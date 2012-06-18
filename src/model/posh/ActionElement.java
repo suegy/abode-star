@@ -33,10 +33,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -222,147 +226,49 @@ public class ActionElement implements IEditableElement {
 
 		mainGui.setDocumentationField(this);
 		
-		// Create our new table model
-		TableModel tableModel = new AbstractTableModel() {
-			//Added to get rid of warnings and properly implement Serializable
-			private static final long serialVersionUID = 1;
+		// Create our new properties panel
 
-			// The two columns of the table
-			private String[] columnNames = { "Attribute", "Value" };
+		// Add name label
+		JLabel namelabel;
+		if(getIsSense()){
+			namelabel = new JLabel("Sense Name");
+		}
+		else{
+			namelabel = new JLabel("Action Name");
+		}
 
-			// Where we store the state of this object
-			private Object[][] data = populateData();
+		int vNamefieldSize = 15;
+		final JTextField namefield = new JTextField(getElementName(), vNamefieldSize);
 
-			/**
-			 * Get the column name for the specified index
-			 *
-			 * @param col Index
-			 * @return Column identifier
-			 **/
-			public String getColumnName(int col) {
-				return columnNames[col];
-			}
-
-			/**
-			 * Get the table value at the specified row/column.
-			 *
-			 * @param row Row of the table to inspect
-			 * @param col Column of row to inspect
-			 *
-			 * @return Contents of specified point in the table
-			 **/
-			public Object getValueAt(int row, int col) {
-				return data[row][col];
-			}
-
-			/**
-			 * Get the number of rows in the data table
-			 * 
-			 * @return Number of rows in data array.
-			 **/
-			public int getRowCount() {
-				return data.length;
-			}
-
-			/**
-			 * Get the type of data being stored in the table
-			 *
-			 * @param c Column index
-			 * @return Class of column (Found from first row)
-			 **/
-			public Class getColumnClass(int c) {
-				return getValueAt(0, c).getClass();
-			}
-
-			/**
-			 * Get the number of columns in this table
-			 *
-			 * @return Number of columns
-			 **/
-			public int getColumnCount() {
-				return columnNames.length;
-			}
-
-			/**
-			 * Determine if a specific cell in the table can be manipulated.
-			 *
-			 * @param row Row of the table
-			 * @param col Column of the table
-			 * @return True if cell editable, false otherwise
-			 **/
-			public boolean isCellEditable(int row, int col) {
-				// First column is never editable
-				if (col == 0)
-					return false;
-
-				// If we'return a 3 row table, editing row 3 (2 in base 0 array) is only
-				// allowed if we've got a value.
-				if (getRowCount() == 3) {
-					if (row == 2)
-						if (getValue() == null)
-							return false;
-				}
-
-				return true;
-			}
-
-			/**
-			 * Set the value at a specific point in the table
-			 *
-			 * @param value Value to set
-			 * @param row Row to put value into.
-			 * @param col Column to put value into.
-			 **/
-			public void setValueAt(Object value, int row, int col) {
-				if (col != 1)
-					return;
-
-				if (row == 0)
-					setElementName(value.toString());
-				if (row == 1) {
-					if (value.toString().length() < 1) {
-						setValue(null);
-						setPredicate(null);
-						data[2][1] = null;
-					} else {
-						setValue(value.toString());
-					}
-				}
-				if (row == 2)
-					setPredicate(value.toString());
-				data[row][col] = value;
-				subGui.updateDiagrams(diagram, getSelf());
+		// Action listener to update the actual data when the field is updated
+		namefield.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setElementName(namefield.getText());
 				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
 			}
+		});
 
-			/**
-			 * Populate an array with the current state of the object
-			 * at the time the class is initialized.
-			 * 
-			 * @return Array of infomration for displaying
-			 **/
-			private Object[][] populateData() {
-				if (getIsSense()) {
-					Object[][] result = new Object[3][2];
-					result[0][0] = "Sense Name";
-					result[0][1] = getElementName();
-					result[1][0] = "Value";
-					result[1][1] = getValue();
-					result[2][0] = "Predicate";
-					result[2][1] = getPredicate();
-					return result;
-				} else {
-					Object[][] result = new Object[1][2];
-					result[0][0] = "Action Name";
-					result[0][1] = getElementName();
-					return result;
-				}
-			}
-		};
+		JPanel namePanel = new JPanel();
+		
+		namePanel.add(namelabel);
+		namePanel.add(namefield);
+	
+		JPanel panel = new JPanel();
+		
+		JLabel typeLabel;
+		if(getIsSense()){
+			typeLabel = new JLabel(" - Sense - ");
+		}
+		else{
+			typeLabel = new JLabel(" - Action - ");
+		}
+		// Add each panel
+		// Seperate panels are used to keep labels adjacent to text fields
+		panel.add(typeLabel);
+		panel.add(namePanel);
 
-		JTable table = new JTable(tableModel);
-//		TODO:
-//		mainGui.setPropertiesPanel(table);
+		mainGui.setPropertiesPanel(panel);
 	}
 
 	/**

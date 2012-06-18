@@ -384,6 +384,10 @@ public class DriveElement implements IEditableElement {
 		
 		JPanel panel = new JPanel();
 		
+		JLabel typeLabel = new JLabel(" - Drive Element - ");
+		// Add each panel
+		// Seperate panels are used to keep labels adjacent to text fields
+		panel.add(typeLabel);
 		panel.add(namePanel);
 		panel.add(actionPanel);
 		panel.add(frequencyValuePanel);

@@ -279,8 +279,10 @@ public class DriveCollection implements IEditableElement {
 	
 		JPanel panel = new JPanel();
 		
+		JLabel typeLabel = new JLabel(" - Drive Collection - ");
 		// Add each panel
 		// Seperate panels are used to keep labels adjacent to text fields
+		panel.add(typeLabel);
 		panel.add(namePanel);
 		panel.add(realtimePanel);
 		panel.add(enabled);
