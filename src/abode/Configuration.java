@@ -70,10 +70,10 @@ public class Configuration {
 
 			BufferedReader brInputFile = null;
 			try {
-				brInputFile = new BufferedReader(new FileReader("Configuration.lisp"));
+				brInputFile = new BufferedReader(new FileReader("/cfg/Configuration.lisp"));
 			} catch (Exception e) {
 				System.out.println("Loading default configuration!");
-				InputStream is = Main.class.getResourceAsStream("DefaultConfiguration.lisp");
+				InputStream is = Main.class.getResourceAsStream("/cfg/DefaultConfiguration.lisp");
 				InputStreamReader isr = new InputStreamReader(is);
 				brInputFile = new BufferedReader(isr);
 			}

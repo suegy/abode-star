@@ -44,7 +44,7 @@ import model.IEditableElement;
  * @author CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
  */
-public class HorizontalListOrganiser implements IListOrganiser {
+public class HorizontalListOrganiser extends ListOrganiser {
 	/**
 	 * Populate the options panel on the right of the screen with the relevent
 	 * list re-arrangement buttons for a list that is being re-arranged
@@ -79,18 +79,7 @@ public class HorizontalListOrganiser implements IListOrganiser {
 			panel.add(bttnMoveUp);
 		}
 
-		// Crush, kill destroy
-		JButton bttnDelete = new JButton("Delete Element", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
-		bttnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
-					myGroup.remove(subject.getValue());
-					internal.updateDiagrams(diagram, subject.getParentNode().getValue());
-				}
-			}
-		});
-		bttnDelete.setHorizontalAlignment(JButton.LEFT);
-		panel.add(bttnDelete);
+		addDeleteButton(panel, internal, subject, diagram);
 
 		// Can this element be moved right?
 		if (myGroup.indexOf(subject.getValue()) < (myGroup.size() - 1)) {

@@ -31,15 +31,16 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
- * A simple list organiser object for providing simple "delete me" functionality
+ * The super list organiser object for providing simple "delete me" functionality
  * 
  * @author CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
  */
-public class DestructiveListOrganiser implements IListOrganiser {
+public class ListOrganiser implements IListOrganiser {
 	/**
 	 * Populate the options panel on the right of the screen with the buttons
 	 * for deleting constructs
@@ -56,16 +57,45 @@ public class DestructiveListOrganiser implements IListOrganiser {
 	public void populateOptionsPanel(final JAbode mainGui, final JEditorWindow internal, final JDiagram diagram, final JTreeNode subject) {
 		// Store some references to make things easier to read
 		final JPanel panel = mainGui.getCommandsPanel();
+		
+		addDeleteButton(panel, internal, subject, diagram);
+		
+		
+	}
+	
+	public void addDeleteButton(final JPanel panel, final JEditorWindow internal, final JTreeNode subject,final JDiagram diagram)
+	{
 		final ArrayList myGroup = subject.getGroup();
-
+		
 		JButton bttnDelete = new JButton("Delete Element", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
 		bttnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				myGroup.remove(subject.getValue());
-				internal.updateDiagrams(diagram, subject.getParentNode().getValue());
+				if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
+					myGroup.remove(subject.getValue());
+					internal.updateDiagrams(diagram, subject.getParentNode().getValue());
+				}
 			}
 		});
 		bttnDelete.setHorizontalAlignment(JButton.LEFT);
+		panel.add(bttnDelete);
+	}
+	
+	public void addDeleteGroupButton(final JPanel panel, final JEditorWindow internal, final JTreeNode subject,final JDiagram diagram)
+	{
+		final ArrayList groupGroup = subject.getParentNode().getGroup();
+		final ArrayList myGroup = subject.getGroup();
+		
+		JButton bttnDelete = new JButton("Delete Group", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
+		bttnDelete.setHorizontalAlignment(JButton.LEFT);
+		bttnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+	
+				if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
+					groupGroup.remove(myGroup);
+					internal.updateDiagrams(diagram, subject.getParentNode().getValue());
+				}
+			}
+		});
 		panel.add(bttnDelete);
 	}
 }

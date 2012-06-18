@@ -42,12 +42,12 @@ import model.IEditableElement;
 import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
-import abode.visual.DestructiveListOrganiser;
 import abode.visual.HorizontalListOrganiser;
 import abode.visual.JAbode;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
+import abode.visual.ListOrganiser;
 
 /**
  * An Action Pattern is a name, interval and a sequence of action elements
@@ -403,16 +403,17 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		}
 		JTreeNode apNode = new JTreeNode(getName(), "Action Pattern", colorToDraw, this, root);
 		JTreeNode chain = apNode;
-		Iterator elements = getElements().iterator();
-		while (elements.hasNext()) {
-			ActionElement ae = (ActionElement) elements.next();
+		
+		for (Object obj : getElements()) {
+			ActionElement ae = (ActionElement) obj;
 			chain = ae.buildTree(chain, lap, detailed, expanded);
 			chain.setOrganiser(new HorizontalListOrganiser());
 			chain.setGroup(getElements());
 		}
-
+			
+		
 		apNode.setGroup(lap.getElements());
-		apNode.setOrganiser(new DestructiveListOrganiser());
+		apNode.setOrganiser(new ListOrganiser());
 		return apNode;
 	}
 

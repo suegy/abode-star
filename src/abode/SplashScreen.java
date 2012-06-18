@@ -23,7 +23,7 @@
  * copyrights, both of the software provider and the 
  * client must be retained.
  */
-package abode.visual;
+package abode;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,6 +36,8 @@ import java.util.HashSet;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
+
+import abode.visual.JAbode;
 
 /**
  * SplashScreen is the class for pre-initialization of the various classes used
@@ -211,5 +213,17 @@ public class SplashScreen extends javax.swing.JFrame {
 
 	private javax.swing.JPanel splashPanel;
 	// End of variables declaration//GEN-END:variables
+	
+	
+	/**
+     * Start the program by invoking the splash screen, which will initialize
+     * all of the classes in the program and then invoke the JAbode main GUI
+     * class.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        new SplashScreen();
+    }
 
 }

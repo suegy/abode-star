@@ -46,7 +46,7 @@ import model.IEditableElement;
  * @author CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
  */
-public class VerticalListOrganiser implements IListOrganiser {
+public class VerticalListOrganiser extends ListOrganiser {
 	/**
 	 * This option populates the options/commands panel of the main GUI display
 	 * with a list of relevent actions based on the currently selected tree
@@ -136,31 +136,9 @@ public class VerticalListOrganiser implements IListOrganiser {
 				panel.add(bttnMoveupGroup);
 			}
 
-			JButton bttnDeleteElement = new JButton("Delete Element", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
-			bttnDeleteElement.setHorizontalAlignment(JButton.LEFT);
-			bttnDeleteElement.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
+			addDeleteButton(panel, internal, subject, diagram);
 
-					if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
-						myGroup.remove(subject.getValue());
-						internal.updateDiagrams(diagram, subject.getParentNode().getValue());
-					}
-				}
-			});
-			panel.add(bttnDeleteElement);
-
-			JButton bttnDelete = new JButton("Delete Group", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
-			bttnDelete.setHorizontalAlignment(JButton.LEFT);
-			bttnDelete.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-
-					if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
-						groupGroup.remove(myGroup);
-						internal.updateDiagrams(diagram, subject.getParentNode().getValue());
-					}
-				}
-			});
-			panel.add(bttnDelete);
+			addDeleteGroupButton(panel, internal, subject, diagram);
 
 			// Dissolve the group
 			JButton bttnUngroup = new JButton("Ungroup Elements", new ImageIcon(getClass().getResource("/image/icon/ungroup.gif")));
@@ -209,15 +187,7 @@ public class VerticalListOrganiser implements IListOrganiser {
 				panel.add(bttnMoveDownGroup);
 			}
 		} else {
-			JButton bttnDelete = new JButton("Delete Element", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
-			bttnDelete.setHorizontalAlignment(JButton.LEFT);
-			bttnDelete.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					groupGroup.remove(myGroup);
-					internal.updateDiagrams(diagram, subject.getParentNode().getValue());
-				}
-			});
-			panel.add(bttnDelete);
+			addDeleteButton(panel, internal, subject, diagram);
 		}
 
 		// If there's a group beneath us

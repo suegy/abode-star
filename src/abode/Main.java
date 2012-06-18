@@ -1,6 +1,5 @@
 package abode;
 
-import abode.visual.SplashScreen;
 
 
 
@@ -13,6 +12,8 @@ import abode.visual.SplashScreen;
  * @author  CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
  */
+
+@Deprecated
 public class Main {   
     /**
      * Start the program by invoking the splash screen, which will initialize
