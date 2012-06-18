@@ -33,19 +33,19 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JTable;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import model.IEditableElement;
-
 
 import abode.Configuration;
 import abode.visual.HorizontalListOrganiser;
@@ -253,6 +253,89 @@ public class ActionElement implements IEditableElement {
 		
 		namePanel.add(namelabel);
 		namePanel.add(namefield);
+		
+		JPanel valuePanel = null;
+		
+		if(getIsSense()){
+			// Value
+			// Add name label for the frequency of a drive
+			JLabel valueLabel = new JLabel("Value");
+	
+			// Setup spinner
+			double startingValue = 1;
+			
+			if(getValue() != null){
+				startingValue = Double.parseDouble(getValue());
+			}
+			final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(startingValue,
+					0, 999999, 1);
+			
+			// Action listener to update the actual data when the field is updated
+			spinnerModel.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					double value = (Double) spinnerModel.getValue();
+					if (Double.toString(value).length() < 1) {
+						setValue(null);
+						setPredicate(null);
+					} else {
+						setValue(Double.toString(value));
+					}
+					subGui.repaint();
+					subGui.updateDiagrams(diagram, getSelf());
+				}
+			});
+			
+			JSpinner valueSpinner = new JSpinner(spinnerModel);
+			
+			// Add name label for the frequency of a drive
+			String[] unitStrings = {"=","!=",">",">=","<","<=","=="};
+			
+			final JComboBox predicateSelector = new JComboBox(unitStrings);
+			
+			String strCurrentPredicate;
+			if(getPredicate() != null){
+				strCurrentPredicate = getPredicate();
+			}
+			else{
+				strCurrentPredicate = "=";
+			}
+			
+			if(strCurrentPredicate.toLowerCase().equals("=")){
+				predicateSelector.setSelectedIndex(0);
+			}
+			else if(strCurrentPredicate.toLowerCase().equals("!=")){
+				predicateSelector.setSelectedIndex(1);
+			}
+			else if(strCurrentPredicate.toLowerCase().equals(">")){
+				predicateSelector.setSelectedIndex(2);
+			}
+			else if(strCurrentPredicate.toLowerCase().equals(">=")){
+				predicateSelector.setSelectedIndex(3);
+			}
+			else if(strCurrentPredicate.toLowerCase().equals("<")){
+				predicateSelector.setSelectedIndex(4);
+			}
+			else if(strCurrentPredicate.toLowerCase().equals("<=")){
+				predicateSelector.setSelectedIndex(5);
+			}
+			else if(strCurrentPredicate.toLowerCase().equals("==")){
+				predicateSelector.setSelectedIndex(6);
+			}
+			
+			// Action listener to update the actual data when the field is updated
+			predicateSelector.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// Get the actual value
+					setPredicate((String)predicateSelector.getSelectedItem());
+				}
+			});
+			
+			valuePanel = new JPanel();
+			
+			valuePanel.add(valueLabel);
+			valuePanel.add(predicateSelector);
+			valuePanel.add(valueSpinner);	
+		}
 	
 		JPanel panel = new JPanel();
 		
@@ -267,6 +350,10 @@ public class ActionElement implements IEditableElement {
 		// Seperate panels are used to keep labels adjacent to text fields
 		panel.add(typeLabel);
 		panel.add(namePanel);
+		
+		if(getIsSense()){
+			panel.add(valuePanel);
+		}
 
 		mainGui.setPropertiesPanel(panel);
 	}

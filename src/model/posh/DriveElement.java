@@ -26,18 +26,13 @@
 package model.posh;
 
 import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.Box;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -45,13 +40,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import model.IEditableElement;
 import model.INamedElement;
@@ -339,8 +331,6 @@ public class DriveElement implements IEditableElement {
 		frequencyValuePanel.add(frequencyValueLabel);
 		frequencyValuePanel.add(frequencyValueSpinner);
 		
-		// Checkbox for enabling and disabling the Drive Collection
-		
 		// Add name label for the frequency of a drive
 		String[] unitStrings = {"seconds","minutes","hours"};
 		
@@ -379,8 +369,7 @@ public class DriveElement implements IEditableElement {
 			}
 		});
 		
-		JPanel frequencyUnitPanel = new JPanel();
-		frequencyUnitPanel.add(frequencyUnit);
+		frequencyValuePanel.add(frequencyUnit);
 		
 		JPanel panel = new JPanel();
 		
@@ -391,7 +380,6 @@ public class DriveElement implements IEditableElement {
 		panel.add(namePanel);
 		panel.add(actionPanel);
 		panel.add(frequencyValuePanel);
-		panel.add(frequencyUnitPanel);
 		
 		mainGui.setPropertiesPanel(panel);
 	}
