@@ -321,7 +321,8 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		};
 
 		JTable table = new JTable(tableModel);
-		mainGui.setPropertiesTable(table);
+		// TODO:
+//		mainGui.setPropertiesPanel(table);
 	}
 
 	public ActionPattern getSelf() {

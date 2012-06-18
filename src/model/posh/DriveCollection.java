@@ -25,22 +25,26 @@
  */
 package model.posh;
 
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import model.IEditableElement;
-
 
 import abode.Configuration;
 import abode.visual.JAbode;
@@ -71,9 +75,9 @@ public class DriveCollection implements IEditableElement {
 
 	private boolean enabled = true;
 
-//	Docs
+	// Docs
 	private String documentation;
-	
+
 	/**
 	 * Initialize this drive collection
 	 * 
@@ -85,14 +89,16 @@ public class DriveCollection implements IEditableElement {
 	 *            Arraylist of drive elements (or lists thereof, to be more
 	 *            precise)
 	 */
-	public DriveCollection(String name, boolean realTime, ArrayList goal, ArrayList elements) {
+	public DriveCollection(String name, boolean realTime, ArrayList goal,
+			ArrayList elements) {
 		strName = name;
 		bIsRealTime = realTime;
 		alGoal = goal;
 		alDriveElements = elements;
 	}
 
-	public DriveCollection(String name, boolean realTime, ArrayList goal, ArrayList elements, boolean shouldBeEnabled) {
+	public DriveCollection(String name, boolean realTime, ArrayList goal,
+			ArrayList elements, boolean shouldBeEnabled) {
 		this(name, realTime, goal, elements);
 		this.setEnabled(shouldBeEnabled);
 	}
@@ -100,23 +106,25 @@ public class DriveCollection implements IEditableElement {
 	public void setDocumentation(String newDocumentation) {
 		this.documentation = newDocumentation;
 	}
-	
+
 	public String getElementDocumentation() {
 		return this.documentation;
 	}
-	
+
 	public boolean isEnabled() {
 		return this.enabled;
 	}
 
 	public void setEnabled(boolean newValue) {
 		this.enabled = newValue;
-		//Disable the children. In a complicated fashion, naturally.
+		// Disable the children. In a complicated fashion, naturally.
 		Iterator directChildrenIterator = this.getDriveElements().iterator();
 		while (directChildrenIterator.hasNext()) {
-			Iterator nonDirectChildrenIterator = ((ArrayList)directChildrenIterator.next()).iterator();
-			while(nonDirectChildrenIterator.hasNext()) {
-				((IEditableElement)nonDirectChildrenIterator.next()).setEnabled(newValue);
+			Iterator nonDirectChildrenIterator = ((ArrayList) directChildrenIterator
+					.next()).iterator();
+			while (nonDirectChildrenIterator.hasNext()) {
+				((IEditableElement) nonDirectChildrenIterator.next())
+						.setEnabled(newValue);
 			}
 		}
 	}
@@ -213,74 +221,72 @@ public class DriveCollection implements IEditableElement {
 	 * @param diagram
 	 *            The diagram we're being select on.
 	 */
-	public void onSelect(JAbode mainGui, final JEditorWindow subGui, final JDiagram diagram) {
+	public void onSelect(JAbode mainGui, final JEditorWindow subGui,
+			final JDiagram diagram) {
 		mainGui.popOutProperties();
 		diagram.repaint();
-		
+
 		mainGui.setDocumentationField(this);
-		
-		TableModel tableModel = new AbstractTableModel() {
-			// Added to properly implement serializable
-			private static final long serialVersionUID = 1;
 
-			private String[] columnNames = { "Attribute", "Value" };
+		// Add name label
+		JLabel namelabel = new JLabel("Name");
 
-			private Object[][] data = populateData();
+		int vNamefieldSize = 15;
+		final JTextField namefield = new JTextField(getName(), vNamefieldSize);
 
-			public String getColumnName(int col) {
-				return columnNames[col];
-			}
-
-			public Object getValueAt(int row, int col) {
-				return data[row][col];
-			}
-
-			public int getRowCount() {
-				return data.length;
-			}
-
-			public Class getColumnClass(int c) {
-				return getValueAt(0, c).getClass();
-			}
-
-			public int getColumnCount() {
-				return columnNames.length;
-			}
-
-			public boolean isCellEditable(int row, int col) {
-				if (col == 0)
-					return false;
-				return true;
-			}
-
-			public void setValueAt(Object value, int row, int col) {
-				if (col != 1)
-					return;
-
-				if (row == 0)
-					setName(value.toString());
-				if (row == 1)
-					if (value != null)
-						setRealTime(value.toString().equals("1") ? true : false);
+		// Action listener to update the actual data when the field is updated
+		namefield.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setName(namefield.getText());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
-				data[row][col] = value;
 			}
+		});
 
-			private Object[][] populateData() {
-				Object[][] result = new Object[3][2];
-				result[0][0] = "Name";
-				result[0][1] = getName();
-				result[1][0] = "Realtime?";
-				result[1][1] = new Integer(getRealTime() ? 1 : 0);
-				result[2][0] = "Enabled";
-				result[2][1] = new Boolean(isEnabled());
-				return result;
+		JPanel namePanel = new JPanel();
+		
+		namePanel.add(namelabel);
+		namePanel.add(namefield);
+
+		// Tick box for realtime Drive Collection
+		final JCheckBox realtime = new JCheckBox("Realtime?", getRealTime());
+
+		// Action listener for setting the data in the class
+		realtime.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setRealTime(realtime.isSelected());
+				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
 			}
-		};
+		});
 
-		JTable table = new JTable(tableModel);
-		mainGui.setPropertiesTable(table);
+		JPanel realtimePanel = new JPanel();
+		
+		realtimePanel.add(realtime);
+		
+		// Checkbox for enabling and disabling the Drive Collection
+		final JCheckBox enabled = new JCheckBox("Enabled?", isEnabled());
+
+		// Action listener for enabling / disabling the drive collection
+		enabled.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setEnabled(enabled.isSelected());
+				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
+			}
+		});
+		
+	
+		JPanel panel = new JPanel();
+		
+		// Add each panel
+		// Seperate panels are used to keep labels adjacent to text fields
+		panel.add(namePanel);
+		panel.add(realtimePanel);
+		panel.add(enabled);
+
+		// Add this panel to the main GUI
+		mainGui.setPropertiesPanel(panel);
 	}
 
 	// Automatically increment drive element numbers
@@ -298,7 +304,9 @@ public class DriveCollection implements IEditableElement {
 	 * @param diagram
 	 *            The diagram in the window we'return being shown on
 	 */
-	public void showContextMenu(final JTreeNode showOn, final LearnableActionPattern lap, final JEditorWindow window, final JDiagram diagram) {
+	public void showContextMenu(final JTreeNode showOn,
+			final LearnableActionPattern lap, final JEditorWindow window,
+			final JDiagram diagram) {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Drive Collection"));
 		menu.addSeparator();
@@ -325,12 +333,18 @@ public class DriveCollection implements IEditableElement {
 			public void actionPerformed(ActionEvent actionEvent) {
 				String name = "Some Name";
 				while (name.indexOf(" ") >= 0) {
-					name = JOptionPane.showInputDialog(showOn.getParent(), "What would you like to name this new drive element?", "DriveElement" + driveElement++).trim();
+					name = JOptionPane
+							.showInputDialog(
+									showOn.getParent(),
+									"What would you like to name this new drive element?",
+									"DriveElement" + driveElement++).trim();
 					if (name.indexOf(" ") >= 0)
-						JOptionPane.showMessageDialog(showOn.getParent(), "Drive Element Names can not contain spaces!");
+						JOptionPane.showMessageDialog(showOn.getParent(),
+								"Drive Element Names can not contain spaces!");
 				}
 
-				DriveElement element = new DriveElement(name, new ArrayList(), "act_" + name);
+				DriveElement element = new DriveElement(name, new ArrayList(),
+						"act_" + name);
 				ArrayList elementList = new ArrayList();
 				elementList.add(element);
 
@@ -342,7 +356,8 @@ public class DriveCollection implements IEditableElement {
 		JMenuItem addGoal = new JMenuItem("Add Goal Element");
 		addGoal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				ActionElement actionElement = new ActionElement(true, "SomeSense" + driveElement++);
+				ActionElement actionElement = new ActionElement(true,
+						"SomeSense" + driveElement++);
 				getGoal().add(actionElement);
 				window.updateDiagrams(diagram, actionElement);
 			}
@@ -351,7 +366,11 @@ public class DriveCollection implements IEditableElement {
 		JMenuItem delete = new JMenuItem("Delete drive Collection");
 		delete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				if (JOptionPane.showConfirmDialog(showOn.getParent(), "Delete Drive Collection", "Are you sure you want to delete the drive collection?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(
+						showOn.getParent(),
+						"Delete Drive Collection",
+						"Are you sure you want to delete the drive collection?",
+						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					lap.getElements().remove(showOn.getValue());
 
 					window.updateDiagrams(diagram, null);
@@ -380,17 +399,21 @@ public class DriveCollection implements IEditableElement {
 	 * @return Tree node representing this node and the relevent sub-tree for
 	 *         the specified diagram rendering settings
 	 */
-	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {
+	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap,
+			boolean detailed, boolean expanded) {
 		Color colorToDraw;
 		if (isEnabled()) {
 			colorToDraw = Configuration.getRGB("colours/driveCollection");
 		} else {
 			colorToDraw = Color.LIGHT_GRAY;
 		}
-		JTreeNode base = new JTreeNode(getName(), (getRealTime() ? "Real-Time DC" : "Non Real-Time DC"), colorToDraw, this, root);
+		JTreeNode base = new JTreeNode(getName(),
+				(getRealTime() ? "Real-Time DC" : "Non Real-Time DC"),
+				colorToDraw, this, root);
 
 		if (detailed) {
-			ActionElement.actionListToTree("Goal", "Goal of drive collection", getGoal(), base, this, this.isEnabled());
+			ActionElement.actionListToTree("Goal", "Goal of drive collection",
+					getGoal(), base, this, this.isEnabled());
 		}
 
 		Iterator groups = getDriveElements().iterator();
@@ -400,7 +423,8 @@ public class DriveCollection implements IEditableElement {
 			ArrayList groupBy = (ArrayList) groups.next();
 			Iterator inGroup = groupBy.iterator();
 			while (inGroup.hasNext()) {
-				JTreeNode node = ((DriveElement) inGroup.next()).buildTree(base, lap, detailed, expanded);
+				JTreeNode node = ((DriveElement) inGroup.next()).buildTree(
+						base, lap, detailed, expanded);
 				node.setGroup(groupBy);
 				node.setOrganiser(new VerticalListOrganiser());
 			}

@@ -361,7 +361,8 @@ public class ActionElement implements IEditableElement {
 		};
 
 		JTable table = new JTable(tableModel);
-		mainGui.setPropertiesTable(table);
+//		TODO:
+//		mainGui.setPropertiesPanel(table);
 	}
 
 	/**

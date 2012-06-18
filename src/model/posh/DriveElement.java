@@ -26,16 +26,30 @@
 package model.posh;
 
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.Box;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -242,93 +256,140 @@ public class DriveElement implements IEditableElement {
 		diagram.repaint();
 		
 		mainGui.setDocumentationField(this);
-		
-		TableModel tableModel = new AbstractTableModel() {
-			// Added to get rid of warnings and properly implement Serializable
-			private static final long serialVersionUID = 1;
 
-			private String[] columnNames = { "Attribute", "Value" };
+		// Add name label
+		JLabel namelabel = new JLabel("Name");
 
-			private Object[][] data = populateData();
+		int vTextFieldSize = 15;
+		final JTextField namefield = new JTextField(getName(), vTextFieldSize);
 
-			public String getColumnName(int col) {
-				return columnNames[col];
-			}
-
-			public Object getValueAt(int row, int col) {
-				return data[row][col];
-			}
-
-			public int getRowCount() {
-				return data.length;
-			}
-
-			public Class getColumnClass(int c) {
-				return getValueAt(0, c).getClass();
-			}
-
-			public int getColumnCount() {
-				return columnNames.length;
-			}
-
-			public boolean isCellEditable(int row, int col) {
-				if (col == 0)
-					return false;
-				return true;
-			}
-
-			public void setValueAt(Object value, int row, int col) {
-				if (col != 1)
-					return;
-
-				if (row == 0)
-					setName(value.toString());
-				if (row == 1)
-					setAction(value.toString());
-				if (row == 2) {
-					if (value.toString().length() < 1) {
-						setFrequency(null);
-						data[2][1] = null;
-						data[3][1] = null;
-					} else {
-						if ((data[3][1] == null) || (data[3][1].toString().length() < 1))
-							data[3][1] = "seconds";
-						setFrequency(new TimeUnit(data[3][1].toString(), Double.parseDouble(value.toString())));
-					}
-				}
-
-				if (row == 3) {
-					if (value.toString().length() < 1) {
-						setFrequency(null);
-						data[2][1] = null;
-						data[3][1] = null;
-					} else {
-						if ((data[2][1] == null) || (data[2][1].toString().length() < 1))
-							data[2][1] = "1";
-						setFrequency(new TimeUnit(value.toString(), Double.parseDouble(data[2][1].toString())));
-					}
-				}
-
-				data[row][col] = value;
+		// Action listener to update the actual data when the field is updated
+		namefield.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setName(namefield.getText());
+				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
 			}
+		});
 
-			private Object[][] populateData() {
-				Object[][] result = new Object[4][2];
-				result[0][0] = "Name";
-				result[0][1] = getName();
-				result[1][0] = "Action Name";
-				result[1][1] = getAction();
-				result[2][0] = "Frequency Value";
-				result[2][1] = (getFrequency() == null) ? "" : new Double(getFrequency().getUnitValue()).toString();
-				result[3][0] = "Frequency Unit";
-				result[3][1] = (getFrequency() == null) ? "" : getFrequency().getUnitName();
-				return result;
+		JPanel namePanel = new JPanel();
+		
+		namePanel.add(namelabel);
+		namePanel.add(namefield);
+		
+		// Add name label for action
+		JLabel actionlabel = new JLabel("Action");
+
+		final JTextField actionfield = new JTextField(getAction(), vTextFieldSize);
+
+		// Action listener to update the actual data when the field is updated
+		actionfield.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setAction(actionfield.getText());
+				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
 			}
-		};
+		});
+		
+		JPanel actionPanel = new JPanel();
 
-		JTable table = new JTable(tableModel);
-		mainGui.setPropertiesTable(table);
+		actionPanel.add(actionlabel);
+		actionPanel.add(actionfield);
+
+		// Add name label for the frequency of a drive
+		JLabel frequencyValueLabel = new JLabel("Frequency");
+
+		// Setup spinner
+		double startingValue = 1;
+		
+		if(getFrequency() != null){
+			startingValue = getFrequency().getUnitValue();
+		}
+		final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(startingValue,
+				0, 9999, 1);
+		
+		// Action listener to update the actual data when the field is updated
+		spinnerModel.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				double value = (Double) spinnerModel.getValue();
+				if (Double.toString(value).length() < 1) {
+					setFrequency(null);
+				} else {
+					String strTimeUnit;
+					// If no previous time unit set, use seconds
+					if (getFrequency() == null){
+						strTimeUnit = "seconds";
+					}
+					else{
+						// Get the previous unit of time
+						strTimeUnit = getFrequency().getUnitName();
+					}
+					//Set the new frequency
+					setFrequency(new TimeUnit(strTimeUnit, value));
+				}
+				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
+			}
+		});
+		
+		JSpinner frequencyValueSpinner = new JSpinner(spinnerModel);
+
+		JPanel frequencyValuePanel = new JPanel();
+		
+		frequencyValuePanel.add(frequencyValueLabel);
+		frequencyValuePanel.add(frequencyValueSpinner);
+		
+		// Checkbox for enabling and disabling the Drive Collection
+		
+		// Add name label for the frequency of a drive
+		String[] unitStrings = {"seconds","minutes","hours"};
+		
+		final JComboBox frequencyUnit = new JComboBox(unitStrings);
+		
+		String strCurrentFrequencyUnit;
+		if(getFrequency() != null){
+			strCurrentFrequencyUnit = getFrequency().getUnitName();
+		}
+		else{
+			strCurrentFrequencyUnit = "seconds";
+		}
+		
+		if(strCurrentFrequencyUnit.toLowerCase().equals("seconds")){
+			frequencyUnit.setSelectedIndex(0);
+		}
+		else if(strCurrentFrequencyUnit.toLowerCase().equals("minutes")){
+			frequencyUnit.setSelectedIndex(1);
+		}
+		else if(strCurrentFrequencyUnit.toLowerCase().equals("hours")){
+			frequencyUnit.setSelectedIndex(2);
+		}
+		
+		// Action listener to update the actual data when the field is updated
+		frequencyUnit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Get the actual value
+				double value;
+				if(getFrequency() == null){
+					value = 1;
+				}
+				else{
+					value = getFrequency().getUnitValue();
+				}
+				setFrequency(new TimeUnit((String)frequencyUnit.getSelectedItem(), value));
+			}
+		});
+		
+		JPanel frequencyUnitPanel = new JPanel();
+		frequencyUnitPanel.add(frequencyUnit);
+		
+		JPanel panel = new JPanel();
+		
+		panel.add(namePanel);
+		panel.add(actionPanel);
+		panel.add(frequencyValuePanel);
+		panel.add(frequencyUnitPanel);
+		
+		mainGui.setPropertiesPanel(panel);
 	}
 
 	/**

@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultDesktopManager;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -271,7 +272,7 @@ public class JAbode extends JFrame {
 		topSideSplitpane = new javax.swing.JSplitPane();
 		
 		tablePanel = new javax.swing.JPanel();
-		propertiesTable = new javax.swing.JTable();
+		propertiesPanelContents = new javax.swing.JPanel();
 		commandsPanel = new javax.swing.JPanel();
 		jLabel3 = new javax.swing.JLabel();
 		comButtonPanel = new javax.swing.JPanel();
@@ -366,10 +367,7 @@ public class JAbode extends JFrame {
 
 		tablePanel.setLayout(new java.awt.BorderLayout());
 
-		propertiesTable.setModel(new javax.swing.table.DefaultTableModel(new Object[][] { {}, {}, {}, {} }, new String[] {
-
-		}));
-		tablePanel.add(propertiesTable, java.awt.BorderLayout.CENTER);
+		tablePanel.add(propertiesPanelContents, java.awt.BorderLayout.CENTER);
 
 		propertiesPanel.add(tablePanel, java.awt.BorderLayout.CENTER);
 
@@ -1050,8 +1048,8 @@ public class JAbode extends JFrame {
 	 * 
 	 * @return Table for properties editor
 	 */
-	public JTable getPropertiesTable() {
-		return propertiesTable;
+	public JPanel getPropertiesPanelContents() {
+		return propertiesPanelContents;
 	}
 
 	/**
@@ -1070,10 +1068,10 @@ public class JAbode extends JFrame {
 	 * @param table
 	 *            New table
 	 */
-	public void setPropertiesTable(JTable table) {
-		propertiesTable = table;
+	public void setPropertiesPanel(JPanel panel) {
+		propertiesPanelContents = panel;
 		tablePanel.removeAll();
-		tablePanel.add(propertiesTable);
+		tablePanel.add(propertiesPanelContents);
 		validate();
 	}
 
@@ -1194,7 +1192,7 @@ public class JAbode extends JFrame {
 
 	private javax.swing.JPanel propertiesPanel;
 
-	private javax.swing.JTable propertiesTable;
+	private javax.swing.JPanel propertiesPanelContents;
 
 	private javax.swing.JLabel propertiesTitle;
 	

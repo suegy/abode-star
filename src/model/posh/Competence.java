@@ -347,7 +347,8 @@ public class Competence implements IEditableElement, INamedElement {
 		};
 
 		JTable table = new JTable(tableModel);
-		mainGui.setPropertiesTable(table);
+		// TODO:
+//		mainGui.setPropertiesPanel(table);
 	}
 
 	/**
