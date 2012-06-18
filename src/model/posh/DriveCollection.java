@@ -1,0 +1,411 @@
+/* CVS: CobaltVault SERVER:\\halo TREE:\abode_mainline
+ *       _    ____   ___  ____  _____ 
+ *      / \  | __ ) / _ \|  _ \| ____|      Advanced
+ *     / _ \ |  _ \| | | | | | |  _|        Behavior
+ *    / ___ \| |_) | |_| | |_| | |___       Oriented
+ *   /_/   \_\____/ \___/|____/|_____|      Design
+ *         www.cobaltsoftware.net           Environment
+ *
+ * PRODUCED FOR:      University of Bath / Boeing
+ * PAYMENT:           On Delivery   
+ * LICENSING MODEL:   Unrestricted distribution (Post Delivery)
+ * COPYRIGHT:         Client retains copyright.
+ *
+ * This program and all the software components herein are
+ * released as-is, without warranties regarding function,
+ * correctness or any other aspect of the components.
+ * Steven Gray, Cobalt Software, it's subcontractors and
+ * successors may not be held liable for any damage caused 
+ * to computers, business or other property through use of 
+ * or misuse of this software.
+ *
+ * Upon redistribution of the program, all notices of
+ * copyrights, both of the software provider and the 
+ * client must be retained.
+ */
+package model.posh;
+
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+
+import model.IEditableElement;
+
+
+import abode.Configuration;
+import abode.visual.JAbode;
+import abode.visual.JDiagram;
+import abode.visual.JEditorWindow;
+import abode.visual.JTreeNode;
+import abode.visual.VerticalListOrganiser;
+
+/**
+ * A (RealTime/Discrete Time) drive collection is a named goal and a set of
+ * drive elements that work to achieve that goal.
+ * 
+ * @author CobaltSoftware (abode.devteam@cobaltsoftware.net)
+ * @version 1.0
+ */
+public class DriveCollection implements IEditableElement {
+	// Are we a realtime drive collection (False->Discrete Time)
+	private boolean bIsRealTime = false;
+
+	// Our name for this drive collection
+	private String strName = null;
+
+	// Our goal (Arraylist of actionelements)
+	private ArrayList alGoal = null;
+
+	// Our drive elements for this collection
+	private ArrayList alDriveElements = null;
+
+	private boolean enabled = true;
+
+//	Docs
+	private String documentation;
+	
+	/**
+	 * Initialize this drive collection
+	 * 
+	 * @param name
+	 *            Name of the collection
+	 * @param realTime
+	 *            Is this a real-time drive collection?
+	 * @param elements
+	 *            Arraylist of drive elements (or lists thereof, to be more
+	 *            precise)
+	 */
+	public DriveCollection(String name, boolean realTime, ArrayList goal, ArrayList elements) {
+		strName = name;
+		bIsRealTime = realTime;
+		alGoal = goal;
+		alDriveElements = elements;
+	}
+
+	public DriveCollection(String name, boolean realTime, ArrayList goal, ArrayList elements, boolean shouldBeEnabled) {
+		this(name, realTime, goal, elements);
+		this.setEnabled(shouldBeEnabled);
+	}
+
+	public void setDocumentation(String newDocumentation) {
+		this.documentation = newDocumentation;
+	}
+	
+	public String getElementDocumentation() {
+		return this.documentation;
+	}
+	
+	public boolean isEnabled() {
+		return this.enabled;
+	}
+
+	public void setEnabled(boolean newValue) {
+		this.enabled = newValue;
+		//Disable the children. In a complicated fashion, naturally.
+		Iterator directChildrenIterator = this.getDriveElements().iterator();
+		while (directChildrenIterator.hasNext()) {
+			Iterator nonDirectChildrenIterator = ((ArrayList)directChildrenIterator.next()).iterator();
+			while(nonDirectChildrenIterator.hasNext()) {
+				((IEditableElement)nonDirectChildrenIterator.next()).setEnabled(newValue);
+			}
+		}
+	}
+
+	/**
+	 * Reset the name of this drive element
+	 * 
+	 * @param name
+	 *            New name of the drive collection
+	 */
+	public void setName(String name) {
+		strName = name;
+	}
+
+	/**
+	 * Get the name of this drive collection
+	 * 
+	 * @return Name of the drive collection
+	 */
+	public String getName() {
+		return strName;
+	}
+
+	/**
+	 * Get our list of drive elements
+	 * 
+	 * @return Arraylist of lists of drive elements
+	 */
+	public ArrayList getDriveElements() {
+		return alDriveElements;
+	}
+
+	/**
+	 * Get the arraylist of actionelements that comprise our goal
+	 * 
+	 * @return Arraylist of action elements comprising our goal
+	 */
+	public ArrayList getGoal() {
+		return alGoal;
+	}
+
+	/**
+	 * Get whether or not this is a real-time drive collection
+	 * 
+	 * @return True if real time drive collection, false otherwise
+	 */
+	public boolean getRealTime() {
+		return bIsRealTime;
+	}
+
+	/**
+	 * Set our list of drive elements to be some new list
+	 * 
+	 * @param drive
+	 *            Drive element lists .
+	 */
+	public void setDriveElements(ArrayList drive) {
+		alDriveElements = drive;
+	}
+
+	/**
+	 * Set our goal list
+	 */
+	public void setGoal(ArrayList goal) {
+		alGoal = goal;
+	}
+
+	/**
+	 * Set whether or not this is a real-time drive collection
+	 * 
+	 * @param real
+	 *            Real time if true, discrete time if not
+	 */
+	public void setRealTime(boolean real) {
+		bIsRealTime = real;
+	}
+
+	/**
+	 * Get reference back this object for inner class
+	 */
+	public DriveCollection getSelf() {
+		return this;
+	}
+
+	/**
+	 * When we click this Action Element in the GUI populate the properties
+	 * panel with the various attributes and setup listeners to catch
+	 * modifications that are made.
+	 * 
+	 * @param mainGui
+	 *            The reference to the outer GUI
+	 * @param subGui
+	 *            The internal frame we're referring to
+	 * @param diagram
+	 *            The diagram we're being select on.
+	 */
+	public void onSelect(JAbode mainGui, final JEditorWindow subGui, final JDiagram diagram) {
+		mainGui.popOutProperties();
+		diagram.repaint();
+		
+		mainGui.setDocumentationField(this);
+		
+		TableModel tableModel = new AbstractTableModel() {
+			// Added to properly implement serializable
+			private static final long serialVersionUID = 1;
+
+			private String[] columnNames = { "Attribute", "Value" };
+
+			private Object[][] data = populateData();
+
+			public String getColumnName(int col) {
+				return columnNames[col];
+			}
+
+			public Object getValueAt(int row, int col) {
+				return data[row][col];
+			}
+
+			public int getRowCount() {
+				return data.length;
+			}
+
+			public Class getColumnClass(int c) {
+				return getValueAt(0, c).getClass();
+			}
+
+			public int getColumnCount() {
+				return columnNames.length;
+			}
+
+			public boolean isCellEditable(int row, int col) {
+				if (col == 0)
+					return false;
+				return true;
+			}
+
+			public void setValueAt(Object value, int row, int col) {
+				if (col != 1)
+					return;
+
+				if (row == 0)
+					setName(value.toString());
+				if (row == 1)
+					if (value != null)
+						setRealTime(value.toString().equals("1") ? true : false);
+				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
+				data[row][col] = value;
+			}
+
+			private Object[][] populateData() {
+				Object[][] result = new Object[3][2];
+				result[0][0] = "Name";
+				result[0][1] = getName();
+				result[1][0] = "Realtime?";
+				result[1][1] = new Integer(getRealTime() ? 1 : 0);
+				result[2][0] = "Enabled";
+				result[2][1] = new Boolean(isEnabled());
+				return result;
+			}
+		};
+
+		JTable table = new JTable(tableModel);
+		mainGui.setPropertiesTable(table);
+	}
+
+	// Automatically increment drive element numbers
+	private int driveElement = 1;
+
+	/**
+	 * Produce and show a context menu for this object
+	 * 
+	 * @param showOn
+	 *            The tree node invoking us
+	 * @param lap
+	 *            The file we're a part of
+	 * @param window
+	 *            The window we're being dispalyed in
+	 * @param diagram
+	 *            The diagram in the window we'return being shown on
+	 */
+	public void showContextMenu(final JTreeNode showOn, final LearnableActionPattern lap, final JEditorWindow window, final JDiagram diagram) {
+		JPopupMenu menu = new JPopupMenu();
+		menu.add(new JMenuItem("Drive Collection"));
+		menu.addSeparator();
+
+		JMenuItem disableThis = null;
+		if (this.isEnabled()) {
+			disableThis = new JMenuItem("Disable element");
+		} else {
+			disableThis = new JMenuItem("Enable element");
+		}
+		disableThis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				if (isEnabled()) {
+					setEnabled(false);
+				} else {
+					setEnabled(true);
+				}
+				window.updateDiagrams(diagram, null);
+			}
+		});
+
+		JMenuItem addNew = new JMenuItem("Add new Drive Element");
+		addNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				String name = "Some Name";
+				while (name.indexOf(" ") >= 0) {
+					name = JOptionPane.showInputDialog(showOn.getParent(), "What would you like to name this new drive element?", "DriveElement" + driveElement++).trim();
+					if (name.indexOf(" ") >= 0)
+						JOptionPane.showMessageDialog(showOn.getParent(), "Drive Element Names can not contain spaces!");
+				}
+
+				DriveElement element = new DriveElement(name, new ArrayList(), "act_" + name);
+				ArrayList elementList = new ArrayList();
+				elementList.add(element);
+
+				getDriveElements().add(elementList);
+				window.updateDiagrams(diagram, element);
+			}
+		});
+
+		JMenuItem addGoal = new JMenuItem("Add Goal Element");
+		addGoal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				ActionElement actionElement = new ActionElement(true, "SomeSense" + driveElement++);
+				getGoal().add(actionElement);
+				window.updateDiagrams(diagram, actionElement);
+			}
+		});
+
+		JMenuItem delete = new JMenuItem("Delete drive Collection");
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				if (JOptionPane.showConfirmDialog(showOn.getParent(), "Delete Drive Collection", "Are you sure you want to delete the drive collection?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					lap.getElements().remove(showOn.getValue());
+
+					window.updateDiagrams(diagram, null);
+				}
+
+			}
+		});
+
+		menu.add(disableThis);
+		menu.addSeparator();
+		menu.add(addNew);
+		menu.add(addGoal);
+		menu.add(delete);
+
+		menu.show(showOn, showOn.getX(), showOn.getY());
+	}
+
+	/**
+	 * Build the tree structure of the file
+	 * 
+	 * @root Root node this tree attatches to
+	 * @lap File we're mapping to
+	 * @detailed Show detailing nodes (i.e. trigger lists)
+	 * @expanded Recursive expansion of sub-nodes
+	 * 
+	 * @return Tree node representing this node and the relevent sub-tree for
+	 *         the specified diagram rendering settings
+	 */
+	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {
+		Color colorToDraw;
+		if (isEnabled()) {
+			colorToDraw = Configuration.getRGB("colours/driveCollection");
+		} else {
+			colorToDraw = Color.LIGHT_GRAY;
+		}
+		JTreeNode base = new JTreeNode(getName(), (getRealTime() ? "Real-Time DC" : "Non Real-Time DC"), colorToDraw, this, root);
+
+		if (detailed) {
+			ActionElement.actionListToTree("Goal", "Goal of drive collection", getGoal(), base, this, this.isEnabled());
+		}
+
+		Iterator groups = getDriveElements().iterator();
+		base.setGroup(getDriveElements());
+
+		while (groups.hasNext()) {
+			ArrayList groupBy = (ArrayList) groups.next();
+			Iterator inGroup = groupBy.iterator();
+			while (inGroup.hasNext()) {
+				JTreeNode node = ((DriveElement) inGroup.next()).buildTree(base, lap, detailed, expanded);
+				node.setGroup(groupBy);
+				node.setOrganiser(new VerticalListOrganiser());
+			}
+		}
+		return base;
+	}
+
+}
