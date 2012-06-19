@@ -66,79 +66,87 @@ public class VerticalListOrganiser extends ListOrganiser {
 		final ArrayList groupGroup = subject.getParentNode().getGroup();
 		final IEditableElement element = subject.getValue();
 
-		String type = (myGroup.size() > 1) ? "Group" : "Element";
+		String type = (myGroup.size() > 1) ? "group" : "element";
 
 		// Move element/group up the list of lists
-		if (groupGroup.indexOf(myGroup) > 0) {
-			JButton bttnMoveUp = new JButton("Move " + type + " up.", new ImageIcon(getClass().getResource("/image/icon/group-up.gif")));
-			bttnMoveUp.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					int index = groupGroup.indexOf(myGroup);
-					groupGroup.add(index - 1, groupGroup.remove(index));
-					internal.updateDiagrams(diagram, subject.getValue());
-				}
-			});
-			bttnMoveUp.setHorizontalAlignment(JButton.LEFT);
-			panel.add(bttnMoveUp);
+		JButton bttnMoveUp = new JButton("Move " + type + " up", new ImageIcon(getClass().getResource("/image/icon/group-up.gif")));
+		bttnMoveUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				int index = groupGroup.indexOf(myGroup);
+				groupGroup.add(index - 1, groupGroup.remove(index));
+				internal.updateDiagrams(diagram, subject.getValue());
+			}
+		});
+		bttnMoveUp.setHorizontalAlignment(JButton.LEFT);
+		panel.add(bttnMoveUp);
+
+		// If not possible to move up, disable the button
+		if (!(groupGroup.indexOf(myGroup) > 0)) {
+			bttnMoveUp.setEnabled(false);
 		}
 
-		// If there's a group above us
-		if (groupGroup.indexOf(myGroup) > 0) {
-			JButton bttnMergeUp = new JButton("Merge with group above.", new ImageIcon(getClass().getResource("/image/icon/merge-group-up.gif")));
-			bttnMergeUp.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					// Get the group above us
-					ArrayList groupAbove = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) - 1);
+		JButton bttnMergeUp = new JButton("Merge with group above", new ImageIcon(getClass().getResource("/image/icon/merge-group-up.gif")));
+		bttnMergeUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				// Get the group above us
+				ArrayList groupAbove = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) - 1);
 
-					// Remove us from the list of lists
-					groupGroup.remove(myGroup);
+				// Remove us from the list of lists
+				groupGroup.remove(myGroup);
 
-					// Add each element to the end of the list above
-					Iterator it = myGroup.iterator();
-					while (it.hasNext())
-						groupAbove.add(it.next());
+				// Add each element to the end of the list above
+				Iterator it = myGroup.iterator();
+				while (it.hasNext())
+					groupAbove.add(it.next());
 
-					internal.updateDiagrams(diagram, subject.getValue());
+				internal.updateDiagrams(diagram, subject.getValue());
 
-				}
-			});
-			bttnMergeUp.setHorizontalAlignment(JButton.LEFT);
-			panel.add(bttnMergeUp);
+			}
+		});
+		bttnMergeUp.setHorizontalAlignment(JButton.LEFT);
+		panel.add(bttnMergeUp);
+		
+		// If there's no group above us disable the button
+		if (!(groupGroup.indexOf(myGroup) > 0)) {
+			bttnMergeUp.setEnabled(false);
 		}
 
 		// Are we in a multi-item group? If so present the option to ungroup
 		if (myGroup.size() > 1) {
 			// Move up in group
-			if (myGroup.indexOf(element) > 0) {
-				JButton bttnMoveupGroup = new JButton("Move up in group", new ImageIcon(getClass().getResource("/image/icon/upingroup.gif")));
-				bttnMoveupGroup.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent actionEvent) {
-						ArrayList newGroup = new ArrayList();
-						Object before = myGroup.get(myGroup.indexOf(subject.getValue()) - 1);
-						Iterator it = myGroup.iterator();
-						while (it.hasNext()) {
-							Object n = it.next();
-							if (n == before) {
-								newGroup.add(subject.getValue());
-								newGroup.add(before);
-							} else if (n == subject.getValue()) {
-								// Dont add ourself
-							} else {
-								newGroup.add(n);
-							}
+			JButton bttnMoveupGroup = new JButton("Move up in group", new ImageIcon(getClass().getResource("/image/icon/upingroup.gif")));
+			bttnMoveupGroup.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent actionEvent) {
+					ArrayList newGroup = new ArrayList();
+					Object before = myGroup.get(myGroup.indexOf(subject.getValue()) - 1);
+					Iterator it = myGroup.iterator();
+					while (it.hasNext()) {
+						Object n = it.next();
+						if (n == before) {
+							newGroup.add(subject.getValue());
+							newGroup.add(before);
+						} else if (n == subject.getValue()) {
+							// Dont add ourself
+						} else {
+							newGroup.add(n);
 						}
-
-						groupGroup.set(groupGroup.indexOf(myGroup), newGroup);
-						internal.updateDiagrams(diagram, subject.getValue());
 					}
-				});
-				bttnMoveupGroup.setHorizontalAlignment(JButton.LEFT);
-				panel.add(bttnMoveupGroup);
+
+					groupGroup.set(groupGroup.indexOf(myGroup), newGroup);
+					internal.updateDiagrams(diagram, subject.getValue());
+				}
+			});
+			bttnMoveupGroup.setHorizontalAlignment(JButton.LEFT);
+			panel.add(bttnMoveupGroup);
+			
+			// If not possible to move up, disable the button
+			if (!(myGroup.indexOf(element) > 0)) {
+				bttnMoveupGroup.setEnabled(false);
 			}
 
-			addDeleteButton(panel, internal, subject, diagram);
+			addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 
-			addDeleteGroupButton(panel, internal, subject, diagram);
+			addDeleteGroupButton(mainGui.getEditPanel(), internal, subject, diagram);
 
 			// Dissolve the group
 			JButton bttnUngroup = new JButton("Ungroup Elements", new ImageIcon(getClass().getResource("/image/icon/ungroup.gif")));
@@ -160,72 +168,81 @@ public class VerticalListOrganiser extends ListOrganiser {
 			panel.add(bttnUngroup);
 
 			// Move down inside group
-			if (myGroup.indexOf(element) < (myGroup.size() - 1)) {
-				JButton bttnMoveDownGroup = new JButton("Move down in group", new ImageIcon(getClass().getResource("/image/icon/downingroup.gif")));
-				bttnMoveDownGroup.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent actionEvent) {
-						ArrayList newGroup = new ArrayList();
-						Object after = myGroup.get(myGroup.indexOf(subject.getValue()) + 1);
-						Iterator it = myGroup.iterator();
-						while (it.hasNext()) {
-							Object n = it.next();
-							if (n == after) {
-								newGroup.add(after);
-								newGroup.add(subject.getValue());
-							} else if (n == subject.getValue()) {
-								// Dont add ourself twice
-							} else {
-								newGroup.add(n);
-							}
-						}
-
-						groupGroup.set(groupGroup.indexOf(myGroup), newGroup);
-						internal.updateDiagrams(diagram, subject.getValue());
-					}
-				});
-				bttnMoveDownGroup.setHorizontalAlignment(JButton.LEFT);
-				panel.add(bttnMoveDownGroup);
-			}
-		} else {
-			addDeleteButton(panel, internal, subject, diagram);
-		}
-
-		// If there's a group beneath us
-		if (groupGroup.indexOf(myGroup) < (groupGroup.size() - 1)) {
-			JButton bttnMergeDown = new JButton("Merge with group below", new ImageIcon(getClass().getResource("/image/icon/merge-group-down.gif")));
-			bttnMergeDown.addActionListener(new ActionListener() {
+			JButton bttnMoveDownGroup = new JButton("Move down in group", new ImageIcon(getClass().getResource("/image/icon/downingroup.gif")));
+			bttnMoveDownGroup.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent actionEvent) {
-					// Get the group above us
-					ArrayList groupBelow = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) + 1);
-
-					// Remove us from the list of lists
-					groupGroup.remove(myGroup);
-
-					// Add each element to the end of the list above
+					ArrayList newGroup = new ArrayList();
+					Object after = myGroup.get(myGroup.indexOf(subject.getValue()) + 1);
 					Iterator it = myGroup.iterator();
-					while (it.hasNext())
-						groupBelow.add(it.next());
+					while (it.hasNext()) {
+						Object n = it.next();
+						if (n == after) {
+							newGroup.add(after);
+							newGroup.add(subject.getValue());
+						} else if (n == subject.getValue()) {
+							// Dont add ourself twice
+						} else {
+							newGroup.add(n);
+						}
+					}
 
+					groupGroup.set(groupGroup.indexOf(myGroup), newGroup);
 					internal.updateDiagrams(diagram, subject.getValue());
 				}
 			});
-			bttnMergeDown.setHorizontalAlignment(JButton.LEFT);
-			panel.add(bttnMergeDown);
+			bttnMoveDownGroup.setHorizontalAlignment(JButton.LEFT);
+			panel.add(bttnMoveDownGroup);
+			
+			// if not possible to move down within the group, disable the button
+			if (!(myGroup.indexOf(element) < (myGroup.size() - 1))) {
+				bttnMoveDownGroup.setEnabled(false);
+			}
+		} else {
+			addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
+		}
+
+		// Button for merging with group below
+		JButton bttnMergeDown = new JButton("Merge with group below", new ImageIcon(getClass().getResource("/image/icon/merge-group-down.gif")));
+		bttnMergeDown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				// Get the group above us
+				ArrayList groupBelow = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) + 1);
+
+				// Remove us from the list of lists
+				groupGroup.remove(myGroup);
+
+				// Add each element to the end of the list above
+				Iterator it = myGroup.iterator();
+				while (it.hasNext())
+					groupBelow.add(it.next());
+
+				internal.updateDiagrams(diagram, subject.getValue());
+			}
+		});
+		bttnMergeDown.setHorizontalAlignment(JButton.LEFT);
+		panel.add(bttnMergeDown);
+			
+		// If there's no group beneath us disable button
+		if (!(groupGroup.indexOf(myGroup) < (groupGroup.size() - 1))) {
+			bttnMergeDown.setEnabled(false);
 		}
 
 		// Move element/group down the list of lists
-		if (groupGroup.indexOf(myGroup) < (groupGroup.size() - 1)) {
-			JButton bttnMoveDown = new JButton("Move " + type + " Down.", new ImageIcon(getClass().getResource("/image/icon/group-down.gif")));
-			bttnMoveDown.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					int index = groupGroup.indexOf(myGroup);
-					groupGroup.add(index, groupGroup.remove(index + 1));
+		JButton bttnMoveDown = new JButton("Move " + type + " down", new ImageIcon(getClass().getResource("/image/icon/group-down.gif")));
+		bttnMoveDown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				int index = groupGroup.indexOf(myGroup);
+				groupGroup.add(index, groupGroup.remove(index + 1));
 
-					internal.updateDiagrams(diagram, subject.getValue());
-				}
-			});
-			bttnMoveDown.setHorizontalAlignment(JButton.LEFT);
-			panel.add(bttnMoveDown);
+				internal.updateDiagrams(diagram, subject.getValue());
+			}
+		});
+		bttnMoveDown.setHorizontalAlignment(JButton.LEFT);
+		panel.add(bttnMoveDown);
+		
+		//Disable if the group / element cannot be moved down
+		if (!(groupGroup.indexOf(myGroup) < (groupGroup.size() - 1))) {
+			bttnMoveDown.setEnabled(false);
 		}
 	}
 }

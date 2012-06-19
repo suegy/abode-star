@@ -271,6 +271,12 @@ public class JAbode extends JFrame {
 		documentationScroller = new JScrollPane();
 		topSideSplitpane = new javax.swing.JSplitPane();
 		
+		// Edit window
+		editPanel = new javax.swing.JPanel();
+		editButtonPanel = new javax.swing.JPanel();
+		editTitle = new javax.swing.JLabel();
+		commandsSplitPane = new javax.swing.JSplitPane(); 
+		
 		tablePanel = new javax.swing.JPanel();
 		propertiesPanelContents = new javax.swing.JPanel();
 		commandsPanel = new javax.swing.JPanel();
@@ -348,12 +354,12 @@ public class JAbode extends JFrame {
 		desktop.setDoubleBuffered(true);
 		sideSplitpane.setLeftComponent(desktop);
 
-		innerSplitpane.setDividerLocation(300);
 		innerSplitpane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-		innerSplitpane.setResizeWeight(0.5);
+		innerSplitpane.setResizeWeight(0.75);
 		innerSplitpane.setContinuousLayout(true);
 		innerSplitpane.setOneTouchExpandable(true);
-		innerSplitpane.setPreferredSize(new java.awt.Dimension(302, 126));
+		innerSplitpane.setPreferredSize(new java.awt.Dimension(302, 70));
+		propertiesPanel.setPreferredSize(new Dimension(302,70));
 		propertiesPanel.setLayout(new java.awt.BorderLayout());
 
 		propertiesTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
@@ -385,6 +391,27 @@ public class JAbode extends JFrame {
 		comButtonPanel.setLayout(new java.awt.GridLayout(0, 1));
 
 		commandsPanel.add(comButtonPanel, java.awt.BorderLayout.CENTER);
+		
+		// TODO: Test
+		editPanel.setLayout(new BorderLayout());
+		editTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
+		editTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon/refactor.gif")));
+		editTitle.setLabelFor(editPanel);
+		editTitle.setText("| Edit |");
+		editTitle.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+		editButtonPanel.setLayout(new java.awt.GridLayout(0, 1));
+		editPanel.add(editTitle, BorderLayout.NORTH);
+		editPanel.add(editButtonPanel, BorderLayout.CENTER);
+		
+		// Splitpane
+		commandsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+		commandsSplitPane.setResizeWeight(0.5);
+		commandsSplitPane.setContinuousLayout(true);
+		commandsSplitPane.setOneTouchExpandable(true);
+		commandsSplitPane.setPreferredSize(new java.awt.Dimension(302, 126));
+		
+		commandsSplitPane.setLeftComponent(commandsPanel);
+		commandsSplitPane.setRightComponent(editPanel);
 
 		documentationPanel.setLayout(new BorderLayout());
 		documentationTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
@@ -398,13 +425,12 @@ public class JAbode extends JFrame {
 		documentationPanel.add(documentationTitle, BorderLayout.NORTH);
 		documentationPanel.add(documentationScroller, BorderLayout.CENTER);
 
-		topSideSplitpane.setDividerLocation(120);
 		topSideSplitpane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-		topSideSplitpane.setResizeWeight(0.5);
+		topSideSplitpane.setResizeWeight(0.85);
 		topSideSplitpane.setContinuousLayout(true);
 		topSideSplitpane.setOneTouchExpandable(true);
-		topSideSplitpane.setPreferredSize(new java.awt.Dimension(302, 126));
-		topSideSplitpane.setLeftComponent(commandsPanel);
+		topSideSplitpane.setPreferredSize(new java.awt.Dimension(302, 200));
+		topSideSplitpane.setLeftComponent(commandsSplitPane);
 		topSideSplitpane.setRightComponent(documentationPanel);
 		
 		jLabel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -1054,12 +1080,25 @@ public class JAbode extends JFrame {
 
 	/**
 	 * Get hold of the panel that holds the various action buttons above the
-	 * properties panel.
+	 * properties panel. This holds tree manipulation actions such as
+	 * moving elements, merging groups, etc.
 	 * 
 	 * @return Panel
 	 */
 	public JPanel getCommandsPanel() {
 		return comButtonPanel;
+	}
+	
+	/**
+	 * Get hold of the panel that holds the various edit buttons above the
+	 * properties panel. This should include edit options such as:
+	 * 	delete
+	 *  undo / redo etc.
+	 * 
+	 * @return Panel
+	 */
+	public JPanel getEditPanel() {
+		return editButtonPanel;
 	}
 	
 	/**
@@ -1203,6 +1242,14 @@ public class JAbode extends JFrame {
 	private JTextArea documentationEditor;
 
 	private JScrollPane documentationScroller;
+	
+	private JPanel editButtonPanel;
+	
+	private JPanel editPanel;
+	
+	private javax.swing.JLabel editTitle;
+	
+	private javax.swing.JSplitPane commandsSplitPane; 
 	
 	private javax.swing.JMenu recentlyUsedMenu;
 

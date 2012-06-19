@@ -407,7 +407,11 @@ public class JTreeNode extends JButton {
 
 		// Trigger the selection action on our editable element
 		element.onSelect(gui, internal, diagram);
+		
+		// Command panel
 		gui.getCommandsPanel().removeAll();
+		// Edit panel
+		gui.getEditPanel().removeAll();
 
 		if (organiser != null)
 			organiser.populateOptionsPanel(gui, internal, diagram, this);
@@ -415,6 +419,10 @@ public class JTreeNode extends JButton {
 		// Revalidate / draw the updated command panel
 		gui.getCommandsPanel().revalidate();
 		gui.getCommandsPanel().repaint();
+		
+		// Edit panel
+		gui.getEditPanel().revalidate();
+		gui.getEditPanel().repaint();
 
 	}
 
