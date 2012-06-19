@@ -408,8 +408,13 @@ public class JTreeNode extends JButton {
 		element.onSelect(gui, internal, diagram);
 		gui.getCommandsPanel().removeAll();
 
-		if (organiser != null)
+		if (organiser != null){
 			organiser.populateOptionsPanel(gui, internal, diagram, this);
+			gui.getCommandsPanel().setVisible(true);
+		}
+		else{
+			gui.getCommandsPanel().setVisible(false);
+		}
 
 	}
 

@@ -1061,7 +1061,7 @@ public class JAbode extends JFrame {
 	public JPanel getCommandsPanel() {
 		return comButtonPanel;
 	}
-
+	
 	/**
 	 * Change our properties table to be another object
 	 * 
