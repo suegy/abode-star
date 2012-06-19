@@ -26,27 +26,6 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-    	
-    	// Trying out OS Look and feel
-    	// TODO: Implement this as an option?
-        try {
-            // Set cross-platform Java L&F (also called "Metal")
-	        UIManager.setLookAndFeel(
-	            UIManager.getSystemLookAndFeelClassName());
-	    } 
-	    catch (UnsupportedLookAndFeelException e) {
-	       // handle exception
-	    }
-	    catch (ClassNotFoundException e) {
-	       // handle exception
-	    }
-	    catch (InstantiationException e) {
-	       // handle exception
-	    }
-	    catch (IllegalAccessException e) {
-	       // handle exception
-	    }
-    	
         new SplashScreen();
     }
 }

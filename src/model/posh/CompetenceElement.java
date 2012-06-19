@@ -31,11 +31,18 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -208,84 +215,100 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		
 		mainGui.setDocumentationField(this);
 		
-		TableModel tableModel = new AbstractTableModel() {
-			//Added to get rid of warnings and properly implement Serializable
-			private static final long serialVersionUID = 1;
+		// Add name label
+		JLabel namelabel = new JLabel("Name");
 
-			private String[] columnNames = { "Attribute", "Value" };
+		int vTextFieldSize = 15;
+		final JTextField namefield = new JTextField(getName(), vTextFieldSize);
 
-			private Object[][] data = populateData();
-
-			public String getColumnName(int col) {
-				return columnNames[col];
-			}
-
-			public Object getValueAt(int row, int col) {
-				return data[row][col];
-			}
-
-			public int getRowCount() {
-				return data.length;
-			}
-
-			public Class getColumnClass(int c) {
-				return getValueAt(0, c).getClass();
-			}
-
-			public int getColumnCount() {
-				return columnNames.length;
-			}
-
-			public boolean isCellEditable(int row, int col) {
-				if (col == 0)
-					return false;
-
-				return true;
-			}
-
-			public void setValueAt(Object value, int row, int col) {
-				if (col != 1)
-					return;
-
-				if (row == 0)
-					setName(value.toString());
-
-				if (row == 1)
-					setAction(value.toString());
-
-				if (row == 2) {
-					int ret = 0;
-					try {
-						ret = Integer.parseInt(value.toString());
-					} catch (Exception e) {
-					}
-
-					setRetries(ret);
-					if (ret == 0)
-						value = "0 (Unlimited)";
-				}
-
-				data[row][col] = value;
-				subGui.updateDiagrams(diagram, getSelf());
+		// Action listener to update the actual data when the field is updated
+		namefield.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setName(namefield.getText());
 				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
 			}
+		});
 
-			private Object[][] populateData() {
-				Object[][] result = new Object[3][2];
-				result[0][0] = "Competence Element";
-				result[0][1] = getName();
-				result[1][0] = "Action Triggered";
-				result[1][1] = getAction();
-				result[2][0] = "Retries";
-				result[2][1] = (getRetries() > 0) ? "" + getRetries() : "0 (Unlimited)";
-				return result;
+		JPanel namePanel = new JPanel();
+		
+		namePanel.add(namelabel);
+		namePanel.add(namefield);
+		
+		// Add name label for action
+		JLabel actionlabel = new JLabel("Action");
 
+		final JTextField actionfield = new JTextField(getAction(), vTextFieldSize);
+
+		// Action listener to update the actual data when the field is updated
+		actionfield.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setAction(actionfield.getText());
+				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
 			}
-		};
+		});
+		
+		JPanel actionPanel = new JPanel();
 
-		JTable table = new JTable(tableModel);
-		// TODO:
-//		mainGui.setPropertiesPanel(table);
+		actionPanel.add(actionlabel);
+		actionPanel.add(actionfield);
+		
+		// Add name label for the number of retries of the competence element
+		JLabel retriesLabel = new JLabel("Retries");
+
+		// Setup spinner
+		int startingValue = getRetries();
+		int minimumValue = 0;
+		int maximumValue = 9999;
+		
+		// TODO: Not sure if this is correct, as some scripts have retry values
+		// of -1
+		if(startingValue < minimumValue){
+			startingValue = minimumValue;
+		}
+		else if(startingValue > maximumValue){
+			startingValue = maximumValue;
+		}
+		
+		final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(startingValue,
+				minimumValue, maximumValue, 1);
+		
+		// Action listener to update the actual data when the field is updated
+		spinnerModel.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				int value = (Integer) spinnerModel.getValue();
+				if (Integer.toString(value).length() < 1) {
+					setRetries(0);
+				} else {
+					//Set the new frequency
+					setRetries(value);
+				}
+				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
+			}
+		});
+		
+		JSpinner retriesSpinner = new JSpinner(spinnerModel);
+		
+		retriesSpinner.setToolTipText("Sets the number of times a competence element will " +
+				"be fired before giving up. Set this to 0 for unlimited retries. ");
+
+		JPanel retriesPanel = new JPanel();
+		
+		retriesPanel.add(retriesLabel);
+		retriesPanel.add(retriesSpinner);
+		
+		JPanel panel = new JPanel();
+		
+		JLabel typeLabel = new JLabel(" - Competence Element - ");
+		
+		panel.add(typeLabel);
+		panel.add(namePanel);
+		panel.add(actionPanel);
+		panel.add(retriesPanel);
+		
+		mainGui.setPropertiesPanel(panel);
 	}
 
 	public CompetenceElement getSelf() {

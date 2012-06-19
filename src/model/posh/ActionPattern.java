@@ -31,10 +31,19 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -196,133 +205,132 @@ public class ActionPattern implements IEditableElement, INamedElement {
 
 		mainGui.setDocumentationField(this);
 		
-		// Prepare our table model
-		TableModel tableModel = new AbstractTableModel() {
-			//Added to properly implement Serializable
-			private static final long serialVersionUID = 1;
+		// Add name label
+		JLabel namelabel = new JLabel("Name");
 
-			// Column titles
-			private String[] columnNames = { "Attribute", "Value" };
+		int vTextFieldSize = 15;
+		final JTextField namefield = new JTextField(getName(), vTextFieldSize);
 
-			// Our state data
-			private Object[][] data = populateData();
-
-			/**
-			 * Get the name of the column with the specified index
-			 *
-			 * @param col Column index
-			 * @return Name of the column
-			 **/
-			public String getColumnName(int col) {
-				return columnNames[col];
-			}
-
-			/**
-			 * Get a value from the array of state data
-			 * 
-			 * @param row Row to look at.
-			 * @param col Column to look at
-			 * @return Object stored in specified location
-			 **/
-			public Object getValueAt(int row, int col) {
-				return data[row][col];
-			}
-
-			/**
-			 * Get the number of rows in this table model
-			 *
-			 * @return Number of rows
-			 **/
-			public int getRowCount() {
-				return data.length;
-			}
-
-			/**
-			 * Get the type of data represented in the column with the specified index
-			 * 
-			 * @param c Index of column
-			 * @return Class of data stored in column (taken from first row)
-			 **/
-			public Class getColumnClass(int c) {
-				return getValueAt(0, c).getClass();
-			}
-
-			/**
-			 * Get the number of columns in this table model
-			 *
-			 * @return Number of columns
-			 **/
-			public int getColumnCount() {
-				return columnNames.length;
-			}
-
-			/**
-			 * Can the specified cell be edited?
-			 *
-			 * @param row Row 
-			 * @param col Column
-			 * @return True if editable, false if not
-			 **/
-			public boolean isCellEditable(int row, int col) {
-				if (col == 0)
-					return false;
-				return true;
-			}
-
-			/**
-			 * Set the value at the specified location
-			 * 
-			 * @param value Value to store
-			 * @param row Row to store in
-			 * @param col Column to store in
-			 **/
-			public void setValueAt(Object value, int row, int col) {
-				if (col != 1)
-					return;
-
-				if (row == 0)
-					setName(value.toString());
-				if (row == 1) {
-					if (value.toString().length() < 1) {
-						getTimeUnit().setUnitValue(0);
-					} else {
-						getTimeUnit().setUnitValue(Double.parseDouble(value.toString()));
-					}
-				}
-				if (row == 2)
-					getTimeUnit().setUnitName(value.toString());
-				if (row == 3) {
-					setEnabled(Boolean.valueOf(value.toString()).booleanValue());
-				}
-
-				data[row][col] = value;
-				subGui.updateDiagrams(diagram, getSelf());
+		// Action listener to update the actual data when the field is updated
+		namefield.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setName(namefield.getText());
 				subGui.repaint();
-
+				subGui.updateDiagrams(diagram, getSelf());
 			}
+		});
 
-			/**
-			 * Perform first time initialization of the data array.
-			 *
-			 * @return Current state of the object
-			 **/
-			private Object[][] populateData() {
-				Object[][] result = new Object[4][2];
-				result[0][0] = "Name";
-				result[0][1] = getName();
-				result[1][0] = "Timeout Length";
-				result[1][1] = new Double(getTimeUnit().getUnitValue());
-				result[2][0] = "Timeout Unit";
-				result[2][1] = getTimeUnit().getUnitName();
-				result[3][0] = "Enabled";
-				result[3][1] = new Boolean(isEnabled());
-				return result;
+		JPanel namePanel = new JPanel();
+		
+		namePanel.add(namelabel);
+		namePanel.add(namefield);
+
+		// Add name label for the timeout
+		JLabel timeoutLabel = new JLabel("Timeout Length");
+
+		// Setup spinner
+		double startingValue = 1;
+		
+		if(getTimeUnit() != null){
+			startingValue = getTimeUnit().getUnitValue();
+		}
+		final SpinnerNumberModel spinnerModel = new SpinnerNumberModel(startingValue,
+				0, 9999, 1);
+		
+		// Action listener to update the actual data when the field is updated
+		spinnerModel.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				double value = (Double) spinnerModel.getValue();
+				if (Double.toString(value).length() < 1) {
+					setTimeUnit(null);
+				} else {
+					String strTimeUnit;
+					// If no previous time unit set, use seconds
+					if (getTimeUnit() == null){
+						strTimeUnit = "seconds";
+					}
+					else{
+						// Get the previous unit of time
+						strTimeUnit = getTimeUnit().getUnitName();
+					}
+					//Set the new timeout
+					setTimeUnit(new TimeUnit(strTimeUnit, value));
+				}
+				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
 			}
-		};
+		});
+		
+		JSpinner timeoutSpinner = new JSpinner(spinnerModel);
 
-		JTable table = new JTable(tableModel);
-		// TODO:
-//		mainGui.setPropertiesPanel(table);
+		JPanel timeoutPanel = new JPanel();
+		
+		timeoutPanel.add(timeoutLabel);
+		timeoutPanel.add(timeoutSpinner);
+		
+		// Add name label for the frequency of a drive
+		String[] unitStrings = {"seconds","minutes","hours"};
+		
+		final JComboBox timeoutUnit = new JComboBox(unitStrings);
+		
+		String strCurrentTimeoutUnit;
+		if(getTimeUnit() != null){
+			strCurrentTimeoutUnit = getTimeUnit().getUnitName();
+		}
+		else{
+			strCurrentTimeoutUnit = "seconds";
+		}
+		
+		if(strCurrentTimeoutUnit.toLowerCase().equals("seconds")){
+			timeoutUnit.setSelectedIndex(0);
+		}
+		else if(strCurrentTimeoutUnit.toLowerCase().equals("minutes")){
+			timeoutUnit.setSelectedIndex(1);
+		}
+		else if(strCurrentTimeoutUnit.toLowerCase().equals("hours")){
+			timeoutUnit.setSelectedIndex(2);
+		}
+		
+		// Action listener to update the actual data when the field is updated
+		timeoutUnit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Get the actual value
+				double value;
+				if(getTimeUnit() == null){
+					value = 1;
+				}
+				else{
+					value = getTimeUnit().getUnitValue();
+				}
+				setTimeUnit(new TimeUnit((String)timeoutUnit.getSelectedItem(), value));
+			}
+		});
+		
+		timeoutPanel.add(timeoutUnit);
+		
+		// Checkbox for enabling and disabling the Action Pattern
+		final JCheckBox enabled = new JCheckBox("Enabled?", isEnabled());
+
+		// Action listener for enabling / disabling the Action Pattern
+		enabled.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setEnabled(enabled.isSelected());
+				subGui.repaint();
+				subGui.updateDiagrams(diagram, getSelf());
+			}
+		});
+		
+		JPanel panel = new JPanel();
+		
+		JLabel typeLabel = new JLabel(" - Action Pattern - ");
+		// Add each panel
+		// Seperate panels are used to keep labels adjacent to text fields
+		panel.add(typeLabel);
+		panel.add(namePanel);
+		panel.add(timeoutPanel);
+		panel.add(enabled);
+
+		mainGui.setPropertiesPanel(panel);
 	}
 
 	public ActionPattern getSelf() {
