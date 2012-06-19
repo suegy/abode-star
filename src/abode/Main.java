@@ -1,11 +1,5 @@
 package abode;
 
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
-
-
-
 /**
  * Main is a simple empty class used for housing the main method
  * away from anywhere unexpected that it doesnt really belong. Hopefully

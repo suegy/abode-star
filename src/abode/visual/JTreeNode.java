@@ -415,6 +415,9 @@ public class JTreeNode extends JButton {
 		else{
 			gui.getCommandsPanel().setVisible(false);
 		}
+		
+		// Revalidate / draw the updated command panel
+		gui.getCommandsPanel().revalidate();
 
 	}
 
