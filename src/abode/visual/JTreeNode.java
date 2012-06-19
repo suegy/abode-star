@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
 import abode.editing.IRenderer;
@@ -408,16 +409,12 @@ public class JTreeNode extends JButton {
 		element.onSelect(gui, internal, diagram);
 		gui.getCommandsPanel().removeAll();
 
-		if (organiser != null){
+		if (organiser != null)
 			organiser.populateOptionsPanel(gui, internal, diagram, this);
-			gui.getCommandsPanel().setVisible(true);
-		}
-		else{
-			gui.getCommandsPanel().setVisible(false);
-		}
 		
 		// Revalidate / draw the updated command panel
 		gui.getCommandsPanel().revalidate();
+		gui.getCommandsPanel().repaint();
 
 	}
 
