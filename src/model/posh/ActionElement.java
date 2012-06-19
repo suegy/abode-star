@@ -452,10 +452,8 @@ public class ActionElement implements IEditableElement {
 		Iterator apIterator = triggerList.iterator();
 		while (apIterator.hasNext()) {
 			ActionElement ae = (ActionElement) apIterator.next();
-			//TODO: Support lessthan/greaterthan equal, not equal as well
-			//      Convert from textual display to symbolic
-			prev = new JTreeNode(ae.getElementName(), (ae.getIsSense() ? "Sense" : "Action/Event") + (ae.getPredicate() == null ? " " : ":- If " + ae.getPredicate().replaceAll("<", "less than ").replaceAll(">", "greater than ").replaceAll("=", "equal-to ") + " ")
-					+ (ae.getValue() == null ? "" : ae.getValue()), colorToDraw, ae, prev);
+			prev = new JTreeNode(ae.getElementName(), "Sense" +  (ae.getPredicate() == null ? " " : " (If " + ae.getPredicate() + " ")
+					+ (ae.getValue() == null ? "" : ae.getValue() + ")"), colorToDraw, ae, prev);
 			prev.setOrganiser(new HorizontalListOrganiser());
 			prev.setGroup(triggerList);
 		}
@@ -478,7 +476,9 @@ public class ActionElement implements IEditableElement {
 		} else {
 			colorToDraw = Color.LIGHT_GRAY;
 		}
-		return new JTreeNode(getElementName(), (getIsSense() ? "Sense" : "Action/Event") + (getPredicate() == null ? " " : ":- If " + getPredicate().replaceAll("<", "less than ").replaceAll(">", "greater than ").replaceAll("=", "equal-to ") + " ") + (getValue() == null ? "" : getValue()),
+		return new JTreeNode(getElementName(), (getIsSense() ? "Sense" : "Action/Event") + 
+				(getPredicate() == null ? " " : " (If " + getPredicate() + " ") 
+				+ (getValue() == null ? "" : getValue()),
 				colorToDraw, this, root);
 	}
 }
