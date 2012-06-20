@@ -541,13 +541,13 @@ public class DriveElement implements IEditableElement {
 		}
 		JTreeNode actionNode = new JTreeNode(getAction(), "Action to Trigger", colorToDraw, this, chainStart);
 
-		// An expanded tree will show our invoked element fully
-		if (expanded)
-			lap.scanActionTree(actionNode, getAction(), detailed, expanded);
-
 		// A detailed tree will show the trigger information for this
 		if (detailed)
 			ActionElement.actionListToTree("Trigger Elements", "", getTrigger(), chainStart, this, this.isEnabled());
+		
+		// An expanded tree will show our invoked element fully
+		if (expanded)
+			lap.scanActionTree(actionNode, getAction(), detailed, expanded);
 
 		chainStart.setOrganiser(new VerticalListOrganiser());
 		return chainStart;

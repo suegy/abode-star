@@ -123,8 +123,8 @@ public class JEditorWindow extends javax.swing.JInternalFrame {
 			sourceArea.setText((new DotLapReader()).getFileContents(fileName));
 		} else {
 			lapCurrent = new LearnableActionPattern();
-			lapCurrent.getElements().add(new DriveCollection("New Drive Collection", false, new ArrayList(), new ArrayList()));
-			sourceArea.setText("You must create elements in order to see resulting code.");
+			lapCurrent.getElements().add(new DriveCollection("NewDriveCollection", false, new ArrayList(), new ArrayList()));
+			sourceArea.setText("You must save your current working file to see the generated source code.");
 			pattern=lapCurrent;
 		}
 		
@@ -162,6 +162,9 @@ public class JEditorWindow extends javax.swing.JInternalFrame {
 		ILapWriter writer = new DotLapWriter();
 		//ILapWriter writer = new CommentedLAPWriter();
 		writer.save(strFileName, getLearnableActionPattern());
+		
+		// Once saved the file, load it in the source code view
+		sourceArea.setText((new DotLapReader()).getFileContents(strFileName));
 	}
 
 	/**
