@@ -335,7 +335,9 @@ public class LearnableActionPattern implements IEditableElement {
 	 * Populate the property grid
 	 */
 	public void onSelect(JAbode mainGui, JEditorWindow subGui, JDiagram diagram) {
-
+		// Depopulate the property grid, so that the previous
+		// menu options are no longer present
+		mainGui.clearProperties();
 	}
 
 	// Used for creating new names

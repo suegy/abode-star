@@ -54,20 +54,15 @@ public class ListOrganiser implements IListOrganiser {
 	 * @param subject
 	 *            The tree-node that was clicked to produce this action
 	 */
-	public void populateOptionsPanel(final JAbode mainGui, final JEditorWindow internal, final JDiagram diagram, final JTreeNode subject) {
-		// Store some references to make things easier to read
-		final JPanel panel = mainGui.getCommandsPanel();
-		
-		addDeleteButton(panel, internal, subject, diagram);
-		
-		
+	public void populateOptionsPanel(final JAbode mainGui, final JEditorWindow internal, final JDiagram diagram, final JTreeNode subject) {		
+		addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 	}
 	
 	public void addDeleteButton(final JPanel panel, final JEditorWindow internal, final JTreeNode subject,final JDiagram diagram)
 	{
 		final ArrayList myGroup = subject.getGroup();
 		
-		JButton bttnDelete = new JButton("Delete Element", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
+		JButton bttnDelete = new JButton("Delete element", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
 		bttnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
@@ -85,7 +80,7 @@ public class ListOrganiser implements IListOrganiser {
 		final ArrayList groupGroup = subject.getParentNode().getGroup();
 		final ArrayList myGroup = subject.getGroup();
 		
-		JButton bttnDelete = new JButton("Delete Group", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
+		JButton bttnDelete = new JButton("Delete group", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
 		bttnDelete.setHorizontalAlignment(JButton.LEFT);
 		bttnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {

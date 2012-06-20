@@ -65,35 +65,41 @@ public class HorizontalListOrganiser extends ListOrganiser {
 		final ArrayList myGroup = subject.getGroup();
 		final IEditableElement element = subject.getValue();
 
+		JButton bttnMoveLeft = new JButton("Move left", new ImageIcon(getClass().getResource("/image/icon/arrowLeft.gif")));
+		bttnMoveLeft.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				int index = myGroup.indexOf(element);
+				myGroup.add(index - 1, myGroup.remove(index));
+				internal.updateDiagrams(diagram, element);
+			}
+		});
+		bttnMoveLeft.setHorizontalAlignment(JButton.LEFT);
+		panel.add(bttnMoveLeft);
+			
 		// Can this element be moved left?
-		if (myGroup.indexOf(element) > 0) {
-			JButton bttnMoveUp = new JButton("Move To Left", new ImageIcon(getClass().getResource("/image/icon/arrowLeft.gif")));
-			bttnMoveUp.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					int index = myGroup.indexOf(element);
-					myGroup.add(index - 1, myGroup.remove(index));
-					internal.updateDiagrams(diagram, element);
-				}
-			});
-			bttnMoveUp.setHorizontalAlignment(JButton.LEFT);
-			panel.add(bttnMoveUp);
+		
+		if (!(myGroup.indexOf(element) > 0)) {
+				bttnMoveLeft.setEnabled(false);
 		}
 
-		addDeleteButton(panel, internal, subject, diagram);
+		addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 
+		JButton bttnMoveRight = new JButton("Move right", new ImageIcon(getClass().getResource("/image/icon/arrowRight.gif")));
+		bttnMoveRight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				int index = myGroup.indexOf(subject.getValue());
+				myGroup.add(index, myGroup.remove(index + 1));
+
+				internal.updateDiagrams(diagram, subject.getValue());
+			}
+		});
+		bttnMoveRight.setHorizontalAlignment(JButton.LEFT);
+		panel.add(bttnMoveRight);
+		
 		// Can this element be moved right?
-		if (myGroup.indexOf(subject.getValue()) < (myGroup.size() - 1)) {
-			JButton bttnMoveDown = new JButton("Move To Right.", new ImageIcon(getClass().getResource("/image/icon/arrowRight.gif")));
-			bttnMoveDown.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					int index = myGroup.indexOf(subject.getValue());
-					myGroup.add(index, myGroup.remove(index + 1));
-
-					internal.updateDiagrams(diagram, subject.getValue());
-				}
-			});
-			bttnMoveDown.setHorizontalAlignment(JButton.LEFT);
-			panel.add(bttnMoveDown);
+		// If it can't, then disable the button
+		if (!(myGroup.indexOf(subject.getValue()) < (myGroup.size() - 1))) {
+			bttnMoveRight.setEnabled(false);
 		}
 	}
 }
