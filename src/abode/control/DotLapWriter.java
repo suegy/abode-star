@@ -90,24 +90,30 @@ public class DotLapWriter implements ILapWriter {
 		while (iterator.hasNext()) {
 			IEditableElement element = (IEditableElement) iterator.next();
 
-			if (element instanceof ActionPattern)
+			if (element instanceof ActionPattern){
+				result += generateCommentsFromElement(element, 0, true);
 				result += "" + generateLispFromActionPattern((ActionPattern) element) + "\n";
+			}
 		}
 
 		iterator = data.getElements().iterator();
 		while (iterator.hasNext()) {
 			IEditableElement element = (IEditableElement) iterator.next();
 
-			if (element instanceof Competence)
+			if (element instanceof Competence){
+				result += generateCommentsFromElement(element, 0, true);
 				result += generateLispFromCompetence((Competence) element) + "\n";
+			}
 		}
 
 		iterator = data.getElements().iterator();
 		while (iterator.hasNext()) {
 			IEditableElement element = (IEditableElement) iterator.next();
 
-			if (element instanceof DriveCollection)
+			if (element instanceof DriveCollection){
+				result += generateCommentsFromElement(element, 0, true);
 				result += generateLispFromDriveCollection((DriveCollection) element) + "\n";
+			}
 		}
 		// Add the final closing bracket
 		result = result + ")";
@@ -151,7 +157,11 @@ public class DotLapWriter implements ILapWriter {
 	 * @return Lisp representation of element
 	 */
 	private String generateLispFromDriveElement(DriveElement driveElement) {
-		String result = "(" + driveElement.getName() + " " + generateLispFromTrigger(driveElement.getTrigger()) + " " + driveElement.getAction();
+		String result = "\n";
+		// If there are comments, then add them!
+		result += generateCommentsFromElement(driveElement, 2, false) + "\n";
+		
+		result += "\t\t(" + driveElement.getName() + " " + generateLispFromTrigger(driveElement.getTrigger()) + " " + driveElement.getAction();
 		if (driveElement.getFrequency() != null)
 			result += generateLispFromTimeUnit(driveElement.getFrequency());
 		result += ")";
@@ -330,5 +340,48 @@ public class DotLapWriter implements ILapWriter {
 	 */
 	private String generateLispFromTimeUnit(TimeUnit timeUnit) {
 		return "(" + timeUnit.getUnitName() + " " + timeUnit.getUnitValue() + ")";
+	}
+	
+	/**
+	 * Returns a comment string for a given element.
+	 * 
+	 * @param element
+	 * 			An IEditableElement
+	 * 		  tabCount
+	 * 			the number of tabs the comment should be idented by
+	 * 	      newLine
+	 * 		    whether the comment should be suffixed by a new line
+	 * @return String for the comment including starting character ";".
+	 */
+	private String generateCommentsFromElement(IEditableElement element, int tabCount, boolean newLine){
+		String strDocumentation = element.getElementDocumentation();
+		String result = "";
+		
+		// Do we have a valid string?
+		if(strDocumentation != null &&
+				strDocumentation.length() > 1){
+			
+			// Determine what new lines should be replaced with
+			String newLineReplaceString = "\n";
+			for(int i = 0; i < tabCount; i++){
+				newLineReplaceString += "\t";
+			}
+			newLineReplaceString += "; ";
+			
+			// Start by tabbing
+			for(int i = 0; i < tabCount; i++){
+				result += "\t";
+			}
+			
+			// Get the final result
+			if(newLine){
+				result += "; " + strDocumentation.replaceAll("\n", newLineReplaceString) + "\n";
+			}
+			else{
+				result += "; " + strDocumentation.replaceAll("\n", newLineReplaceString);
+			}
+		}
+		
+		return result;
 	}
 }

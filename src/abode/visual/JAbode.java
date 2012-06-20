@@ -32,6 +32,7 @@ package abode.visual;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -65,6 +66,10 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import model.IEditableElement;
+import model.posh.ActionPattern;
+import model.posh.Competence;
+import model.posh.DriveCollection;
+import model.posh.DriveElement;
 
 import abode.Configuration;
 import abode.control.DotLapReader;
@@ -1124,6 +1129,21 @@ public class JAbode extends JFrame {
 		}
 		documentationEditor.setText(newElement.getElementDocumentation());
 		currentEditingElement = newElement;
+		
+		// TODO: Change this as more types of elements are supported
+		if(!(newElement instanceof ActionPattern ||
+				newElement instanceof Competence ||
+				newElement instanceof DriveCollection
+				|| newElement instanceof DriveElement)){
+			documentationEditor.setEditable(false);
+			documentationEditor.setEnabled(false);
+			documentationEditor.setBackground(Color.LIGHT_GRAY);
+		}
+		else{
+			documentationEditor.setEditable(true);
+			documentationEditor.setEnabled(true);
+			documentationEditor.setBackground(Color.WHITE);
+		}
 	}
 	
 	/**
