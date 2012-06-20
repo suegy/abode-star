@@ -544,11 +544,11 @@ public class DriveElement implements IEditableElement {
 		} else {
 			colorToDraw = Color.LIGHT_GRAY;
 		}
-		JTreeNode actionNode = new JTreeNode(getAction(), "Action to Trigger", colorToDraw, this, chainStart);
-
 		// A detailed tree will show the trigger information for this
 		if (detailed)
 			ActionElement.actionListToTree("Trigger Elements", "", getTrigger(), chainStart, this, this.isEnabled());
+		
+		JTreeNode actionNode = new JTreeNode(getAction(), "Action to Trigger", colorToDraw, this, chainStart);
 		
 		// An expanded tree will show our invoked element fully
 		if (expanded)

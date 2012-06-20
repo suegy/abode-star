@@ -449,8 +449,8 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 			} else {
 				colorToDraw = Color.LIGHT_GRAY;
 			}
-			action = new JTreeNode(getAction(), "Action to Trigger", colorToDraw, this, result);
 			ActionElement.actionListToTree("Trigger Elements", "", getTrigger(), result, this, this.isEnabled());
+			action = new JTreeNode(getAction(), "Action to Trigger", colorToDraw, this, result);
 		}
 		if (expanded) {
 			// If we're expanded and we'return also detailed, then chain the action tree from the "Action to trigger node"
