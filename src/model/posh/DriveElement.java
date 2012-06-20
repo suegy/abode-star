@@ -290,9 +290,14 @@ public class DriveElement implements IEditableElement {
 
 		// Add name label for the frequency of a drive
 		JLabel frequencyValueLabel = new JLabel("Frequency");
+		
+		// Add name label for the frequency of a drive
+		String[] unitStrings = {"seconds","minutes","hours","None"};
+		
+		final JComboBox frequencyUnit = new JComboBox(unitStrings);
 
 		// Setup spinner
-		double startingValue = 1;
+		double startingValue = 0;
 		
 		if(getFrequency() != null){
 			startingValue = getFrequency().getUnitValue();
@@ -304,8 +309,10 @@ public class DriveElement implements IEditableElement {
 		spinnerModel.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				double value = (Double) spinnerModel.getValue();
-				if (Double.toString(value).length() < 1) {
+				if (Double.toString(value).length() < 1 ||
+						value == 0) {
 					setFrequency(null);
+					frequencyUnit.setSelectedIndex(3);
 				} else {
 					String strTimeUnit;
 					// If no previous time unit set, use seconds
@@ -331,17 +338,13 @@ public class DriveElement implements IEditableElement {
 		frequencyValuePanel.add(frequencyValueLabel);
 		frequencyValuePanel.add(frequencyValueSpinner);
 		
-		// Add name label for the frequency of a drive
-		String[] unitStrings = {"seconds","minutes","hours"};
-		
-		final JComboBox frequencyUnit = new JComboBox(unitStrings);
-		
+		// Setup frequency unit selector
 		String strCurrentFrequencyUnit;
 		if(getFrequency() != null){
 			strCurrentFrequencyUnit = getFrequency().getUnitName();
 		}
 		else{
-			strCurrentFrequencyUnit = "seconds";
+			strCurrentFrequencyUnit = "None";
 		}
 		
 		if(strCurrentFrequencyUnit.toLowerCase().equals("seconds")){
@@ -353,19 +356,21 @@ public class DriveElement implements IEditableElement {
 		else if(strCurrentFrequencyUnit.toLowerCase().equals("hours")){
 			frequencyUnit.setSelectedIndex(2);
 		}
+		else{
+			frequencyUnit.setSelectedIndex(3);
+		}
 		
 		// Action listener to update the actual data when the field is updated
 		frequencyUnit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Get the actual value
-				double value;
-				if(getFrequency() == null){
-					value = 1;
+				if(frequencyUnit.getSelectedIndex() == 3 || getFrequency() == null){
+					setFrequency(null);
 				}
 				else{
-					value = getFrequency().getUnitValue();
+					// Get the actual value
+					double value = getFrequency().getUnitValue();
+					setFrequency(new TimeUnit((String)frequencyUnit.getSelectedItem(), value));
 				}
-				setFrequency(new TimeUnit((String)frequencyUnit.getSelectedItem(), value));
 			}
 		});
 		
@@ -423,7 +428,7 @@ public class DriveElement implements IEditableElement {
 			public void actionPerformed(ActionEvent ae) {
 				String name = JOptionPane.showInputDialog(window, "Please enter a name for this new action pattern.", "");
 				if ((name != null) && (name.length() > 0)) {
-					ActionPattern ap = new ActionPattern(name, new TimeUnit("Minutes", 1), new ArrayList());
+					ActionPattern ap = new ActionPattern(name, new TimeUnit("minutes", 1), new ArrayList());
 					elements.add(ap);
 					setAction(ap.getName());
 					window.updateDiagrams(diagram, showOn.getValue());
@@ -437,7 +442,7 @@ public class DriveElement implements IEditableElement {
 			public void actionPerformed(ActionEvent ae) {
 				String name = JOptionPane.showInputDialog(window, "Please enter a name for this new competence", "");
 				if ((name != null) && (name.length() > 0)) {
-					Competence c = new Competence(name, new TimeUnit("Minutes", 1), new ArrayList(), new ArrayList());
+					Competence c = new Competence(name, new TimeUnit("minutes", 1), new ArrayList(), new ArrayList());
 					elements.add(c);
 					setAction(c.getName());
 					window.updateDiagrams(diagram, showOn.getValue());

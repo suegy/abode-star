@@ -350,7 +350,7 @@ public class DriveCollection implements IEditableElement {
 			}
 		});
 
-		JMenuItem addGoal = new JMenuItem("Add Goal Element");
+		JMenuItem addGoal = new JMenuItem("Add Goal Sense");
 		addGoal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				ActionElement actionElement = new ActionElement(true,

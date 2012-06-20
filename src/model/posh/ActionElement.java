@@ -257,6 +257,12 @@ public class ActionElement implements IEditableElement {
 		JPanel valuePanel = null;
 		
 		if(getIsSense()){
+			
+			// Add name label for the frequency of a drive
+			String[] unitStrings = {"=","!=",">",">=","<","<=","=="};
+			
+			final JComboBox predicateSelector = new JComboBox(unitStrings);
+			
 			// Value
 			// Add name label for the frequency of a drive
 			JLabel valueLabel = new JLabel("Value");
@@ -279,6 +285,7 @@ public class ActionElement implements IEditableElement {
 						setPredicate(null);
 					} else {
 						setValue(Double.toString(value));
+						setPredicate((String)predicateSelector.getSelectedItem());
 					}
 					subGui.repaint();
 					subGui.updateDiagrams(diagram, getSelf());
@@ -286,11 +293,6 @@ public class ActionElement implements IEditableElement {
 			});
 			
 			JSpinner valueSpinner = new JSpinner(spinnerModel);
-			
-			// Add name label for the frequency of a drive
-			String[] unitStrings = {"=","!=",">",">=","<","<=","=="};
-			
-			final JComboBox predicateSelector = new JComboBox(unitStrings);
 			
 			String strCurrentPredicate;
 			if(getPredicate() != null){
@@ -327,6 +329,8 @@ public class ActionElement implements IEditableElement {
 				public void actionPerformed(ActionEvent e) {
 					// Get the actual value
 					setPredicate((String)predicateSelector.getSelectedItem());
+					subGui.repaint();
+					subGui.updateDiagrams(diagram, getSelf());
 				}
 			});
 			

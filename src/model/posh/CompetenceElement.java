@@ -338,7 +338,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 			public void actionPerformed(ActionEvent ae) {
 				String name = JOptionPane.showInputDialog(window, "Please enter a name for this new action pattern.", "");
 				if ((name != null) && (name.length() > 0)) {
-					ActionPattern ap = new ActionPattern(name, new TimeUnit("Minutes", 1), new ArrayList());
+					ActionPattern ap = new ActionPattern(name, new TimeUnit("minutes", 1), new ArrayList());
 					elements.add(ap);
 					setAction(ap.getName());
 					window.updateDiagrams(diagram, showOn.getValue());
@@ -352,7 +352,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 			public void actionPerformed(ActionEvent ae) {
 				String name = JOptionPane.showInputDialog(window, "Please enter a name for this new competence", "");
 				if ((name != null) && (name.length() > 0)) {
-					Competence c = new Competence(name, new TimeUnit("Minutes", 1), new ArrayList(), new ArrayList());
+					Competence c = new Competence(name, new TimeUnit("minutes", 1), new ArrayList(), new ArrayList());
 					elements.add(c);
 					setAction(c.getName());
 					window.updateDiagrams(diagram, showOn.getValue());
