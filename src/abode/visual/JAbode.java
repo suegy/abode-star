@@ -41,6 +41,8 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +64,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JViewport;
+import javax.swing.KeyStroke;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -426,6 +429,20 @@ public class JAbode extends JFrame {
 		documentationTitle.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 		documentationEditor.setLineWrap(true);
 		documentationEditor.setWrapStyleWord(true);
+	
+		// Add key listener which will update the elements comments field
+		// when this is updated
+		documentationEditor.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
+				if (currentEditingElement != null) {
+					currentEditingElement.setDocumentation(documentationEditor.getText());
+				}
+			}
+			public void keyReleased(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {}
+		});
+		
+		
 		documentationScroller = new JScrollPane(documentationEditor);
 		documentationPanel.add(documentationTitle, BorderLayout.NORTH);
 		documentationPanel.add(documentationScroller, BorderLayout.CENTER);
@@ -594,6 +611,10 @@ public class JAbode extends JFrame {
 				saveMenuItemActionPerformed(evt);
 			}
 		});
+		
+		// Keyboard shortcuts
+		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
 		fileMenu.add(saveMenuItem);
 
@@ -1133,8 +1154,7 @@ public class JAbode extends JFrame {
 		// TODO: Change this as more types of elements are supported
 		if(!(newElement instanceof ActionPattern ||
 				newElement instanceof Competence ||
-				newElement instanceof DriveCollection
-				|| newElement instanceof DriveElement)){
+				newElement instanceof DriveCollection)){
 			documentationEditor.setEditable(false);
 			documentationEditor.setEnabled(false);
 			documentationEditor.setBackground(Color.LIGHT_GRAY);
