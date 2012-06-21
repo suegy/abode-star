@@ -326,8 +326,8 @@ public class JAbode extends JFrame {
 		jSeparator1 = new javax.swing.JSeparator();
 		jMenuItem6 = new javax.swing.JMenuItem();
 		viewMenu = new javax.swing.JMenu();
-		jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
-		jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
+		consoleMenuItem = new javax.swing.JCheckBoxMenuItem();
+		propertiesMenuItem = new javax.swing.JCheckBoxMenuItem();
 		jMenuItem4 = new javax.swing.JMenuItem();
 		toolMenu = new javax.swing.JMenu();
 		jMenuItem1 = new javax.swing.JMenuItem();
@@ -658,23 +658,23 @@ public class JAbode extends JFrame {
 		viewMenu.setMnemonic('v');
 		viewMenu.setText("View");
 		viewMenu.setName("viewMenu");
-		jCheckBoxMenuItem1.setText("Output");
-		jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+		consoleMenuItem.setText("Output");
+		consoleMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jCheckBoxMenuItem1ActionPerformed(evt);
 			}
 		});
 
-		viewMenu.add(jCheckBoxMenuItem1);
+		viewMenu.add(consoleMenuItem);
 
-		jCheckBoxMenuItem2.setText("Commands/Properties");
-		jCheckBoxMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+		propertiesMenuItem.setText("Commands/Properties");
+		propertiesMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jCheckBoxMenuItem2ActionPerformed(evt);
 			}
 		});
 
-		viewMenu.add(jCheckBoxMenuItem2);
+		viewMenu.add(propertiesMenuItem);
 
 		jMenuItem4.setText("Hide Validation");
 		jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -777,7 +777,7 @@ public class JAbode extends JFrame {
 	}// GEN-LAST:event_jMenuItem6ActionPerformed
 
 	private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
-		if (jCheckBoxMenuItem2.isSelected()) {
+		if (propertiesMenuItem.isSelected()) {
 			popOutProperties();
 		} else {
 			hideProperties();
@@ -785,7 +785,7 @@ public class JAbode extends JFrame {
 	}// GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
 	private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
-		if (jCheckBoxMenuItem1.isSelected()) {
+		if (consoleMenuItem.isSelected()) {
 			popOutConsole();
 		} else {
 			hideConsole();
@@ -1038,6 +1038,7 @@ public class JAbode extends JFrame {
 			sideSplitpane.setDividerLocation(PopoutHorizontal);
 			innerSplitpane.setDividerLocation(VerticalSplit);
 		}
+		propertiesMenuItem.setSelected(true);
 	}
 
 	/**
@@ -1053,6 +1054,7 @@ public class JAbode extends JFrame {
 			VerticalHidden = false;
 			mainSplitpane.setDividerLocation(PopoutVertical);
 		}
+		consoleMenuItem.setSelected(true);
 	}
 
 	/**
@@ -1060,7 +1062,7 @@ public class JAbode extends JFrame {
 	 */
 	public void hideConsole() {
 		if (!VerticalHidden) {
-			jCheckBoxMenuItem1.setSelected(false);
+			consoleMenuItem.setSelected(false);
 			PopoutVertical = mainSplitpane.getDividerLocation();
 			mainSplitpane.setDividerLocation(2000);
 			VerticalHidden = true;
@@ -1072,7 +1074,7 @@ public class JAbode extends JFrame {
 	 */
 	public void hideProperties() {
 		if (!HorizontalHidden) {
-			jCheckBoxMenuItem2.setSelected(false);
+			propertiesMenuItem.setSelected(false);
 			PopoutHorizontal = sideSplitpane.getDividerLocation();
 			VerticalSplit = innerSplitpane.getDividerLocation();
 			sideSplitpane.setDividerLocation(2000);
@@ -1234,9 +1236,9 @@ public class JAbode extends JFrame {
 
 	private javax.swing.JButton jButton1;
 
-	private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
+	private javax.swing.JCheckBoxMenuItem consoleMenuItem;
 
-	private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
+	private javax.swing.JCheckBoxMenuItem propertiesMenuItem;
 
 	private javax.swing.JComboBox jComboBox1;
 
