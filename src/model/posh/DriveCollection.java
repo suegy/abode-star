@@ -280,7 +280,9 @@ public class DriveCollection implements IEditableElement {
 		panel.add(typeLabel);
 		panel.add(namePanel);
 		panel.add(realtimePanel);
-		panel.add(enabled);
+		
+		/* TODO: This has been disabled because this functionality doesn't actually work */
+//		panel.add(enabled);
 
 		// Add this panel to the main GUI
 		mainGui.setPropertiesPanel(panel);

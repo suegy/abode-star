@@ -358,7 +358,9 @@ public class Competence implements IEditableElement, INamedElement {
 		panel.add(typeLabel);
 		panel.add(namePanel);
 		panel.add(timeoutPanel);
-		panel.add(enabled);
+		
+		/* TODO: This has been disabled because this functionality doesn't actually work */
+//		panel.add(enabled);
 		
 		mainGui.setPropertiesPanel(panel);
 	}
