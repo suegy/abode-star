@@ -21,7 +21,7 @@ public class JAbout extends javax.swing.JFrame {
 	/** Creates new form JAbout */
 	public JAbout() {
 		initComponents();
-		setSize(390, 250);
+		setSize(390, 350);
 		Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(SCREEN_SIZE.width / 2 - getWidth() / 2, SCREEN_SIZE.height / 2 - getHeight() / 2);
 	}
@@ -59,7 +59,15 @@ public class JAbout extends javax.swing.JFrame {
 		jTextArea2.setBackground(new java.awt.Color(204, 204, 204));
 		jTextArea2.setLineWrap(true);
 		jTextArea2
-				.setText("Behavior Oriented Design (BOD) is a methodology for developing control of complex intelligent agents, such as virtual reality characters, humanoid robots or intelligent environments.  It combines the advantages of Behavior-Based AI and Object Oriented Design. ABODE is a Java based integrated development environment for designing and building such plans.\n");
+				.setText("Behavior Oriented Design (BOD) is a methodology" +
+						" for developing control of complex intelligent agents," +
+						" such as virtual reality characters, humanoid robots or intelligent" +
+						" environments.  It combines the advantages of Behavior-Based AI" +
+						" and Object Oriented Design. ABODE is a Java based integrated " +
+						"development environment for designing and building such plans.\n" +
+						"\n" +
+						"More information about Behavior Oriented Design can be found online at: " +
+						"http://www.cs.bath.ac.uk/~jjb/web/bod.html");
 		jTextArea2.setWrapStyleWord(true);
 		jTextArea2.setEditable(false);
 		getContentPane().add(jTextArea2);
