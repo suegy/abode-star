@@ -611,10 +611,6 @@ public class JAbode extends JFrame {
 				saveMenuItemActionPerformed(evt);
 			}
 		});
-		
-		// Keyboard shortcuts
-		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(
-		        KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
 		fileMenu.add(saveMenuItem);
 
@@ -730,6 +726,17 @@ public class JAbode extends JFrame {
 		helpMenu.add(jMenuItem3);
 
 		menubar.add(helpMenu);
+		
+		// Keyboard shortcuts
+		// Try and keep these all in one place for convenience
+		fileMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+		openMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+		saveAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
 		setJMenuBar(menubar);
 		pack();

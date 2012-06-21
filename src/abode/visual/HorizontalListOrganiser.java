@@ -28,6 +28,7 @@ package abode.visual;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -74,6 +75,12 @@ public class HorizontalListOrganiser extends ListOrganiser {
 			}
 		});
 		bttnMoveLeft.setHorizontalAlignment(JButton.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnMoveLeft.setToolTipText("Moves an element left in hierarchy" +
+				" (Alt + Left)");
+		bttnMoveLeft.setMnemonic(KeyEvent.VK_LEFT);
+		
 		panel.add(bttnMoveLeft);
 			
 		// Can this element be moved left?
@@ -94,6 +101,12 @@ public class HorizontalListOrganiser extends ListOrganiser {
 			}
 		});
 		bttnMoveRight.setHorizontalAlignment(JButton.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnMoveRight.setToolTipText("Moves an element right in hierarchy" +
+				" (Alt + Right)");
+		bttnMoveRight.setMnemonic(KeyEvent.VK_RIGHT);
+		
 		panel.add(bttnMoveRight);
 		
 		// Can this element be moved right?
