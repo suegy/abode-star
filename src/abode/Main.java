@@ -1,5 +1,9 @@
 package abode;
 
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
+
 /**
  * Main is a simple empty class used for housing the main method
  * away from anywhere unexpected that it doesnt really belong. Hopefully
@@ -20,6 +24,24 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+    	
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (UnsupportedLookAndFeelException e) {
+		    // handle exception
+		} catch (ClassNotFoundException e) {
+		    // handle exception
+		} catch (InstantiationException e) {
+		    // handle exception
+		} catch (IllegalAccessException e) {
+		    // handle exception
+		}
+    	
         new SplashScreen();
     }
 }

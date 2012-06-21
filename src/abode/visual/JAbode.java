@@ -35,6 +35,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -49,8 +50,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultDesktopManager;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
@@ -249,6 +252,13 @@ public class JAbode extends JFrame {
 		manager = new MDIDesktopManager(this, desktop);
 		desktop.setDesktopManager(manager);
 		desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+		
+		// Set the logo
+		try {
+			setIconImage(ImageIO.read((getClass().getResource("/image/icon/logo.png"))));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		// Show us to the world
 		setVisible(true);
