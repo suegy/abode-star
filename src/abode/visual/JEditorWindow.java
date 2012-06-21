@@ -340,9 +340,6 @@ public class JEditorWindow extends javax.swing.JInternalFrame {
 		bttnListPrims = new javax.swing.JButton();
 		bttnExport = new javax.swing.JButton();
 		bttnPrint = new javax.swing.JButton();
-		jComboBox1 = new javax.swing.JComboBox();
-
-		jCheckBox1.setText("jCheckBox1");
 		jMenu1.setText("Menu");
 		jMenuBar1.add(jMenu1);
 
@@ -616,8 +613,6 @@ public class JEditorWindow extends javax.swing.JInternalFrame {
 		});
 
 		jToolBar1.add(bttnPrint);
-
-		jToolBar1.add(jComboBox1);
 
 		buttonPanel.add(jToolBar1);
 
@@ -998,8 +993,6 @@ public class JEditorWindow extends javax.swing.JInternalFrame {
 	private javax.swing.JTabbedPane internalTabs;
 
 	private javax.swing.JCheckBox jCheckBox1;
-
-	private javax.swing.JComboBox jComboBox1;
 
 	private javax.swing.JLabel jLabel1;
 

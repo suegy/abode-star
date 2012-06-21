@@ -337,7 +337,7 @@ public class JAbode extends JFrame {
 		jMenuItem3 = new javax.swing.JMenuItem();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		setTitle("A.B.O.D.E");
+		setTitle("ABODE - Advanced Behaviour Oriented Design Environment");
 		setName("appFrame");
 		statusPanel.setLayout(new java.awt.GridLayout(1, 0));
 
