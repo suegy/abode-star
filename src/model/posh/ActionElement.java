@@ -282,8 +282,8 @@ public class ActionElement implements IEditableElement {
 		namefield.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), 
-						new ActionElementEdit(getSelf(), getSelf().bIsSense, namefield.getText(), getSelf().strValue, getSelf().strComparator, getSelf().enabled, getSelf().documentation)));
-				setElementName(namefield.getText());
+						new ActionElementEdit(getSelf(), getSelf().bIsSense, namefield.getSelectedItem().toString(), getSelf().strValue, getSelf().strComparator, getSelf().enabled, getSelf().documentation)));
+				setElementName(namefield.getSelectedItem().toString());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
 			}
