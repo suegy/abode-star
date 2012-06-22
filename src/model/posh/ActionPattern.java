@@ -387,7 +387,8 @@ public class ActionPattern implements IEditableElement, INamedElement {
 			}
 		});
 
-		menu.add(disableThis);
+		/* TODO: This has been disabled because this functionality doesn't actually work */
+//		menu.add(disableThis);
 		menu.addSeparator();
 		menu.add(addElement);
 		menu.add(deleteElement);

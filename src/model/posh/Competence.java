@@ -448,7 +448,8 @@ public class Competence implements IEditableElement, INamedElement {
 			}
 		});
 
-		menu.add(disableThis);
+		/* TODO: This has been disabled because this functionality doesn't actually work */
+//		menu.add(disableThis);
 		menu.addSeparator();
 		menu.add(addNew);
 		menu.add(addGoal);

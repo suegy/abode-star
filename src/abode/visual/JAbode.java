@@ -395,7 +395,7 @@ public class JAbode extends JFrame {
 
 		propertiesPanel.add(tablePanel, java.awt.BorderLayout.CENTER);
 
-		innerSplitpane.setRightComponent(propertiesPanel);
+		innerSplitpane.setRightComponent(documentationPanel);
 
 		commandsPanel.setLayout(new java.awt.BorderLayout());
 
@@ -463,7 +463,7 @@ public class JAbode extends JFrame {
 		topSideSplitpane.setOneTouchExpandable(true);
 		topSideSplitpane.setPreferredSize(new java.awt.Dimension(302, 200));
 		topSideSplitpane.setLeftComponent(commandsSplitPane);
-		topSideSplitpane.setRightComponent(documentationPanel);
+		topSideSplitpane.setRightComponent(propertiesPanel);
 		
 		jLabel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 		

@@ -693,6 +693,8 @@ public class JEditorWindow extends javax.swing.JInternalFrame {
 
 		ConsoleWriter.writeLine(getOutputBuffer(), this);
 		clearOutputBuffer();
+		// Open the console window to show this
+		mainFrame.popOutConsole();
 	}// GEN-LAST:event_bttnListPrimsActionPerformed
 
 	private void logicPaneComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_logicPaneComponentShown
@@ -851,6 +853,8 @@ public class JEditorWindow extends javax.swing.JInternalFrame {
 				addOutputBuffer("<font style=color:green><b>Validation against " + chooser.getSelectedFile().getName() + " complete: </b></font>" + errorCount + " errors<BR>");
 				ConsoleWriter.writeLine(getOutputBuffer(), this);
 				clearOutputBuffer();
+				// Open the console to show the results
+				mainFrame.popOutConsole();
 			}
 		}
 	}// GEN-LAST:event_bttnValidateActionPerformed
