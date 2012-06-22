@@ -68,6 +68,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -295,7 +296,7 @@ public class JAbode extends JFrame {
 		editTitle = new javax.swing.JLabel();
 		commandsSplitPane = new javax.swing.JSplitPane(); 
 		
-		tablePanel = new javax.swing.JPanel();
+		propertiesScrollablePanel = new javax.swing.JScrollPane();
 		propertiesPanelContents = new javax.swing.JPanel();
 		commandsPanel = new javax.swing.JPanel();
 		jLabel3 = new javax.swing.JLabel();
@@ -373,11 +374,12 @@ public class JAbode extends JFrame {
 		sideSplitpane.setLeftComponent(desktop);
 
 		innerSplitpane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-		innerSplitpane.setResizeWeight(0.75);
 		innerSplitpane.setContinuousLayout(true);
 		innerSplitpane.setOneTouchExpandable(true);
 		innerSplitpane.setPreferredSize(new java.awt.Dimension(302, 70));
+		
 		propertiesPanel.setPreferredSize(new Dimension(302,70));
+		propertiesPanel.setMinimumSize(new Dimension(302,240));
 		propertiesPanel.setLayout(new java.awt.BorderLayout());
 
 		propertiesTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
@@ -389,11 +391,9 @@ public class JAbode extends JFrame {
 		
 		propertiesPanel.add(propertiesTitle, java.awt.BorderLayout.NORTH);
 
-		tablePanel.setLayout(new java.awt.BorderLayout());
+		propertiesScrollablePanel.setViewportView(propertiesPanelContents);
 
-		tablePanel.add(propertiesPanelContents, java.awt.BorderLayout.CENTER);
-
-		propertiesPanel.add(tablePanel, java.awt.BorderLayout.CENTER);
+		propertiesPanel.add(propertiesScrollablePanel, java.awt.BorderLayout.CENTER);
 
 		innerSplitpane.setRightComponent(documentationPanel);
 
@@ -432,6 +432,7 @@ public class JAbode extends JFrame {
 		commandsSplitPane.setRightComponent(editPanel);
 
 		documentationPanel.setLayout(new BorderLayout());
+		documentationPanel.setMaximumSize(new Dimension(302,150));
 		documentationTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
 		documentationTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon/document.gif")));
 		documentationTitle.setLabelFor(documentationPanel);
@@ -466,7 +467,6 @@ public class JAbode extends JFrame {
 		topSideSplitpane.setRightComponent(propertiesPanel);
 		
 		jLabel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-		
 		
 		innerSplitpane.setLeftComponent(topSideSplitpane);
 
@@ -1158,8 +1158,11 @@ public class JAbode extends JFrame {
 	 */
 	public void setPropertiesPanel(JPanel panel) {
 		propertiesPanelContents = panel;
-		tablePanel.removeAll();
-		tablePanel.add(propertiesPanelContents);
+		propertiesScrollablePanel = new JScrollPane(panel);
+		propertiesScrollablePanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		propertiesPanel.removeAll();
+		propertiesPanel.add(propertiesTitle, java.awt.BorderLayout.NORTH);
+		propertiesPanel.add(propertiesScrollablePanel, java.awt.BorderLayout.CENTER);
 		validate();
 	}
 
@@ -1200,7 +1203,7 @@ public class JAbode extends JFrame {
 	 * Clear the properties table
 	 */
 	public void clearProperties() {
-		tablePanel.removeAll();
+		propertiesScrollablePanel.removeAll();
 	}
 
 	/**
@@ -1332,7 +1335,7 @@ public class JAbode extends JFrame {
 
 	private javax.swing.JPanel statusPanel;
 
-	private javax.swing.JPanel tablePanel;
+	private javax.swing.JScrollPane propertiesScrollablePanel;
 
 	private javax.swing.JMenu toolMenu;
 

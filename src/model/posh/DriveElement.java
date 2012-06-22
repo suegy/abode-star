@@ -26,6 +26,7 @@
 package model.posh;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +43,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -378,7 +380,11 @@ public class DriveElement implements IEditableElement {
 		
 		JPanel panel = new JPanel();
 		
-		JLabel typeLabel = new JLabel(" - Drive Element - ");
+		// Set the panel layout
+		panel.setLayout(new java.awt.GridLayout(0, 1));
+		JLabel typeLabel = new JLabel("Drive Element Properties (" + getName() + ")");
+		typeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		typeLabel.setFont(new Font(typeLabel.getFont().getName(),Font.BOLD,typeLabel.getFont().getSize() + 1));
 		// Add each panel
 		// Seperate panels are used to keep labels adjacent to text fields
 		panel.add(typeLabel);

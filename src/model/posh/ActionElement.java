@@ -28,6 +28,7 @@ package model.posh;
 
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -342,14 +344,18 @@ public class ActionElement implements IEditableElement {
 		}
 	
 		JPanel panel = new JPanel();
-		
+		// Set the panel layout
+		panel.setLayout(new java.awt.GridLayout(0, 1));
+
 		JLabel typeLabel;
 		if(getIsSense()){
-			typeLabel = new JLabel(" - Sense - ");
+			typeLabel = new JLabel("Sense Properties (" + getElementName() + ")");
 		}
 		else{
-			typeLabel = new JLabel(" - Action - ");
+			typeLabel = new JLabel("Action Properties (" + getElementName() + ")");
 		}
+		typeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		typeLabel.setFont(new Font(typeLabel.getFont().getName(),Font.BOLD,typeLabel.getFont().getSize() + 1));
 		// Add each panel
 		// Seperate panels are used to keep labels adjacent to text fields
 		panel.add(typeLabel);
