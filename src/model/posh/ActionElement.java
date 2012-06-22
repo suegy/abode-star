@@ -46,10 +46,14 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.undo.AbstractUndoableEdit;
 
 import model.IEditableElement;
 
+import abode.AbodeUndoManager;
 import abode.Configuration;
+import abode.editing.ActionElementEdit;
 import abode.visual.HorizontalListOrganiser;
 import abode.visual.JAbode;
 import abode.visual.JDiagram;
@@ -241,7 +245,7 @@ public class ActionElement implements IEditableElement {
 
 		int vNamefieldSize = 15;
 		final JTextField namefield = new JTextField(getElementName(), vNamefieldSize);
-
+		namefield.getDocument().addUndoableEditListener(AbodeUndoManager.getUndoManager());
 		// Action listener to update the actual data when the field is updated
 		namefield.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -282,6 +286,8 @@ public class ActionElement implements IEditableElement {
 			spinnerModel.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
 					double value = (Double) spinnerModel.getValue();
+					
+					
 					if (Double.toString(value).length() < 1) {
 						setValue(null);
 						setPredicate(null);
@@ -329,6 +335,8 @@ public class ActionElement implements IEditableElement {
 			// Action listener to update the actual data when the field is updated
 			predicateSelector.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					ActionElement a=ActionElement.this;
+					AbodeUndoManager.getUndoListener().undoableEditHappened(new UndoableEditEvent(this, new ActionElementEdit(a,a.bIsSense,a.strElementName,a.strValue, (String)predicateSelector.getSelectedItem(),a.enabled,a.documentation)));
 					// Get the actual value
 					setPredicate((String)predicateSelector.getSelectedItem());
 					subGui.repaint();

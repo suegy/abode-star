@@ -31,6 +31,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import abode.SplashScreen;
 import abode.editing.IRenderer;
 
 import model.IEditableElement;
@@ -86,6 +87,7 @@ public class JDiagram extends javax.swing.JPanel {
 		setVisible(true);
 		setPreferredSize(null);
 
+		
 		// Our properties
 		bDetailed = detailed;
 		bExpanded = expanded;
@@ -131,9 +133,11 @@ public class JDiagram extends javax.swing.JPanel {
 	 */
 	private void unvalidateRecursive(JTreeNode root) {
 		root.setValid(true);
-		Iterator iterator = root.getChildren().iterator();
-		while (iterator.hasNext())
-			unvalidateRecursive((JTreeNode) iterator.next());
+		
+		for (Object child : root.getChildren()) {
+			unvalidateRecursive((JTreeNode) child);
+		}
+
 	}
 
 	/**

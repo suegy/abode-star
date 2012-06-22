@@ -36,6 +36,7 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
@@ -59,7 +60,7 @@ import model.posh.*;
  * @author CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
  */
-public class JEditorWindow extends javax.swing.JInternalFrame {
+public class JEditorWindow extends JInternalFrame{
 
 	// Added to properly implement serializable
 	private static final long serialVersionUID = 1;
@@ -108,6 +109,8 @@ public class JEditorWindow extends javax.swing.JInternalFrame {
 		initComponents();
 		mainFrame = main;
 
+
+		
 		setSize((int) (getMainFrame().getWidth() * 0.79), (int) (getMainFrame().getHeight() * 0.69));
 
 		// Set the window title

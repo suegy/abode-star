@@ -36,8 +36,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
+import javax.swing.event.UndoableEditEvent;
+
+import abode.AbodeUndoManager;
+import abode.editing.PositionEdit;
 
 import model.IEditableElement;
 
@@ -77,6 +79,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 			public void actionPerformed(ActionEvent actionEvent) {
 				int index = groupGroup.indexOf(myGroup);
 				groupGroup.add(index - 1, groupGroup.remove(index));
+				AbodeUndoManager.getUndoListener().undoableEditHappened(new UndoableEditEvent(this, new PositionEdit(myGroup, index, index-1, groupGroup)));
 				internal.updateDiagrams(diagram, subject.getValue());
 			}
 		});
@@ -192,22 +195,30 @@ public class VerticalListOrganiser extends ListOrganiser {
 			JButton bttnMoveDownGroup = new JButton("Move down in group", new ImageIcon(getClass().getResource("/image/icon/downingroup.gif")));
 			bttnMoveDownGroup.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent actionEvent) {
-					ArrayList newGroup = new ArrayList();
-					Object after = myGroup.get(myGroup.indexOf(subject.getValue()) + 1);
-					Iterator it = myGroup.iterator();
-					while (it.hasNext()) {
-						Object n = it.next();
-						if (n == after) {
-							newGroup.add(after);
-							newGroup.add(subject.getValue());
-						} else if (n == subject.getValue()) {
-							// Dont add ourself twice
-						} else {
-							newGroup.add(n);
-						}
-					}
-
-					groupGroup.set(groupGroup.indexOf(myGroup), newGroup);
+					
+					int index = myGroup.indexOf(subject.getValue());
+					Object elem = myGroup.remove(index);
+					myGroup.add(index+1, elem);
+					
+					AbodeUndoManager.getUndoListener().undoableEditHappened(new UndoableEditEvent(this, new PositionEdit(subject.getValue(), index, index+1, myGroup)));
+					
+					
+					
+//					ArrayList newGroup = new ArrayList();
+//					Object after = myGroup.get(myGroup.indexOf(subject.getValue()) + 1);
+//					
+//					for (Object object : myGroup) {
+//						if (object == after) {
+//							newGroup.add(after);
+//							newGroup.add(subject.getValue());
+//						} else if (object == subject.getValue()) {
+//							// Dont add ourself twice
+//						} else {
+//							newGroup.add(object);
+//						}
+//					}
+//					
+//					groupGroup.set(groupGroup.indexOf(myGroup), newGroup);
 					internal.updateDiagrams(diagram, subject.getValue());
 				}
 			});
@@ -262,9 +273,13 @@ public class VerticalListOrganiser extends ListOrganiser {
 		bttnMoveDown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				int index = groupGroup.indexOf(myGroup);
+				
 				groupGroup.add(index, groupGroup.remove(index + 1));
 
+				AbodeUndoManager.getUndoListener().undoableEditHappened(new UndoableEditEvent(this, new PositionEdit(myGroup, index, index+1, groupGroup)));
+				
 				internal.updateDiagrams(diagram, subject.getValue());
+				
 			}
 		});
 		bttnMoveDown.setHorizontalAlignment(JButton.LEFT);

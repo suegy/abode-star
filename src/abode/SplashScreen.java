@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
+import javax.swing.undo.UndoManager;
 
 import abode.visual.JAbode;
 
@@ -57,7 +58,7 @@ public class SplashScreen extends javax.swing.JFrame {
 	// List of all classes within the application that are to be pre-initialized
 	private File models;
 	private HashSet<String> classes;
-
+	
 	// Our lovely splash image
 	private ImageIcon icon = new ImageIcon(getClass().getResource("/image/splash/monkey.png"));
 
@@ -70,11 +71,13 @@ public class SplashScreen extends javax.swing.JFrame {
 	public SplashScreen() {
 		// NetBeans Form Designer
 		initComponents();
+		
 		models = new File(getClass().getResource("/model").getFile().replaceAll("%20", " "));
 		
 		if (models.isDirectory())
 			classes = getRecursiveChildren(models, "", new HashSet<String>());
 
+		
 			
 		// Centre us on the screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -88,7 +91,6 @@ public class SplashScreen extends javax.swing.JFrame {
 		// Show all classes
 		doInitialization();
 	}
-	
 	
 	private HashSet<String> getRecursiveChildren(File dir,String packageName,HashSet<String> children)
 	{
@@ -207,6 +209,8 @@ public class SplashScreen extends javax.swing.JFrame {
 		// EVIL: Call containing panels child painting method.
 		splashPanel.paintComponents(g);
 	}
+	
+	
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JProgressBar jProgressBar1;
