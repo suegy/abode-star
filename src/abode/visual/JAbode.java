@@ -32,59 +32,51 @@ package abode.visual;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Insets;
-import java.awt.MenuItem;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultDesktopManager;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JToolBar;
 import javax.swing.JViewport;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.SoftBevelBorder;
+import javax.swing.KeyStroke;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 
 import model.IEditableElement;
-import abode.AbodeUndoManager;
+import model.posh.ActionPattern;
+import model.posh.Competence;
+import model.posh.DriveCollection;
+import model.posh.DriveElement;
+
 import abode.Configuration;
 import abode.control.DotLapReader;
 import abode.control.ILAPReader;
@@ -260,6 +252,13 @@ public class JAbode extends JFrame {
 		manager = new MDIDesktopManager(this, desktop);
 		desktop.setDesktopManager(manager);
 		desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+		
+		// Set the logo
+		try {
+			setIconImage(ImageIO.read((getClass().getResource("/image/icon/logo.png"))));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		// Show us to the world
 		setVisible(true);
@@ -273,87 +272,93 @@ public class JAbode extends JFrame {
 	// <editor-fold defaultstate="collapsed" desc=" Generated Code
 	// ">//GEN-BEGIN:initComponents
 	private void initComponents() {
-		statusPanel = new JPanel();
-		statusBar = new JTextArea();
-		jTextArea2 = new JTextArea();
-		jProgressBar1 = new JProgressBar();
-		mainSplitpane = new JSplitPane();
-		sideSplitpane = new JSplitPane();
-		desktop = new JDesktopPane();
-		innerSplitpane = new JSplitPane();
-		propertiesPanel = new JPanel();
-		propertiesTitle = new JLabel();
+		statusPanel = new javax.swing.JPanel();
+		statusBar = new javax.swing.JTextArea();
+		jTextArea2 = new javax.swing.JTextArea();
+		jProgressBar1 = new javax.swing.JProgressBar();
+		mainSplitpane = new javax.swing.JSplitPane();
+		sideSplitpane = new javax.swing.JSplitPane();
+		desktop = new javax.swing.JDesktopPane();
+		innerSplitpane = new javax.swing.JSplitPane();
+		propertiesPanel = new javax.swing.JPanel();
+		propertiesTitle = new javax.swing.JLabel();
 		//Documentation window
-		documentationPanel = new JPanel();
-		documentationTitle = new JLabel();
+		documentationPanel = new javax.swing.JPanel();
+		documentationTitle = new javax.swing.JLabel();
 		documentationEditor = new JTextArea();
 		documentationScroller = new JScrollPane();
-		topSideSplitpane = new JSplitPane();
+		topSideSplitpane = new javax.swing.JSplitPane();
 		
-		tablePanel = new JPanel();
-		propertiesPanelContents = new JPanel();
-		commandsPanel = new JPanel();
-		jLabel3 = new JLabel();
-		comButtonPanel = new JPanel();
-		outputPanel = new JPanel();
-		outputLabel = new JLabel();
-		outputTab = new JTabbedPane();
-		jScrollPane1 = new JScrollPane();
-		jTextArea1 = new JTextArea();
-		jPanel1 = new JPanel();
-		toolbar1 = new JToolBar();
-		newButton = new JButton();
-		openButton = new JButton();
-		saveButton = new JButton();
-		printButton = new JButton();
-		jToolBar1 = new JToolBar();
-		jLabel1 = new JLabel();
-		jComboBox1 = new JComboBox();
-		jButton1 = new JButton();
-		menubar = new JMenuBar();
-		fileMenu = new JMenu();
-		fileMenuItem = new JMenuItem();
-		openMenuItem = new JMenuItem();
-		recentlyUsedMenu = new JMenu();
-		saveMenuItem = new JMenuItem();
-		saveAllMenuItem = new JMenuItem();
-		saveAsMenuItem = new JMenuItem();
-		jSeparator1 = new JSeparator();
-		jMenuItem6 = new JMenuItem();
-		viewMenu = new JMenu();
-		jCheckBoxMenuItem1 = new JCheckBoxMenuItem();
-		jCheckBoxMenuItem2 = new JCheckBoxMenuItem();
-		jMenuItem4 = new JMenuItem();
-		toolMenu = new JMenu();
-		jMenuItem1 = new JMenuItem();
-		windowMenu = new JMenu();
-		helpMenu = new JMenu();
-		jMenuItem2 = new JMenuItem();
-		jMenuItem3 = new JMenuItem();
+		// Edit window
+		editPanel = new javax.swing.JPanel();
+		editButtonPanel = new javax.swing.JPanel();
+		editTitle = new javax.swing.JLabel();
+		commandsSplitPane = new javax.swing.JSplitPane(); 
+		
+		tablePanel = new javax.swing.JPanel();
+		propertiesPanelContents = new javax.swing.JPanel();
+		commandsPanel = new javax.swing.JPanel();
+		jLabel3 = new javax.swing.JLabel();
+		comButtonPanel = new javax.swing.JPanel();
+		outputPanel = new javax.swing.JPanel();
+		outputLabel = new javax.swing.JLabel();
+		outputTab = new javax.swing.JTabbedPane();
+		jScrollPane1 = new javax.swing.JScrollPane();
+		jTextArea1 = new javax.swing.JTextArea();
+		jPanel1 = new javax.swing.JPanel();
+		toolbar1 = new javax.swing.JToolBar();
+		newButton = new javax.swing.JButton();
+		openButton = new javax.swing.JButton();
+		saveButton = new javax.swing.JButton();
+		printButton = new javax.swing.JButton();
+		jToolBar1 = new javax.swing.JToolBar();
+		jLabel1 = new javax.swing.JLabel();
+		jComboBox1 = new javax.swing.JComboBox();
+		jButton1 = new javax.swing.JButton();
+		menubar = new javax.swing.JMenuBar();
+		fileMenu = new javax.swing.JMenu();
+		fileMenuItem = new javax.swing.JMenuItem();
+		openMenuItem = new javax.swing.JMenuItem();
+		recentlyUsedMenu = new javax.swing.JMenu();
+		saveMenuItem = new javax.swing.JMenuItem();
+		saveAllMenuItem = new javax.swing.JMenuItem();
+		saveAsMenuItem = new javax.swing.JMenuItem();
+		jSeparator1 = new javax.swing.JSeparator();
+		jMenuItem6 = new javax.swing.JMenuItem();
+		viewMenu = new javax.swing.JMenu();
+		consoleMenuItem = new javax.swing.JCheckBoxMenuItem();
+		propertiesMenuItem = new javax.swing.JCheckBoxMenuItem();
+		jMenuItem4 = new javax.swing.JMenuItem();
+		toolMenu = new javax.swing.JMenu();
+		jMenuItem1 = new javax.swing.JMenuItem();
+		windowMenu = new javax.swing.JMenu();
+		helpMenu = new javax.swing.JMenu();
+		jMenuItem2 = new javax.swing.JMenuItem();
+		jMenuItem3 = new javax.swing.JMenuItem();
 
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setTitle("A.B.O.D.E");
+		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		setTitle("ABODE - Advanced Behaviour Oriented Design Environment");
 		setName("appFrame");
 		statusPanel.setLayout(new java.awt.GridLayout(1, 0));
 
-		statusBar.setBackground(UIManager.getDefaults().getColor("Button.background"));
+		statusBar.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
 		statusBar.setEditable(false);
 		statusBar.setText("Ready");
-		statusBar.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+		statusBar.setBorder(new javax.swing.border.EtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 		statusPanel.add(statusBar);
 
-		jTextArea2.setBackground(UIManager.getDefaults().getColor("Button.background"));
+		jTextArea2.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
 		jTextArea2.setEditable(false);
-		jTextArea2.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+		jTextArea2.setBorder(new javax.swing.border.EtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 		statusPanel.add(jTextArea2);
 
-		jProgressBar1.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+		jProgressBar1.setBorder(new javax.swing.border.EtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 		statusPanel.add(jProgressBar1);
 
 		getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
 
 		mainSplitpane.setDividerLocation(2000);
-		mainSplitpane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		mainSplitpane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 		mainSplitpane.setResizeWeight(0.5);
 		mainSplitpane.setContinuousLayout(true);
 		mainSplitpane.setMaximumSize(new java.awt.Dimension(400, 165));
@@ -376,10 +381,10 @@ public class JAbode extends JFrame {
 		propertiesPanel.setLayout(new java.awt.BorderLayout());
 
 		propertiesTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
-		propertiesTitle.setIcon(new ImageIcon(getClass().getResource("/image/propertiesIcon.gif")));
+		propertiesTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/propertiesIcon.gif")));
 		propertiesTitle.setLabelFor(propertiesPanel);
 		propertiesTitle.setText("| Properties |");
-		propertiesTitle.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
+		propertiesTitle.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 		
 		
 		propertiesPanel.add(propertiesTitle, java.awt.BorderLayout.NORTH);
@@ -395,10 +400,10 @@ public class JAbode extends JFrame {
 		commandsPanel.setLayout(new java.awt.BorderLayout());
 
 		jLabel3.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
-		jLabel3.setIcon(new ImageIcon(getClass().getResource("/image/toolIcon.gif")));
+		jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/toolIcon.gif")));
 		jLabel3.setLabelFor(commandsPanel);
 		jLabel3.setText("| Commands |");
-		jLabel3.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
+		jLabel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 		commandsPanel.add(jLabel3, java.awt.BorderLayout.NORTH);
 
 		comButtonPanel.setLayout(new java.awt.GridLayout(0, 1));
@@ -428,12 +433,26 @@ public class JAbode extends JFrame {
 
 		documentationPanel.setLayout(new BorderLayout());
 		documentationTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
-		documentationTitle.setIcon(new ImageIcon(getClass().getResource("/image/icon/document.gif")));
+		documentationTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon/document.gif")));
 		documentationTitle.setLabelFor(documentationPanel);
 		documentationTitle.setText("| Documentation |");
-		documentationTitle.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
+		documentationTitle.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 		documentationEditor.setLineWrap(true);
 		documentationEditor.setWrapStyleWord(true);
+	
+		// Add key listener which will update the elements comments field
+		// when this is updated
+		documentationEditor.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
+				if (currentEditingElement != null) {
+					currentEditingElement.setDocumentation(documentationEditor.getText());
+				}
+			}
+			public void keyReleased(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {}
+		});
+		
+		
 		documentationScroller = new JScrollPane(documentationEditor);
 		documentationPanel.add(documentationTitle, BorderLayout.NORTH);
 		documentationPanel.add(documentationScroller, BorderLayout.CENTER);
@@ -446,7 +465,7 @@ public class JAbode extends JFrame {
 		topSideSplitpane.setLeftComponent(commandsSplitPane);
 		topSideSplitpane.setRightComponent(documentationPanel);
 		
-		jLabel3.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
+		jLabel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 		
 		
 		innerSplitpane.setLeftComponent(topSideSplitpane);
@@ -461,15 +480,15 @@ public class JAbode extends JFrame {
 		outputLabel.setLabelFor(outputPanel);
 		outputLabel.setText("| Output |");
 		outputLabel.setToolTipText("Output");
-		outputLabel.setBorder(new BevelBorder(BevelBorder.RAISED));
-		outputLabel.setVerticalTextPosition(SwingConstants.TOP);
+		outputLabel.setBorder(new javax.swing.border.BevelBorder(javax.swing.border.BevelBorder.RAISED));
+		outputLabel.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
 		outputPanel.add(outputLabel, java.awt.BorderLayout.NORTH);
 
 		outputTab.setName("outputTabs");
 		jTextArea1.setEditable(false);
 		jScrollPane1.setViewportView(jTextArea1);
 
-		outputTab.addTab("Environment Notices", new ImageIcon(getClass().getResource("/image/globe_icon.gif")), jScrollPane1);
+		outputTab.addTab("Environment Notices", new javax.swing.ImageIcon(getClass().getResource("/image/globe_icon.gif")), jScrollPane1);
 
 		outputPanel.add(outputTab, java.awt.BorderLayout.CENTER);
 
@@ -480,11 +499,11 @@ public class JAbode extends JFrame {
 		jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
 		toolbar1.setPreferredSize(new java.awt.Dimension(126, 25));
-		newButton.setIcon(new ImageIcon(getClass().getResource("/image/new_document_32.gif")));
+		newButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/new_document_32.gif")));
 		newButton.setToolTipText("Create a new learnable action plan");
-		newButton.setBorder(new EmptyBorder(new java.awt.Insets(1, 1, 1, 1)));
+		newButton.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(1, 1, 1, 1)));
 		newButton.setFocusPainted(false);
-		newButton.setHorizontalAlignment(SwingConstants.LEFT);
+		newButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 		newButton.setMaximumSize(new java.awt.Dimension(25, 20));
 		newButton.setMinimumSize(new java.awt.Dimension(20, 20));
 		newButton.setPreferredSize(new java.awt.Dimension(35, 32));
@@ -496,15 +515,15 @@ public class JAbode extends JFrame {
 
 		toolbar1.add(newButton);
 
-		openButton.setIcon(new ImageIcon(getClass().getResource("/image/open_document_32.gif")));
+		openButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/open_document_32.gif")));
 		openButton.setToolTipText("Open an existing learnable action plan");
 		openButton.setBorder(null);
 		openButton.setFocusPainted(false);
-		openButton.setHorizontalAlignment(SwingConstants.LEFT);
+		openButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 		openButton.setMaximumSize(new java.awt.Dimension(30, 20));
 		openButton.setMinimumSize(new java.awt.Dimension(20, 20));
-		openButton.setVerticalAlignment(SwingConstants.TOP);
-		openButton.setVerticalTextPosition(SwingConstants.TOP);
+		openButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+		openButton.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
 		openButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				openButtonActionPerformed(evt);
@@ -513,14 +532,14 @@ public class JAbode extends JFrame {
 
 		toolbar1.add(openButton);
 
-		saveButton.setIcon(new ImageIcon(getClass().getResource("/image/save_32.gif")));
+		saveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/save_32.gif")));
 		saveButton.setToolTipText("Save the selected plan");
 		saveButton.setBorder(null);
 		saveButton.setFocusPainted(false);
-		saveButton.setHorizontalAlignment(SwingConstants.LEFT);
+		saveButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 		saveButton.setMaximumSize(new java.awt.Dimension(30, 20));
 		saveButton.setMinimumSize(new java.awt.Dimension(20, 20));
-		saveButton.setVerticalAlignment(SwingConstants.TOP);
+		saveButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				saveButtonActionPerformed(evt);
@@ -529,14 +548,14 @@ public class JAbode extends JFrame {
 
 		toolbar1.add(saveButton);
 
-		printButton.setIcon(new ImageIcon(getClass().getResource("/image/print_32.gif")));
+		printButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/print_32.gif")));
 		printButton.setToolTipText("Print the selected plan");
 		printButton.setBorder(null);
 		printButton.setFocusPainted(false);
-		printButton.setHorizontalAlignment(SwingConstants.LEFT);
+		printButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 		printButton.setMaximumSize(new java.awt.Dimension(20, 20));
 		printButton.setMinimumSize(new java.awt.Dimension(20, 20));
-		printButton.setVerticalAlignment(SwingConstants.TOP);
+		printButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 		printButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				printButtonActionPerformed(evt);
@@ -554,7 +573,7 @@ public class JAbode extends JFrame {
 		jComboBox1.setMaximumSize(new java.awt.Dimension(150, 20));
 		jToolBar1.add(jComboBox1);
 
-		jButton1.setIcon(new ImageIcon(getClass().getResource("/image/icon_run.gif")));
+		jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon_run.gif")));
 		jButton1.setText("Run!");
 		jButton1.setBorder(null);
 		jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -625,66 +644,37 @@ public class JAbode extends JFrame {
 
 		fileMenu.add(jSeparator1);
 
+		jMenuItem6.setText("Exit");
+		jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				jMenuItem6ActionPerformed(evt);
+			}
+		});
+
+		fileMenu.add(jMenuItem6);
+
 		menubar.add(fileMenu);
 
-		JMenu menu = new JMenu();
-		menu.setMnemonic('e');
-		menu.setText("Edit");
-		menu.setName("editMenu");
-		
-		JMenuItem menuItem = new JMenuItem();
-		menuItem.setMnemonic('u');
-		menuItem.setText("Undo");
-		menuItem.setName("undoMenuItem");
-		menuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				try {
-				AbodeUndoManager.getUndoManager().undo();
-				}
-				catch(CannotUndoException e){
-					
-				}
-			}
-		});
-		menu.add(menuItem);
-		
-		menuItem = new JMenuItem();
-		menuItem.setMnemonic('r');
-		menuItem.setText("Redo");
-		menuItem.setName("redoMenuItem");
-		menuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				try {
-					AbodeUndoManager.getUndoManager().redo();
-					}
-					catch(CannotRedoException e){
-						
-					}
-			}
-		});
-		menu.add(menuItem);
-		menubar.add(menu);
-		
 		viewMenu.setMnemonic('v');
 		viewMenu.setText("View");
 		viewMenu.setName("viewMenu");
-		jCheckBoxMenuItem1.setText("Output");
-		jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+		consoleMenuItem.setText("Output");
+		consoleMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jCheckBoxMenuItem1ActionPerformed(evt);
 			}
 		});
 
-		viewMenu.add(jCheckBoxMenuItem1);
+		viewMenu.add(consoleMenuItem);
 
-		jCheckBoxMenuItem2.setText("Commands/Properties");
-		jCheckBoxMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+		propertiesMenuItem.setText("Commands/Properties");
+		propertiesMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jCheckBoxMenuItem2ActionPerformed(evt);
 			}
 		});
 
-		viewMenu.add(jCheckBoxMenuItem2);
+		viewMenu.add(propertiesMenuItem);
 
 		jMenuItem4.setText("Hide Validation");
 		jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -746,6 +736,17 @@ public class JAbode extends JFrame {
 		helpMenu.add(jMenuItem3);
 
 		menubar.add(helpMenu);
+		
+		// Keyboard shortcuts
+		// Try and keep these all in one place for convenience
+		fileMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+		openMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+		saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+		saveAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 
 		setJMenuBar(menubar);
 		pack();
@@ -776,7 +777,7 @@ public class JAbode extends JFrame {
 	}// GEN-LAST:event_jMenuItem6ActionPerformed
 
 	private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
-		if (jCheckBoxMenuItem2.isSelected()) {
+		if (propertiesMenuItem.isSelected()) {
 			popOutProperties();
 		} else {
 			hideProperties();
@@ -784,7 +785,7 @@ public class JAbode extends JFrame {
 	}// GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
 	private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
-		if (jCheckBoxMenuItem1.isSelected()) {
+		if (consoleMenuItem.isSelected()) {
 			popOutConsole();
 		} else {
 			hideConsole();
@@ -878,7 +879,7 @@ public class JAbode extends JFrame {
 
 	private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_openButtonActionPerformed
 		String filename = "";
-		JFileChooser fc = new JFileChooser(new java.io.File(filename));
+		javax.swing.JFileChooser fc = new javax.swing.JFileChooser(new java.io.File(filename));
 
 		// Show open dialog; this method does not return until the dialog is
 		// closed
@@ -1037,6 +1038,7 @@ public class JAbode extends JFrame {
 			sideSplitpane.setDividerLocation(PopoutHorizontal);
 			innerSplitpane.setDividerLocation(VerticalSplit);
 		}
+		propertiesMenuItem.setSelected(true);
 	}
 
 	/**
@@ -1052,6 +1054,7 @@ public class JAbode extends JFrame {
 			VerticalHidden = false;
 			mainSplitpane.setDividerLocation(PopoutVertical);
 		}
+		consoleMenuItem.setSelected(true);
 	}
 
 	/**
@@ -1059,7 +1062,7 @@ public class JAbode extends JFrame {
 	 */
 	public void hideConsole() {
 		if (!VerticalHidden) {
-			jCheckBoxMenuItem1.setSelected(false);
+			consoleMenuItem.setSelected(false);
 			PopoutVertical = mainSplitpane.getDividerLocation();
 			mainSplitpane.setDividerLocation(2000);
 			VerticalHidden = true;
@@ -1071,7 +1074,7 @@ public class JAbode extends JFrame {
 	 */
 	public void hideProperties() {
 		if (!HorizontalHidden) {
-			jCheckBoxMenuItem2.setSelected(false);
+			propertiesMenuItem.setSelected(false);
 			PopoutHorizontal = sideSplitpane.getDividerLocation();
 			VerticalSplit = innerSplitpane.getDividerLocation();
 			sideSplitpane.setDividerLocation(2000);
@@ -1166,6 +1169,20 @@ public class JAbode extends JFrame {
 		}
 		documentationEditor.setText(newElement.getElementDocumentation());
 		currentEditingElement = newElement;
+		
+		// TODO: Change this as more types of elements are supported
+		if(!(newElement instanceof ActionPattern ||
+				newElement instanceof Competence ||
+				newElement instanceof DriveCollection)){
+			documentationEditor.setEditable(false);
+			documentationEditor.setEnabled(false);
+			documentationEditor.setBackground(Color.LIGHT_GRAY);
+		}
+		else{
+			documentationEditor.setEditable(true);
+			documentationEditor.setEnabled(true);
+			documentationEditor.setBackground(Color.WHITE);
+		}
 	}
 	
 	/**
@@ -1203,83 +1220,83 @@ public class JAbode extends JFrame {
 	}
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private JPanel comButtonPanel;
+	private javax.swing.JPanel comButtonPanel;
 
-	private JPanel commandsPanel;
+	private javax.swing.JPanel commandsPanel;
 
-	private JDesktopPane desktop;
+	private javax.swing.JDesktopPane desktop;
 
-	private JMenu fileMenu;
+	private javax.swing.JMenu fileMenu;
 
-	private JMenuItem fileMenuItem;
+	private javax.swing.JMenuItem fileMenuItem;
 
-	private JMenu helpMenu;
+	private javax.swing.JMenu helpMenu;
 
-	private JSplitPane innerSplitpane;
+	private javax.swing.JSplitPane innerSplitpane;
 
-	private JButton jButton1;
+	private javax.swing.JButton jButton1;
 
-	private JCheckBoxMenuItem jCheckBoxMenuItem1;
+	private javax.swing.JCheckBoxMenuItem consoleMenuItem;
 
-	private JCheckBoxMenuItem jCheckBoxMenuItem2;
+	private javax.swing.JCheckBoxMenuItem propertiesMenuItem;
 
-	private JComboBox jComboBox1;
+	private javax.swing.JComboBox jComboBox1;
 
-	private JLabel jLabel1;
+	private javax.swing.JLabel jLabel1;
 
-	private JLabel jLabel3;
+	private javax.swing.JLabel jLabel3;
 
-	private JMenuItem jMenuItem1;
+	private javax.swing.JMenuItem jMenuItem1;
 
-	private JMenuItem jMenuItem2;
+	private javax.swing.JMenuItem jMenuItem2;
 
-	private JMenuItem jMenuItem3;
+	private javax.swing.JMenuItem jMenuItem3;
 
-	private JMenuItem jMenuItem4;
+	private javax.swing.JMenuItem jMenuItem4;
 
-	private JMenuItem jMenuItem6;
+	private javax.swing.JMenuItem jMenuItem6;
 
-	private JPanel jPanel1;
+	private javax.swing.JPanel jPanel1;
 
-	private JProgressBar jProgressBar1;
+	private javax.swing.JProgressBar jProgressBar1;
 
-	private JScrollPane jScrollPane1;
+	private javax.swing.JScrollPane jScrollPane1;
 
-	private JSeparator jSeparator1;
+	private javax.swing.JSeparator jSeparator1;
 
-	private static JTextArea jTextArea1;
+	private static javax.swing.JTextArea jTextArea1;
 
-	private JTextArea jTextArea2;
+	private javax.swing.JTextArea jTextArea2;
 
-	private JToolBar jToolBar1;
+	private javax.swing.JToolBar jToolBar1;
 
-	public JSplitPane mainSplitpane;
+	public javax.swing.JSplitPane mainSplitpane;
 
-	private JMenuBar menubar;
+	private javax.swing.JMenuBar menubar;
 
-	private JButton newButton;
+	private javax.swing.JButton newButton;
 
-	private JButton openButton;
+	private javax.swing.JButton openButton;
 
-	private JMenuItem openMenuItem;
+	private javax.swing.JMenuItem openMenuItem;
 
-	private JLabel outputLabel;
+	private javax.swing.JLabel outputLabel;
 
-	private JPanel outputPanel;
+	private javax.swing.JPanel outputPanel;
 
-	private JTabbedPane outputTab;
+	private javax.swing.JTabbedPane outputTab;
 
-	private JButton printButton;
+	private javax.swing.JButton printButton;
 
-	private JPanel propertiesPanel;
+	private javax.swing.JPanel propertiesPanel;
 
-	private JPanel propertiesPanelContents;
+	private javax.swing.JPanel propertiesPanelContents;
 
-	private JLabel propertiesTitle;
+	private javax.swing.JLabel propertiesTitle;
 	
-	private JPanel documentationPanel;
+	private javax.swing.JPanel documentationPanel;
 	
-	private JLabel documentationTitle;
+	private javax.swing.JLabel documentationTitle;
 	
 	private JTextArea documentationEditor;
 
@@ -1295,31 +1312,31 @@ public class JAbode extends JFrame {
 	
 	private javax.swing.JMenu recentlyUsedMenu;
 
-	private JMenuItem saveAllMenuItem;
+	private javax.swing.JMenuItem saveAllMenuItem;
 
-	private JMenuItem saveAsMenuItem;
+	private javax.swing.JMenuItem saveAsMenuItem;
 
-	private JButton saveButton;
+	private javax.swing.JButton saveButton;
 
-	private JMenuItem saveMenuItem;
+	private javax.swing.JMenuItem saveMenuItem;
 
-	public JSplitPane sideSplitpane;
+	public javax.swing.JSplitPane sideSplitpane;
 	
-	public JSplitPane topSideSplitpane;
+	public javax.swing.JSplitPane topSideSplitpane;
 
-	private JTextArea statusBar;
+	private javax.swing.JTextArea statusBar;
 
-	private JPanel statusPanel;
+	private javax.swing.JPanel statusPanel;
 
-	private JPanel tablePanel;
+	private javax.swing.JPanel tablePanel;
 
-	private JMenu toolMenu;
+	private javax.swing.JMenu toolMenu;
 
-	private JToolBar toolbar1;
+	private javax.swing.JToolBar toolbar1;
 
-	private JMenu viewMenu;
+	private javax.swing.JMenu viewMenu;
 
-	private JMenu windowMenu;
+	private javax.swing.JMenu windowMenu;
 	// End of variables declaration//GEN-END:variables
 
 }

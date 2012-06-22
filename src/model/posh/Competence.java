@@ -358,7 +358,9 @@ public class Competence implements IEditableElement, INamedElement {
 		panel.add(typeLabel);
 		panel.add(namePanel);
 		panel.add(timeoutPanel);
-		panel.add(enabled);
+		
+		/* TODO: This has been disabled because this functionality doesn't actually work */
+//		panel.add(enabled);
 		
 		mainGui.setPropertiesPanel(panel);
 	}
@@ -425,7 +427,7 @@ public class Competence implements IEditableElement, INamedElement {
 			}
 		});
 
-		JMenuItem addGoal = new JMenuItem("Add Goal Element");
+		JMenuItem addGoal = new JMenuItem("Add Goal Sense");
 		addGoal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				ActionElement actionElement = new ActionElement(true, "SomeSense" + compElement++);

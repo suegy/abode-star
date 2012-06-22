@@ -27,6 +27,7 @@ package abode.visual;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -72,6 +73,12 @@ public class ListOrganiser implements IListOrganiser {
 			}
 		});
 		bttnDelete.setHorizontalAlignment(JButton.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnDelete.setToolTipText("Deletes an element from the hierarchy" +
+				" (Alt + Delete)");
+		bttnDelete.setMnemonic(KeyEvent.VK_DELETE);
+		
 		panel.add(bttnDelete);
 	}
 	
@@ -91,6 +98,10 @@ public class ListOrganiser implements IListOrganiser {
 				}
 			}
 		});
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnDelete.setToolTipText("Deletes an entire group from the hierarchy");
+		
 		panel.add(bttnDelete);
 	}
 }

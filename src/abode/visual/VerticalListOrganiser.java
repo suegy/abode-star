@@ -28,6 +28,7 @@ package abode.visual;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -83,6 +84,12 @@ public class VerticalListOrganiser extends ListOrganiser {
 			}
 		});
 		bttnMoveUp.setHorizontalAlignment(JButton.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnMoveUp.setToolTipText("Moves an element up the hierarchy" +
+				" (Alt + Up)");
+		bttnMoveUp.setMnemonic(KeyEvent.VK_UP);
+		
 		panel.add(bttnMoveUp);
 
 		// If not possible to move up, disable the button
@@ -109,6 +116,10 @@ public class VerticalListOrganiser extends ListOrganiser {
 			}
 		});
 		bttnMergeUp.setHorizontalAlignment(JButton.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnMergeUp.setToolTipText("Merges an element with the element above it in the hierarchy.");
+		
 		panel.add(bttnMergeUp);
 		
 		// If there's no group above us disable the button
@@ -142,6 +153,12 @@ public class VerticalListOrganiser extends ListOrganiser {
 				}
 			});
 			bttnMoveupGroup.setHorizontalAlignment(JButton.LEFT);
+			
+			// Set tooltip and shortcut key (Mnemonic)
+			bttnMoveupGroup.setToolTipText("Moves an element up within a group" +
+					" (Alt + })");
+			bttnMoveupGroup.setMnemonic(KeyEvent.VK_BRACERIGHT);
+			
 			panel.add(bttnMoveupGroup);
 			
 			// If not possible to move up, disable the button
@@ -170,6 +187,8 @@ public class VerticalListOrganiser extends ListOrganiser {
 				}
 			});
 			bttnUngroup.setHorizontalAlignment(JButton.LEFT);
+			bttnUngroup.setToolTipText("Dissolves a group. All of the elements will return to being singular elements.");
+			
 			panel.add(bttnUngroup);
 
 			// Move down inside group
@@ -204,6 +223,11 @@ public class VerticalListOrganiser extends ListOrganiser {
 				}
 			});
 			bttnMoveDownGroup.setHorizontalAlignment(JButton.LEFT);
+			// Set tooltip and shortcut key (Mnemonic)
+			bttnMoveDownGroup.setToolTipText("Moves an element down within a group" +
+					" (Alt + {)");
+			bttnMoveDownGroup.setMnemonic(KeyEvent.VK_BRACELEFT);
+			
 			panel.add(bttnMoveDownGroup);
 			
 			// if not possible to move down within the group, disable the button
@@ -233,6 +257,10 @@ public class VerticalListOrganiser extends ListOrganiser {
 			}
 		});
 		bttnMergeDown.setHorizontalAlignment(JButton.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnMergeDown.setToolTipText("Merges an element with the element above it in the hierarchy.");
+		
 		panel.add(bttnMergeDown);
 			
 		// If there's no group beneath us disable button
@@ -255,6 +283,12 @@ public class VerticalListOrganiser extends ListOrganiser {
 			}
 		});
 		bttnMoveDown.setHorizontalAlignment(JButton.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnMoveDown.setToolTipText("Moves an element down the hierarchy" +
+				" (Alt + Down)");
+		bttnMoveDown.setMnemonic(KeyEvent.VK_DOWN);
+		
 		panel.add(bttnMoveDown);
 		
 		//Disable if the group / element cannot be moved down

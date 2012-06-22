@@ -280,7 +280,9 @@ public class DriveCollection implements IEditableElement {
 		panel.add(typeLabel);
 		panel.add(namePanel);
 		panel.add(realtimePanel);
-		panel.add(enabled);
+		
+		/* TODO: This has been disabled because this functionality doesn't actually work */
+//		panel.add(enabled);
 
 		// Add this panel to the main GUI
 		mainGui.setPropertiesPanel(panel);
@@ -350,7 +352,7 @@ public class DriveCollection implements IEditableElement {
 			}
 		});
 
-		JMenuItem addGoal = new JMenuItem("Add Goal Element");
+		JMenuItem addGoal = new JMenuItem("Add Goal Sense");
 		addGoal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				ActionElement actionElement = new ActionElement(true,

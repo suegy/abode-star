@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import abode.editing.CommentScraper;
 import abode.editing.Documentation;
 import abode.editing.LispBlob;
 import abode.visual.JAbode;
@@ -122,6 +123,13 @@ public class DotLapReader implements ILAPReader {
 
 		// Iterate over the list and see if we can find the documentation
 		Iterator children = blob.getIterator();
+		
+		// Get the comments in readable format
+		CommentScraper topLevelComments = new CommentScraper(strFileContent, 1);
+		
+		// The count / index of the elements that are currently being added to the tree.
+		// Used to get the associated comments.
+		int elementIndex = 0;
 
 		// Carry on scanning
 		while (children.hasNext()) {
@@ -129,7 +137,8 @@ public class DotLapReader implements ILAPReader {
 			LispBlob child = (LispBlob) children.next();
 
 			// Add it to our children list after parsing it
-			Object element = parseElement(child);
+			Object element = parseElement(child, topLevelComments.getCommentString(elementIndex));
+			elementIndex++;
 			if (element instanceof Documentation) {
 				documentation = (Documentation) element;
 			} else {
@@ -143,7 +152,7 @@ public class DotLapReader implements ILAPReader {
 	/**
 	 * Parse a construct from the file
 	 */
-	private Object parseElement(LispBlob block) throws Exception {
+	private Object parseElement(LispBlob block, String comments) throws Exception {
 		// All of the various constructs must be lists, so we exception
 		// if there is no list inside this list.
 		if (!block.isList()) {
@@ -167,15 +176,19 @@ public class DotLapReader implements ILAPReader {
 		}
 		if (strType.equals("AP")) {
 			returnedElement = parseActionPattern(children, false);
+			returnedElement.setDocumentation(comments);
 		}
 		if (strType.equals("C")) {
 			returnedElement = parseCompetence(children, false);
+			returnedElement.setDocumentation(comments);
 		}
 		if (strType.equals("DC")) {
 			returnedElement = parseDriveCollection(children, false, false);
+			returnedElement.setDocumentation(comments);
 		}
 		if (strType.equals("RDC")) {
 			returnedElement = parseDriveCollection(children, true, false);
+			returnedElement.setDocumentation(comments);
 		}
 		return returnedElement;
 	}
