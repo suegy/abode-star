@@ -40,6 +40,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
+import abode.JAbode;
 import abode.editing.IRenderer;
 
 import model.IEditableElement;

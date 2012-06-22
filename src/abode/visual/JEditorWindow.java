@@ -41,6 +41,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
+import abode.JAbode;
 import abode.control.ConsoleWriter;
 import abode.control.DotLapReader;
 import abode.control.DotLapWriter;

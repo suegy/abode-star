@@ -42,7 +42,7 @@ import javax.swing.JTextField;
 import model.IEditableElement;
 
 import abode.Configuration;
-import abode.visual.JAbode;
+import abode.JAbode;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;

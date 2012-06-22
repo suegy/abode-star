@@ -32,6 +32,7 @@ import java.util.Iterator;
 import javax.swing.DefaultListModel;
 
 import abode.Configuration;
+import abode.JAbode;
 import abode.JEngineInput;
 
 /**

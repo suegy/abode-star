@@ -39,6 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.event.UndoableEditEvent;
 
 import abode.AbodeUndoManager;
+import abode.JAbode;
 import abode.editing.PositionEdit;
 
 import model.IEditableElement;

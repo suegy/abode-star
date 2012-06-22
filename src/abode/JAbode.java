@@ -28,7 +28,7 @@
  * functionality of JInternalFrames, but has been heavily 
  * adapted to deal with the object model of this application.
  */
-package abode.visual;
+package abode;
 
 
 import java.awt.BorderLayout;
@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.print.attribute.standard.JobHoldUntil;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultDesktopManager;
 import javax.swing.ImageIcon;
@@ -64,6 +65,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JViewport;
@@ -77,10 +79,12 @@ import model.posh.Competence;
 import model.posh.DriveCollection;
 import model.posh.DriveElement;
 
-import abode.Configuration;
 import abode.control.DotLapReader;
 import abode.control.ILAPReader;
 import abode.control.JManual;
+import abode.visual.JAbout;
+import abode.visual.JEditorWindow;
+import abode.visual.JOptionsScreen;
 
 
 /**
@@ -654,7 +658,46 @@ public class JAbode extends JFrame {
 		fileMenu.add(jMenuItem6);
 
 		menubar.add(fileMenu);
+		
+		// EditMenu for the Undo/Redo Functionality
+		JMenu editMenu = new JMenu();
+		editMenu.setMnemonic('e');
+		editMenu.setText("Edit");
+		editMenu.setName("editMenu");
 
+		JMenuItem item=new JMenuItem();
+		item.setMnemonic('u');
+		item.setText("Undo");
+		item.setName("undoItem");
+		item.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				AbodeUndoManager.getUndoManager().undo();
+				
+			}
+		});
+		AbodeUndoManager.getUndoManager().registerUndoButton(item);
+		editMenu.add(item);
+				
+		item=new JMenuItem();
+		item.setMnemonic('r');
+		item.setText("Redo");
+		item.setName("redoItem");
+		item.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				AbodeUndoManager.getUndoManager().redo();
+				
+			}
+		});
+		AbodeUndoManager.getUndoManager().registerRedoButton(item);
+		editMenu.add(item);
+		editMenu.add(new JSeparator());
+		
+		menubar.add(editMenu);
+		
 		viewMenu.setMnemonic('v');
 		viewMenu.setText("View");
 		viewMenu.setName("viewMenu");

@@ -38,10 +38,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import abode.JAbode;
 import abode.editing.CommentScraper;
 import abode.editing.Documentation;
 import abode.editing.LispBlob;
-import abode.visual.JAbode;
 
 
 import model.IEditableElement;

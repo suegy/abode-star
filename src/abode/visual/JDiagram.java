@@ -31,6 +31,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import abode.JAbode;
 import abode.SplashScreen;
 import abode.editing.IRenderer;
 

@@ -61,15 +61,6 @@ public class ActionElementEdit extends AbstractUndoableEdit {
 		o_enabled=action.isEnabled();
 		o_documentation=action.getElementDocumentation();
 		
-		
-		
-		
-		bIsSense=action.getIsSense();
-		strElementName=action.getElementName();
-		strValue=action.getValue();
-		strComparator=action.getPredicate();
-		this.enabled=action.isEnabled();
-		documentation=action.getElementDocumentation();
 	}
 	
 	public void undo(){
@@ -80,7 +71,7 @@ public class ActionElementEdit extends AbstractUndoableEdit {
 		actionElement.setPredicate(o_strComparator);
 		actionElement.setEnabled(o_enabled);
 		actionElement.setDocumentation(o_documentation);
-		
+		actionElement.refresh();
 	}
 	
 	public void redo(){
@@ -91,6 +82,7 @@ public class ActionElementEdit extends AbstractUndoableEdit {
 		actionElement.setPredicate(strComparator);
 		actionElement.setEnabled(enabled);
 		actionElement.setDocumentation(documentation);
+		actionElement.refresh();
 		
 	}
 	

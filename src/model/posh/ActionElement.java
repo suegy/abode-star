@@ -51,9 +51,9 @@ import model.IEditableElement;
 
 import abode.AbodeUndoManager;
 import abode.Configuration;
+import abode.JAbode;
 import abode.editing.ActionElementEdit;
 import abode.visual.HorizontalListOrganiser;
-import abode.visual.JAbode;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
@@ -83,6 +83,9 @@ public class ActionElement implements IEditableElement {
 	
 	//Docs
 	private String documentation;
+	
+	private JEditorWindow _subGui = null;
+	private JDiagram _diagram = null;
 
 	/**
 	 * Create an  action element with a comp/prim name only
@@ -214,6 +217,11 @@ public class ActionElement implements IEditableElement {
 		return this;
 	}
 	
+	public void refresh(){
+		_subGui.repaint();
+		_subGui.updateDiagrams(_diagram, getSelf());
+	}
+	
 	/**
 	 * When we click this Action Element in the GUI populate the properties
 	 * panel with the various attributes and setup listeners to catch modifications
@@ -228,6 +236,8 @@ public class ActionElement implements IEditableElement {
 		mainGui.popOutProperties();
 		diagram.repaint();
 
+		_subGui=subGui;
+		_diagram=diagram;
 		mainGui.setDocumentationField(this);
 		
 		// Create our new properties panel
@@ -243,10 +253,11 @@ public class ActionElement implements IEditableElement {
 
 		int vNamefieldSize = 15;
 		final JTextField namefield = new JTextField(getElementName(), vNamefieldSize);
-		namefield.getDocument().addUndoableEditListener(AbodeUndoManager.getUndoManager());
 		// Action listener to update the actual data when the field is updated
 		namefield.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), 
+						new ActionElementEdit(getSelf(), getSelf().bIsSense, namefield.getText(), getSelf().strValue, getSelf().strComparator, getSelf().enabled, getSelf().documentation)));
 				setElementName(namefield.getText());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
@@ -287,9 +298,14 @@ public class ActionElement implements IEditableElement {
 					
 					
 					if (Double.toString(value).length() < 1) {
+						_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), 
+								new ActionElementEdit(getSelf(), getSelf().bIsSense, getSelf().strElementName, null, null, getSelf().enabled, getSelf().documentation)));
+
 						setValue(null);
 						setPredicate(null);
 					} else {
+						_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), 
+								new ActionElementEdit(getSelf(), getSelf().bIsSense, getSelf().strElementName, Double.toString(value), (String)predicateSelector.getSelectedItem(), getSelf().enabled, getSelf().documentation)));
 						setValue(Double.toString(value));
 						setPredicate((String)predicateSelector.getSelectedItem());
 					}
@@ -334,7 +350,8 @@ public class ActionElement implements IEditableElement {
 			predicateSelector.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					ActionElement a=ActionElement.this;
-					AbodeUndoManager.getUndoListener().undoableEditHappened(new UndoableEditEvent(this, new ActionElementEdit(a,a.bIsSense,a.strElementName,a.strValue, (String)predicateSelector.getSelectedItem(),a.enabled,a.documentation)));
+					_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), 
+							new ActionElementEdit(getSelf(), getSelf().bIsSense, getSelf().strElementName, getSelf().strValue, (String)predicateSelector.getSelectedItem(), getSelf().enabled, getSelf().documentation)));
 					// Get the actual value
 					setPredicate((String)predicateSelector.getSelectedItem());
 					subGui.repaint();

@@ -26,7 +26,11 @@
 package model;
 
 
-import abode.visual.JAbode;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.UndoManager;
+
+import abode.AbodeUndoManager;
+import abode.JAbode;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
@@ -42,6 +46,11 @@ import model.posh.LearnableActionPattern;
  * @version 1.0
  */
 public interface IEditableElement {
+	
+	public static UndoableEditListener _undoListener = AbodeUndoManager.getUndoListener();
+	public static AbodeUndoManager _undo = AbodeUndoManager.getUndoManager();
+	
+
 	
 	/**
 	 * Sets enabled

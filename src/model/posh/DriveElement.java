@@ -49,7 +49,7 @@ import model.IEditableElement;
 import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
-import abode.visual.JAbode;
+import abode.JAbode;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;

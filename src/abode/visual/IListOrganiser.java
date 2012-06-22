@@ -25,6 +25,8 @@
  */
 package abode.visual;
 
+import abode.JAbode;
+
 /**
  * The IListOrganiser interface is intended to encapsulate the rearranging
  * functionality that comes with constructs in the rendered tree that make use

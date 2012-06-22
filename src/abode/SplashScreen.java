@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.undo.UndoManager;
 
-import abode.visual.JAbode;
 
 /**
  * SplashScreen is the class for pre-initialization of the various classes used
