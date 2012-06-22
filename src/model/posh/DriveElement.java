@@ -26,6 +26,7 @@
 package model.posh;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +43,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -271,19 +273,41 @@ public class DriveElement implements IEditableElement {
 		
 		// Add name label for action
 		JLabel actionlabel = new JLabel("Action");
-
-		final JTextField actionfield = new JTextField(getAction(), vTextFieldSize);
-
+		
+		JPanel actionPanel = new JPanel();
+		
 		// Action listener to update the actual data when the field is updated
+		ArrayList <String> existing_values = new ArrayList<String>();
+		
+		ArrayList elements = subGui.getLearnableActionPattern().getElements();
+		Iterator it = elements.iterator();
+		while (it.hasNext()) {
+			IEditableElement current = (IEditableElement) it.next();
+			if (current instanceof INamedElement) {
+				INamedElement namedCurrent = (INamedElement) current;
+				existing_values.add(namedCurrent.getName());
+			}
+		}
+		
+		final JComboBox actionfield = new JComboBox(existing_values.toArray());
+		
+		// Set the combo box to be the currently selected value if possible
+		for(int i = 0; i < actionfield.getItemCount(); i++){
+			if(getAction().equals(actionfield.getItemAt(i))){
+				actionfield.setSelectedIndex(i);
+				break;
+			}
+		}
+		actionfield.setEditable(true);
+		
 		actionfield.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setAction(actionfield.getText());
+				setAction((String)actionfield.getSelectedItem());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
 			}
 		});
 		
-		JPanel actionPanel = new JPanel();
 
 		actionPanel.add(actionlabel);
 		actionPanel.add(actionfield);
@@ -378,7 +402,11 @@ public class DriveElement implements IEditableElement {
 		
 		JPanel panel = new JPanel();
 		
-		JLabel typeLabel = new JLabel(" - Drive Element - ");
+		// Set the panel layout
+		panel.setLayout(new java.awt.GridLayout(0, 1));
+		JLabel typeLabel = new JLabel("Drive Element Properties (" + getName() + ")");
+		typeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		typeLabel.setFont(new Font(typeLabel.getFont().getName(),Font.BOLD,typeLabel.getFont().getSize() + 1));
 		// Add each panel
 		// Seperate panels are used to keep labels adjacent to text fields
 		panel.add(typeLabel);
@@ -507,7 +535,8 @@ public class DriveElement implements IEditableElement {
 			}
 		});
 		
-		menu.add(disableThis);
+		/* TODO: This has been disabled because this functionality doesn't actually work */
+//		menu.add(disableThis);
 		menu.addSeparator();
 		menu.add(trigger);
 		menu.add(addTrigger);

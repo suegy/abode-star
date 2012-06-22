@@ -630,58 +630,9 @@ public class JEditorWindow extends JInternalFrame{
 	private void bttnListPrimsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_bttnListPrimsActionPerformed
 		// Dump a list of the primitives used to the console
 
-		ArrayList actionList = new ArrayList();
-		ArrayList senseList = new ArrayList();
-
-		Iterator it = lapCurrent.getElements().iterator();
-		while (it.hasNext()) {
-			IEditableElement element = (IEditableElement) it.next();
-			if (element instanceof DriveCollection) {
-				DriveCollection collection = (DriveCollection) element;
-				Iterator driveElementLists = collection.getDriveElements().iterator();
-				while (driveElementLists.hasNext()) {
-					Iterator driveElements = ((ArrayList) driveElementLists.next()).iterator();
-					while (driveElements.hasNext()) {
-						DriveElement driveElement = (DriveElement) driveElements.next();
-						if (!actionList.contains(driveElement.getAction()) && (!lapCurrent.containsElementNamed(driveElement.getAction())))
-							actionList.add(driveElement.getAction());
-
-						Iterator triggerElements = driveElement.getTrigger().iterator();
-						while (triggerElements.hasNext()) {
-							ActionElement actionElement = (ActionElement) triggerElements.next();
-							if (!senseList.contains(actionElement.getElementName()))
-								senseList.add(actionElement.getElementName());
-						}
-					}
-				}
-			} else if (element instanceof Competence) {
-				Competence competence = (Competence) element;
-				Iterator competenceLists = competence.getElementLists().iterator();
-				while (competenceLists.hasNext()) {
-					Iterator competences = ((ArrayList) competenceLists.next()).iterator();
-					while (competences.hasNext()) {
-						CompetenceElement compElement = (CompetenceElement) competences.next();
-						if (!actionList.contains(compElement.getAction()) && (!lapCurrent.containsElementNamed(compElement.getAction())))
-							actionList.add(compElement.getAction());
-						Iterator triggerElements = compElement.getTrigger().iterator();
-						while (triggerElements.hasNext()) {
-							ActionElement actionElement = (ActionElement) triggerElements.next();
-							if (!senseList.contains(actionElement.getElementName()))
-								senseList.add(actionElement.getElementName());
-						}
-					}
-				}
-			} else if (element instanceof ActionPattern) {
-				ActionPattern ap = (ActionPattern) element;
-
-				Iterator elements = ap.getElements().iterator();
-				while (elements.hasNext()) {
-					ActionElement actionElement = (ActionElement) elements.next();
-					if (!actionList.contains(actionElement.getElementName()) && (!lapCurrent.containsElementNamed(actionElement.getElementName())))
-						actionList.add(actionElement.getElementName());
-				}
-			}
-		}
+		ArrayList actionList = getListOfActions();
+		ArrayList senseList = getListOfSenses();
+		
 		addOutputBuffer("<b>Action Primitives Used:</b><ul>");
 
 		Iterator actions = actionList.iterator();
@@ -697,6 +648,8 @@ public class JEditorWindow extends JInternalFrame{
 
 		ConsoleWriter.writeLine(getOutputBuffer(), this);
 		clearOutputBuffer();
+		// Open the console window to show this
+		mainFrame.popOutConsole();
 	}// GEN-LAST:event_bttnListPrimsActionPerformed
 
 	private void logicPaneComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_logicPaneComponentShown
@@ -855,6 +808,8 @@ public class JEditorWindow extends JInternalFrame{
 				addOutputBuffer("<font style=color:green><b>Validation against " + chooser.getSelectedFile().getName() + " complete: </b></font>" + errorCount + " errors<BR>");
 				ConsoleWriter.writeLine(getOutputBuffer(), this);
 				clearOutputBuffer();
+				// Open the console to show the results
+				mainFrame.popOutConsole();
 			}
 		}
 	}// GEN-LAST:event_bttnValidateActionPerformed
@@ -967,6 +922,103 @@ public class JEditorWindow extends JInternalFrame{
 			scanFor.grabFocus();
 			currentScrollpane.getViewport().scrollRectToVisible(scanFor.getBounds());
 		}
+	}
+	
+	
+	/** Returns a string of all of the actions in the given LAP object */
+	public ArrayList<String> getListOfActions() {
+		ArrayList <String> actionList = new ArrayList <String> ();
+
+		Iterator it = lapCurrent.getElements().iterator();
+		while (it.hasNext()) {
+			IEditableElement element = (IEditableElement) it.next();
+			if (element instanceof DriveCollection) {
+				DriveCollection collection = (DriveCollection) element;
+				Iterator driveElementLists = collection.getDriveElements().iterator();
+				while (driveElementLists.hasNext()) {
+					Iterator driveElements = ((ArrayList) driveElementLists.next()).iterator();
+					while (driveElements.hasNext()) {
+						DriveElement driveElement = (DriveElement) driveElements.next();
+						if (!actionList.contains(driveElement.getAction()) && (!lapCurrent.containsElementNamed(driveElement.getAction())))
+							actionList.add(driveElement.getAction());
+
+						Iterator triggerElements = driveElement.getTrigger().iterator();
+					}
+				}
+			} else if (element instanceof Competence) {
+				Competence competence = (Competence) element;
+				Iterator competenceLists = competence.getElementLists().iterator();
+				while (competenceLists.hasNext()) {
+					Iterator competences = ((ArrayList) competenceLists.next()).iterator();
+					while (competences.hasNext()) {
+						CompetenceElement compElement = (CompetenceElement) competences.next();
+						if (!actionList.contains(compElement.getAction()) && (!lapCurrent.containsElementNamed(compElement.getAction())))
+							actionList.add(compElement.getAction());
+						Iterator triggerElements = compElement.getTrigger().iterator();
+					}
+				}
+			} else if (element instanceof ActionPattern) {
+				ActionPattern ap = (ActionPattern) element;
+
+				Iterator elements = ap.getElements().iterator();
+				while (elements.hasNext()) {
+					ActionElement actionElement = (ActionElement) elements.next();
+					if (!actionList.contains(actionElement.getElementName()) && (!lapCurrent.containsElementNamed(actionElement.getElementName())))
+						actionList.add(actionElement.getElementName());
+				}
+			}
+		}
+		return actionList;
+	}
+	
+	/** Returns a string of all of the senses in the given LAP object */
+	public ArrayList<String> getListOfSenses() {
+		ArrayList <String> senseList = new ArrayList <String> ();
+		
+		Iterator it = lapCurrent.getElements().iterator();
+		while (it.hasNext()) {
+			IEditableElement element = (IEditableElement) it.next();
+			if (element instanceof DriveCollection) {
+				DriveCollection collection = (DriveCollection) element;
+				Iterator driveElementLists = collection.getDriveElements().iterator();
+				while (driveElementLists.hasNext()) {
+					Iterator driveElements = ((ArrayList) driveElementLists.next()).iterator();
+					while (driveElements.hasNext()) {
+						DriveElement driveElement = (DriveElement) driveElements.next();
+						Iterator triggerElements = driveElement.getTrigger().iterator();
+						while (triggerElements.hasNext()) {
+							ActionElement actionElement = (ActionElement) triggerElements.next();
+							if (!senseList.contains(actionElement.getElementName()))
+								senseList.add(actionElement.getElementName());
+						}
+					}
+				}
+			} else if (element instanceof Competence) {
+				Competence competence = (Competence) element;
+				// Get all of the goal senses as well
+				Iterator goalList = competence.getGoal().iterator();
+				while(goalList.hasNext()){
+					ActionElement goal = (ActionElement)goalList.next();
+					if (!senseList.contains(goal.getElementName()))
+						senseList.add(goal.getElementName());
+				}
+				
+				Iterator competenceLists = competence.getElementLists().iterator();
+				while (competenceLists.hasNext()) {
+					Iterator competences = ((ArrayList) competenceLists.next()).iterator();
+					while (competences.hasNext()) {
+						CompetenceElement compElement = (CompetenceElement) competences.next();
+						Iterator triggerElements = compElement.getTrigger().iterator();
+						while (triggerElements.hasNext()) {
+							ActionElement actionElement = (ActionElement) triggerElements.next();
+							if (!senseList.contains(actionElement.getElementName()))
+								senseList.add(actionElement.getElementName());
+						}
+					}
+				}
+			}
+		}
+		return senseList;
 	}
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables

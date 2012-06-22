@@ -26,6 +26,7 @@
 package model.posh;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import model.IEditableElement;
 
@@ -274,7 +276,11 @@ public class DriveCollection implements IEditableElement {
 	
 		JPanel panel = new JPanel();
 		
-		JLabel typeLabel = new JLabel(" - Drive Collection - ");
+		// Set the panel layout
+		panel.setLayout(new java.awt.GridLayout(0, 1));
+		JLabel typeLabel = new JLabel("Drive Collection Properties (" + getName() + ")");
+		typeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		typeLabel.setFont(new Font(typeLabel.getFont().getName(),Font.BOLD,typeLabel.getFont().getSize() + 1));
 		// Add each panel
 		// Seperate panels are used to keep labels adjacent to text fields
 		panel.add(typeLabel);
@@ -378,7 +384,8 @@ public class DriveCollection implements IEditableElement {
 			}
 		});
 
-		menu.add(disableThis);
+		/* TODO: This has been disabled because this functionality doesn't actually work */
+//		menu.add(disableThis);
 		menu.addSeparator();
 		menu.add(addNew);
 		menu.add(addGoal);

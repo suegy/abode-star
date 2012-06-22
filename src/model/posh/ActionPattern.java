@@ -26,6 +26,7 @@
 package model.posh;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
@@ -322,13 +324,18 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		
 		JPanel panel = new JPanel();
 		
-		JLabel typeLabel = new JLabel(" - Action Pattern - ");
+		// Set the panel layout
+		panel.setLayout(new java.awt.GridLayout(0, 1));
+		JLabel typeLabel = new JLabel("Action Pattern Properties (" + getName() + ")");
+		typeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		typeLabel.setFont(new Font(typeLabel.getFont().getName(),Font.BOLD,typeLabel.getFont().getSize() + 1));
 		// Add each panel
 		// Seperate panels are used to keep labels adjacent to text fields
 		panel.add(typeLabel);
 		panel.add(namePanel);
 		panel.add(timeoutPanel);
-		panel.add(enabled);
+		// TODO: Removed this as this functionality isn't currently working
+//		panel.add(enabled);
 
 		mainGui.setPropertiesPanel(panel);
 	}
@@ -387,7 +394,8 @@ public class ActionPattern implements IEditableElement, INamedElement {
 			}
 		});
 
-		menu.add(disableThis);
+		/* TODO: This has been disabled because this functionality doesn't actually work */
+//		menu.add(disableThis);
 		menu.addSeparator();
 		menu.add(addElement);
 		menu.add(deleteElement);

@@ -70,6 +70,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -299,7 +300,7 @@ public class JAbode extends JFrame {
 		editTitle = new javax.swing.JLabel();
 		commandsSplitPane = new javax.swing.JSplitPane(); 
 		
-		tablePanel = new javax.swing.JPanel();
+		propertiesScrollablePanel = new javax.swing.JScrollPane();
 		propertiesPanelContents = new javax.swing.JPanel();
 		commandsPanel = new javax.swing.JPanel();
 		jLabel3 = new javax.swing.JLabel();
@@ -328,17 +329,17 @@ public class JAbode extends JFrame {
 		saveAllMenuItem = new javax.swing.JMenuItem();
 		saveAsMenuItem = new javax.swing.JMenuItem();
 		jSeparator1 = new javax.swing.JSeparator();
-		jMenuItem6 = new javax.swing.JMenuItem();
+		exitMenuItem = new javax.swing.JMenuItem();
 		viewMenu = new javax.swing.JMenu();
 		consoleMenuItem = new javax.swing.JCheckBoxMenuItem();
 		propertiesMenuItem = new javax.swing.JCheckBoxMenuItem();
-		jMenuItem4 = new javax.swing.JMenuItem();
+		hideValidationItem = new javax.swing.JMenuItem();
 		toolMenu = new javax.swing.JMenu();
-		jMenuItem1 = new javax.swing.JMenuItem();
+		optionsMenuItem = new javax.swing.JMenuItem();
 		windowMenu = new javax.swing.JMenu();
 		helpMenu = new javax.swing.JMenu();
-		jMenuItem2 = new javax.swing.JMenuItem();
-		jMenuItem3 = new javax.swing.JMenuItem();
+		manualMenuItem = new javax.swing.JMenuItem();
+		aboutMenuItem = new javax.swing.JMenuItem();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("ABODE - Advanced Behaviour Oriented Design Environment");
@@ -377,11 +378,12 @@ public class JAbode extends JFrame {
 		sideSplitpane.setLeftComponent(desktop);
 
 		innerSplitpane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-		innerSplitpane.setResizeWeight(0.75);
 		innerSplitpane.setContinuousLayout(true);
 		innerSplitpane.setOneTouchExpandable(true);
 		innerSplitpane.setPreferredSize(new java.awt.Dimension(302, 70));
+		
 		propertiesPanel.setPreferredSize(new Dimension(302,70));
+		propertiesPanel.setMinimumSize(new Dimension(302,240));
 		propertiesPanel.setLayout(new java.awt.BorderLayout());
 
 		propertiesTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
@@ -393,13 +395,11 @@ public class JAbode extends JFrame {
 		
 		propertiesPanel.add(propertiesTitle, java.awt.BorderLayout.NORTH);
 
-		tablePanel.setLayout(new java.awt.BorderLayout());
+		propertiesScrollablePanel.setViewportView(propertiesPanelContents);
 
-		tablePanel.add(propertiesPanelContents, java.awt.BorderLayout.CENTER);
+		propertiesPanel.add(propertiesScrollablePanel, java.awt.BorderLayout.CENTER);
 
-		propertiesPanel.add(tablePanel, java.awt.BorderLayout.CENTER);
-
-		innerSplitpane.setRightComponent(propertiesPanel);
+		innerSplitpane.setRightComponent(documentationPanel);
 
 		commandsPanel.setLayout(new java.awt.BorderLayout());
 
@@ -436,6 +436,7 @@ public class JAbode extends JFrame {
 		commandsSplitPane.setRightComponent(editPanel);
 
 		documentationPanel.setLayout(new BorderLayout());
+		documentationPanel.setMaximumSize(new Dimension(302,150));
 		documentationTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
 		documentationTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon/document.gif")));
 		documentationTitle.setLabelFor(documentationPanel);
@@ -467,10 +468,9 @@ public class JAbode extends JFrame {
 		topSideSplitpane.setOneTouchExpandable(true);
 		topSideSplitpane.setPreferredSize(new java.awt.Dimension(302, 200));
 		topSideSplitpane.setLeftComponent(commandsSplitPane);
-		topSideSplitpane.setRightComponent(documentationPanel);
+		topSideSplitpane.setRightComponent(propertiesPanel);
 		
 		jLabel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-		
 		
 		innerSplitpane.setLeftComponent(topSideSplitpane);
 
@@ -648,14 +648,14 @@ public class JAbode extends JFrame {
 
 		fileMenu.add(jSeparator1);
 
-		jMenuItem6.setText("Exit");
-		jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+		exitMenuItem.setText("Exit");
+		exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jMenuItem6ActionPerformed(evt);
+				exitProgramEvent(evt);
 			}
 		});
 
-		fileMenu.add(jMenuItem6);
+		fileMenu.add(exitMenuItem);
 
 		menubar.add(fileMenu);
 		
@@ -704,7 +704,7 @@ public class JAbode extends JFrame {
 		consoleMenuItem.setText("Output");
 		consoleMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jCheckBoxMenuItem1ActionPerformed(evt);
+				openOutputEvent(evt);
 			}
 		});
 
@@ -713,33 +713,33 @@ public class JAbode extends JFrame {
 		propertiesMenuItem.setText("Commands/Properties");
 		propertiesMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jCheckBoxMenuItem2ActionPerformed(evt);
+				openCommandPropertiesEvent(evt);
 			}
 		});
 
 		viewMenu.add(propertiesMenuItem);
 
-		jMenuItem4.setText("Hide Validation");
-		jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+		hideValidationItem.setText("Hide Validation");
+		hideValidationItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jMenuItem4ActionPerformed(evt);
+				hideValidationEvent(evt);
 			}
 		});
 
-		viewMenu.add(jMenuItem4);
+		viewMenu.add(hideValidationItem);
 
 		menubar.add(viewMenu);
 
 		toolMenu.setMnemonic('t');
 		toolMenu.setText("Tools");
-		jMenuItem1.setText("Options");
-		jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+		optionsMenuItem.setText("Options");
+		optionsMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jMenuItem1ActionPerformed(evt);
+				openOptionsMenuEvent(evt);
 			}
 		});
 
-		toolMenu.add(jMenuItem1);
+		toolMenu.add(optionsMenuItem);
 
 		menubar.add(toolMenu);
 
@@ -760,23 +760,23 @@ public class JAbode extends JFrame {
 			}
 		});
 
-		jMenuItem2.setText("Manual");
-		jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+		manualMenuItem.setText("Manual");
+		manualMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jMenuItem2ActionPerformed(evt);
+				openMaualEvent(evt);
 			}
 		});
 
-		helpMenu.add(jMenuItem2);
+		helpMenu.add(manualMenuItem);
 
-		jMenuItem3.setText("About");
-		jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+		aboutMenuItem.setText("About");
+		aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jMenuItem3ActionPerformed(evt);
+				openAboutMenuEvent(evt);
 			}
 		});
 
-		helpMenu.add(jMenuItem3);
+		helpMenu.add(aboutMenuItem);
 
 		menubar.add(helpMenu);
 		
@@ -790,13 +790,17 @@ public class JAbode extends JFrame {
 		        KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		saveAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(
 		        KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+		manualMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_F1, 0));
+		aboutMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_F1, ActionEvent.SHIFT_MASK));
 
 		setJMenuBar(menubar);
 		pack();
 	}
 	// </editor-fold>//GEN-END:initComponents
 
-	private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem4ActionPerformed
+	private void hideValidationEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem4ActionPerformed
 		JEditorWindow window = (JEditorWindow) desktop.getSelectedFrame();
 		if (window != null)
 			window.resetDiagrams();
@@ -813,13 +817,13 @@ public class JAbode extends JFrame {
 	/**
 	 * Close the application
 	 */
-	private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem6ActionPerformed
+	private void exitProgramEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem6ActionPerformed
 
 		setVisible(false);
 		dispose();
 	}// GEN-LAST:event_jMenuItem6ActionPerformed
 
-	private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
+	private void openCommandPropertiesEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
 		if (propertiesMenuItem.isSelected()) {
 			popOutProperties();
 		} else {
@@ -827,7 +831,7 @@ public class JAbode extends JFrame {
 		}
 	}// GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
-	private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
+	private void openOutputEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
 		if (consoleMenuItem.isSelected()) {
 			popOutConsole();
 		} else {
@@ -836,12 +840,12 @@ public class JAbode extends JFrame {
 
 	}// GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
 
-	private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem2ActionPerformed
+	private void openMaualEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem2ActionPerformed
 		JManual manual = new JManual();
 		manual.show();
 	}// GEN-LAST:event_jMenuItem2ActionPerformed
 
-	private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem3ActionPerformed
+	private void openAboutMenuEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem3ActionPerformed
 		JAbout about = new JAbout();
 		about.show();
 	}// GEN-LAST:event_jMenuItem3ActionPerformed
@@ -869,7 +873,7 @@ public class JAbode extends JFrame {
 
 	}// GEN-LAST:event_jButton1ActionPerformed
 
-	private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem1ActionPerformed
+	private void openOptionsMenuEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem1ActionPerformed
 		JOptionsScreen options = new JOptionsScreen(this);
 		Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 		options.setLocation(SCREEN_SIZE.width / 2 - options.getWidth() / 2, SCREEN_SIZE.height / 2 - options.getHeight() / 2);
@@ -1197,8 +1201,11 @@ public class JAbode extends JFrame {
 	 */
 	public void setPropertiesPanel(JPanel panel) {
 		propertiesPanelContents = panel;
-		tablePanel.removeAll();
-		tablePanel.add(propertiesPanelContents);
+		propertiesScrollablePanel = new JScrollPane(panel);
+		propertiesScrollablePanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		propertiesPanel.removeAll();
+		propertiesPanel.add(propertiesTitle, java.awt.BorderLayout.NORTH);
+		propertiesPanel.add(propertiesScrollablePanel, java.awt.BorderLayout.CENTER);
 		validate();
 	}
 
@@ -1239,7 +1246,7 @@ public class JAbode extends JFrame {
 	 * Clear the properties table
 	 */
 	public void clearProperties() {
-		tablePanel.removeAll();
+		propertiesScrollablePanel.removeAll();
 	}
 
 	/**
@@ -1289,15 +1296,15 @@ public class JAbode extends JFrame {
 
 	private javax.swing.JLabel jLabel3;
 
-	private javax.swing.JMenuItem jMenuItem1;
+	private javax.swing.JMenuItem optionsMenuItem;
 
-	private javax.swing.JMenuItem jMenuItem2;
+	private javax.swing.JMenuItem manualMenuItem;
 
-	private javax.swing.JMenuItem jMenuItem3;
+	private javax.swing.JMenuItem aboutMenuItem;
 
-	private javax.swing.JMenuItem jMenuItem4;
+	private javax.swing.JMenuItem hideValidationItem;
 
-	private javax.swing.JMenuItem jMenuItem6;
+	private javax.swing.JMenuItem exitMenuItem;
 
 	private javax.swing.JPanel jPanel1;
 
@@ -1371,7 +1378,7 @@ public class JAbode extends JFrame {
 
 	private javax.swing.JPanel statusPanel;
 
-	private javax.swing.JPanel tablePanel;
+	private javax.swing.JScrollPane propertiesScrollablePanel;
 
 	private javax.swing.JMenu toolMenu;
 

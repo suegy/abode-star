@@ -129,7 +129,7 @@ public class DotLapReader implements ILAPReader {
 		
 		// The count / index of the elements that are currently being added to the tree.
 		// Used to get the associated comments.
-		int elementIndex = 0;
+		int elementIndex = 1;
 
 		// Carry on scanning
 		while (children.hasNext()) {
@@ -138,11 +138,11 @@ public class DotLapReader implements ILAPReader {
 
 			// Add it to our children list after parsing it
 			Object element = parseElement(child, topLevelComments.getCommentString(elementIndex));
-			elementIndex++;
 			if (element instanceof Documentation) {
 				documentation = (Documentation) element;
 			} else {
 				elements.add(element);
+				elementIndex++;
 			}
 		}
 

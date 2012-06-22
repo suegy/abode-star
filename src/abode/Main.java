@@ -27,6 +27,7 @@ public class Main {
     	
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		    	// Try using the Nimbus look and feel
 		        if ("Nimbus".equals(info.getName())) {
 		            UIManager.setLookAndFeel(info.getClassName());
 		            break;
