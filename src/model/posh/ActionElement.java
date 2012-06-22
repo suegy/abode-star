@@ -243,17 +243,42 @@ public class ActionElement implements IEditableElement {
 			namelabel = new JLabel("Action Name");
 		}
 
-		int vNamefieldSize = 15;
-		final JTextField namefield = new JTextField(getElementName(), vNamefieldSize);
-		namefield.getDocument().addUndoableEditListener(AbodeUndoManager.getUndoManager());
+		
 		// Action listener to update the actual data when the field is updated
+		ArrayList <String> existing_values = new ArrayList<String>();
+		
+		if(getIsSense()){
+			for(String str : subGui.getListOfSenses()){
+				existing_values.add(str);
+			}
+		}
+		else{
+			for(String str : subGui.getListOfActions()){
+				existing_values.add(str);
+			}
+		}
+		
+		final JComboBox namefield = new JComboBox(existing_values.toArray());
+		
+		// Set the combo box to be the currently selected value if possible
+		for(int i = 0; i < namefield.getItemCount(); i++){
+			if(getElementName().equals(namefield.getItemAt(i))){
+				namefield.setSelectedIndex(i);
+				break;
+			}
+		}
+		namefield.setEditable(true);
+		
 		namefield.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setElementName(namefield.getText());
+				setElementName((String)namefield.getSelectedItem());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
 			}
 		});
+		
+//		TODO: Have changed this to a combo box, does this need to be in here?
+//		namefield.getDocument().addUndoableEditListener(AbodeUndoManager.getUndoManager());
 
 		JPanel namePanel = new JPanel();
 		

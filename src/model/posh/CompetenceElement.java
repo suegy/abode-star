@@ -32,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -240,12 +241,33 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		// Add name label for action
 		JLabel actionlabel = new JLabel("Action");
 
-		final JTextField actionfield = new JTextField(getAction(), vTextFieldSize);
-
 		// Action listener to update the actual data when the field is updated
+		ArrayList <String> existing_values = new ArrayList<String>();
+		
+		ArrayList elements = subGui.getLearnableActionPattern().getElements();
+		Iterator it = elements.iterator();
+		while (it.hasNext()) {
+			IEditableElement current = (IEditableElement) it.next();
+			if (current instanceof INamedElement) {
+				INamedElement namedCurrent = (INamedElement) current;
+				existing_values.add(namedCurrent.getName());
+			}
+		}
+		
+		final JComboBox actionfield = new JComboBox(existing_values.toArray());
+		
+		// Set the combo box to be the currently selected value if possible
+		for(int i = 0; i < actionfield.getItemCount(); i++){
+			if(getAction().equals(actionfield.getItemAt(i))){
+				actionfield.setSelectedIndex(i);
+				break;
+			}
+		}
+		actionfield.setEditable(true);
+		
 		actionfield.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setAction(actionfield.getText());
+				setAction((String)actionfield.getSelectedItem());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
 			}
