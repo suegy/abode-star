@@ -665,7 +665,7 @@ public class JAbode extends JFrame {
 		editMenu.setText("Edit");
 		editMenu.setName("editMenu");
 
-		JMenuItem item=new JMenuItem();
+		JMenuItem item = new JMenuItem();
 		item.setMnemonic('u');
 		item.setText("Undo");
 		item.setName("undoItem");
@@ -677,10 +677,13 @@ public class JAbode extends JFrame {
 				
 			}
 		});
+		
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+		
 		AbodeUndoManager.getUndoManager().registerUndoButton(item);
 		editMenu.add(item);
 				
-		item=new JMenuItem();
+		item = new JMenuItem();
 		item.setMnemonic('r');
 		item.setText("Redo");
 		item.setName("redoItem");
@@ -692,6 +695,9 @@ public class JAbode extends JFrame {
 				
 			}
 		});
+		
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+		
 		AbodeUndoManager.getUndoManager().registerRedoButton(item);
 		editMenu.add(item);
 		editMenu.add(new JSeparator());
