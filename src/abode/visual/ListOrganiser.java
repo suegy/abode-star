@@ -34,8 +34,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.UndoableEditEvent;
 
 import abode.JAbode;
+import abode.control.AbodeActionHandler;
+import abode.editing.DeleteEdit;
 
 /**
  * The super list organiser object for providing simple "delete me" functionality
@@ -63,15 +66,10 @@ public class ListOrganiser implements IListOrganiser {
 	
 	public void addDeleteButton(final JPanel panel, final JEditorWindow internal, final JTreeNode subject,final JDiagram diagram)
 	{
-		final ArrayList myGroup = subject.getGroup();
-		
 		JButton bttnDelete = new JButton("Delete element", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
 		bttnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
-					myGroup.remove(subject.getValue());
-					internal.updateDiagrams(diagram, subject.getParentNode().getValue());
-				}
+				AbodeActionHandler.getActionHandler().deleteElementAction(diagram, internal, subject);
 			}
 		});
 		bttnDelete.setHorizontalAlignment(JButton.LEFT);
@@ -86,18 +84,11 @@ public class ListOrganiser implements IListOrganiser {
 	
 	public void addDeleteGroupButton(final JPanel panel, final JEditorWindow internal, final JTreeNode subject,final JDiagram diagram)
 	{
-		final ArrayList groupGroup = subject.getParentNode().getGroup();
-		final ArrayList myGroup = subject.getGroup();
-		
 		JButton bttnDelete = new JButton("Delete group", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
 		bttnDelete.setHorizontalAlignment(JButton.LEFT);
 		bttnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-	
-				if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
-					groupGroup.remove(myGroup);
-					internal.updateDiagrams(diagram, subject.getParentNode().getValue());
-				}
+				AbodeActionHandler.getActionHandler().deleteGroupAction(diagram, internal, subject);
 			}
 		});
 		

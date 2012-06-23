@@ -35,8 +35,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.UndoableEditEvent;
 
 import abode.JAbode;
+import abode.control.AbodeActionHandler;
+import abode.editing.PositionEdit;
 
 import model.IEditableElement;
 
@@ -71,9 +74,7 @@ public class HorizontalListOrganiser extends ListOrganiser {
 		JButton bttnMoveLeft = new JButton("Move left", new ImageIcon(getClass().getResource("/image/icon/arrowLeft.gif")));
 		bttnMoveLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				int index = myGroup.indexOf(element);
-				myGroup.add(index - 1, myGroup.remove(index));
-				internal.updateDiagrams(diagram, element);
+				AbodeActionHandler.getActionHandler().moveUpInGroupAction(diagram, internal, subject);
 			}
 		});
 		bttnMoveLeft.setHorizontalAlignment(JButton.LEFT);
@@ -96,10 +97,7 @@ public class HorizontalListOrganiser extends ListOrganiser {
 		JButton bttnMoveRight = new JButton("Move right", new ImageIcon(getClass().getResource("/image/icon/arrowRight.gif")));
 		bttnMoveRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				int index = myGroup.indexOf(subject.getValue());
-				myGroup.add(index, myGroup.remove(index + 1));
-
-				internal.updateDiagrams(diagram, subject.getValue());
+				AbodeActionHandler.getActionHandler().moveDownInGroupAction(diagram, internal, subject);
 			}
 		});
 		bttnMoveRight.setHorizontalAlignment(JButton.LEFT);
