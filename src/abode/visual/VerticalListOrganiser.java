@@ -41,7 +41,9 @@ import javax.swing.event.UndoableEditEvent;
 import abode.AbodeUndoManager;
 import abode.JAbode;
 import abode.control.AbodeActionHandler;
+import abode.editing.MergeGroupsEdit;
 import abode.editing.PositionEdit;
+import abode.editing.UnGroupEdit;
 
 import model.IEditableElement;
 
@@ -176,14 +178,14 @@ public class VerticalListOrganiser extends ListOrganiser {
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get the group above us
 				ArrayList groupAbove = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) - 1);
-
+				_undoListener.undoableEditHappened(new UndoableEditEvent(groupGroup, new MergeGroupsEdit(diagram, internal, myGroup, groupGroup.indexOf(myGroup) , groupAbove, groupGroup, subject)));
 				// Remove us from the list of lists
 				groupGroup.remove(myGroup);
 
 				// Add each element to the end of the list above
-				Iterator it = myGroup.iterator();
-				while (it.hasNext())
-					groupAbove.add(it.next());
+				for (Object object : myGroup)
+					groupAbove.add(object);
+
 
 				internal.updateDiagrams(diagram, subject.getValue());
 
@@ -207,14 +209,13 @@ public class VerticalListOrganiser extends ListOrganiser {
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get the group above us
 				ArrayList groupBelow = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) + 1);
-
+				_undoListener.undoableEditHappened(new UndoableEditEvent(groupGroup, new MergeGroupsEdit(diagram, internal, myGroup, groupGroup.indexOf(myGroup) , groupBelow, groupGroup, subject)));
 				// Remove us from the list of lists
 				groupGroup.remove(myGroup);
 
 				// Add each element to the end of the list above
-				Iterator it = myGroup.iterator();
-				while (it.hasNext())
-					groupBelow.add(it.next());
+				for (Object object : myGroup)
+					groupBelow.add(object);
 
 				internal.updateDiagrams(diagram, subject.getValue());
 			}
@@ -230,23 +231,26 @@ public class VerticalListOrganiser extends ListOrganiser {
 		if (!(groupGroup.indexOf(myGroup) < (groupGroup.size() - 1))) {
 			bttnMergeDown.setEnabled(false);
 		}
-		
-		addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 
-		addDeleteGroupButton(mainGui.getEditPanel(), internal, subject, diagram);
 
 		// Dissolve the group
 		JButton bttnUngroup = new JButton("Ungroup Elements", new ImageIcon(getClass().getResource("/image/icon/ungroup.gif")));
 		bttnUngroup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				Iterator it = myGroup.iterator();
-				int done = 0;
-				while (it.hasNext()) {
-					ArrayList newGroup = new ArrayList();
-					newGroup.add(it.next());
-					groupGroup.add(groupGroup.indexOf(myGroup) + (done++), newGroup);
+				int index= groupGroup.indexOf(myGroup);
+				ArrayList<IEditableElement> [] unGrouped=new ArrayList[myGroup.size()];
+				for (Object item : myGroup) {
+					unGrouped[myGroup.indexOf(item)]=new ArrayList<IEditableElement>();
+					unGrouped[myGroup.indexOf(item)].add((IEditableElement)item);
 				}
 				groupGroup.remove(myGroup);
+				for (Object object : unGrouped) {
+					groupGroup.add(index,object);
+				}
+				
+				_undoListener.undoableEditHappened(new UndoableEditEvent(groupGroup, new UnGroupEdit(diagram, internal, myGroup, index, unGrouped, groupGroup, subject)));
+				
+				
 				internal.updateDiagrams(diagram, subject.getValue());
 
 			}
@@ -255,5 +259,10 @@ public class VerticalListOrganiser extends ListOrganiser {
 		bttnUngroup.setToolTipText("Dissolves a group. All of the elements will return to being singular elements.");
 		
 		panel.add(bttnUngroup);
+		
+		
+		addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
+
+		addDeleteGroupButton(mainGui.getEditPanel(), internal, subject, diagram);
 	}
 }

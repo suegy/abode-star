@@ -46,6 +46,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.UndoableEditEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -54,6 +55,8 @@ import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
 import abode.JAbode;
+import abode.editing.ActionPatternEdit;
+import abode.editing.DeleteEdit;
 import abode.visual.HorizontalListOrganiser;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
@@ -81,6 +84,9 @@ public class ActionPattern implements IEditableElement, INamedElement {
 	
 	//Docs
 	private String documentation;
+	
+	private JEditorWindow _subGui = null;
+	private JDiagram _diagram = null;
 	
 	/**
 	 * Initialize our action pattern with a blank list of elements
@@ -191,6 +197,11 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		tTimeOut = unit;
 	}
 	
+	public void refresh(){
+		_subGui.repaint();
+		_subGui.updateDiagrams(_diagram, getSelf());
+	}
+	
 	/**
 	 * When we click this Action Pattern in the GUI populate the properties
 	 * panel with the various attributes and setup listeners to catch modifications
@@ -204,6 +215,8 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		// Show the right menu and refresh this button to show the new state
 		mainGui.popOutProperties();
 		diagram.repaint();
+		_diagram = diagram;
+		_subGui = subGui;
 
 		mainGui.setDocumentationField(this);
 		
@@ -216,6 +229,7 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		// Action listener to update the actual data when the field is updated
 		namefield.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new ActionPatternEdit(getSelf(), alElements, tTimeOut, namefield.getText(), enabled, documentation)));
 				setName(namefield.getText());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
@@ -244,6 +258,8 @@ public class ActionPattern implements IEditableElement, INamedElement {
 			public void stateChanged(ChangeEvent e) {
 				double value = (Double) spinnerModel.getValue();
 				if (Double.toString(value).length() < 1) {
+					_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new ActionPatternEdit(getSelf(), alElements, null, strName, enabled, documentation)));
+					
 					setTimeUnit(null);
 				} else {
 					String strTimeUnit;
@@ -256,6 +272,7 @@ public class ActionPattern implements IEditableElement, INamedElement {
 						strTimeUnit = getTimeUnit().getUnitName();
 					}
 					//Set the new timeout
+					_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new ActionPatternEdit(getSelf(), alElements, new TimeUnit(strTimeUnit, value), strName, enabled, documentation)));
 					setTimeUnit(new TimeUnit(strTimeUnit, value));
 				}
 				subGui.repaint();
@@ -304,6 +321,7 @@ public class ActionPattern implements IEditableElement, INamedElement {
 				else{
 					value = getTimeUnit().getUnitValue();
 				}
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new ActionPatternEdit(getSelf(), alElements, new TimeUnit((String)timeoutUnit.getSelectedItem(), value), strName, enabled, documentation)));
 				setTimeUnit(new TimeUnit((String)timeoutUnit.getSelectedItem(), value));
 			}
 		});
@@ -316,6 +334,7 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		// Action listener for enabling / disabling the Action Pattern
 		enabled.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new ActionPatternEdit(getSelf(), alElements, tTimeOut, strName, enabled.isSelected(), documentation)));
 				setEnabled(enabled.isSelected());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
@@ -370,6 +389,7 @@ public class ActionPattern implements IEditableElement, INamedElement {
 				} else {
 					setEnabled(true);
 				}
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new ActionPatternEdit(getSelf(), alElements, tTimeOut, strName, isEnabled(), documentation)));
 				window.updateDiagrams(diagram, null);
 			}
 		});
@@ -378,7 +398,9 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		addElement.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent aev) {
 				ActionElement ae = new ActionElement(false, "someComposite");
-
+				ArrayList newElements = (ArrayList) getSelf().getElements().clone();
+				newElements.add(ae);
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new ActionPatternEdit(getSelf(), newElements, tTimeOut, strName, enabled, documentation)));
 				getSelf().getElements().add(ae);
 				window.updateDiagrams(diagram, ae);
 			}
@@ -388,6 +410,7 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		deleteElement.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this Action Pattern?") == JOptionPane.YES_OPTION) {
+					_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new DeleteEdit(diagram, window, showOn.getParentNode(), getSelf(), lap.getElements().indexOf(getSelf()), lap.getElements())));
 					lap.getElements().remove(getSelf());
 					window.updateDiagrams(diagram, showOn.getParentNode().getValue());
 				}

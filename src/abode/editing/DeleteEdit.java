@@ -55,14 +55,14 @@ public class DeleteEdit extends AbstractUndoableEdit {
 		super.undo();
 		store.add(o_Pos, elem);
 		
-		_editor.updateDiagrams(_diagram,parent.getValue());
+		_editor.updateDiagrams(_diagram,(parent instanceof JTreeNode) ? parent.getValue() : null);
 		
 	}
 	public void redo(){
 		super.redo();
 		store.remove(elem);
 		
-		_editor.updateDiagrams(_diagram, parent.getValue());
+		_editor.updateDiagrams(_diagram, (parent instanceof JTreeNode) ? parent.getValue() : null);
 		
 	}
 

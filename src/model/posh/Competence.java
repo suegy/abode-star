@@ -46,6 +46,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.UndoableEditEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -54,6 +55,8 @@ import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
 import abode.JAbode;
+import abode.editing.CompetenceEdit;
+import abode.editing.DeleteEdit;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
@@ -85,6 +88,9 @@ public class Competence implements IEditableElement, INamedElement {
 
 	//docs
 	private String documentation;
+	
+	private JEditorWindow _subGui = null;
+	private JDiagram _diagram = null;
 
 	/**
 	 * Create an empty competence with only a name and a time
@@ -234,6 +240,8 @@ public class Competence implements IEditableElement, INamedElement {
 	public void onSelect(JAbode mainGui, final JEditorWindow subGui, final JDiagram diagram) {
 		mainGui.popOutProperties();
 		diagram.repaint();
+		_subGui = subGui;
+		_diagram = diagram;
 		
 		mainGui.setDocumentationField(this);
 		
@@ -246,6 +254,7 @@ public class Competence implements IEditableElement, INamedElement {
 		// Action listener to update the actual data when the field is updated
 		namefield.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), alElementLists, alGoal, tTimeout, namefield.getText(), enabled, documentation)));
 				setName(namefield.getText());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
@@ -274,6 +283,7 @@ public class Competence implements IEditableElement, INamedElement {
 			public void stateChanged(ChangeEvent e) {
 				double value = (Double) spinnerModel.getValue();
 				if (Double.toString(value).length() < 1) {
+					_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), alElementLists, alGoal, null, strName, enabled, documentation)));
 					setTimeout(null);
 				} else {
 					String strTimeUnit;
@@ -285,6 +295,7 @@ public class Competence implements IEditableElement, INamedElement {
 						// Get the previous unit of time
 						strTimeUnit = getTimeout().getUnitName();
 					}
+					_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), alElementLists, alGoal, new TimeUnit(strTimeUnit, value), strName, enabled, documentation)));
 					//Set the new frequency
 					setTimeout(new TimeUnit(strTimeUnit, value));
 				}
@@ -334,6 +345,7 @@ public class Competence implements IEditableElement, INamedElement {
 				else{
 					value = getTimeout().getUnitValue();
 				}
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), alElementLists, alGoal, new TimeUnit((String)timeoutUnit.getSelectedItem(), value), strName, enabled, documentation)));
 				setTimeout(new TimeUnit((String)timeoutUnit.getSelectedItem(), value));
 			}
 		});
@@ -346,6 +358,7 @@ public class Competence implements IEditableElement, INamedElement {
 		// Action listener for enabling / disabling the Competence
 		enabled.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), alElementLists, alGoal, tTimeout, strName, enabled.isSelected(), documentation)));
 				setEnabled(enabled.isSelected());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
@@ -384,6 +397,11 @@ public class Competence implements IEditableElement, INamedElement {
 
 	private static int compElement = 1;
 
+	public void refresh(){
+		_subGui.repaint();
+		_subGui.updateDiagrams(_diagram, getSelf());
+	}
+	
 	/**
 	 * Produce and show a context menu for this object
 	 * 
@@ -410,6 +428,7 @@ public class Competence implements IEditableElement, INamedElement {
 				} else {
 					setEnabled(true);
 				}
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), alElementLists, alGoal, tTimeout, strName, isEnabled(), documentation)));
 				window.updateDiagrams(diagram, null);
 			}
 		});
@@ -428,6 +447,11 @@ public class Competence implements IEditableElement, INamedElement {
 				ArrayList elementList = new ArrayList();
 				elementList.add(element);
 
+				ArrayList temp =(ArrayList) getElementLists().clone();
+				temp.add(elementList);
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), temp, alGoal, tTimeout, strName, enabled, documentation)));
+				
+
 				getElementLists().add(elementList);
 				window.updateDiagrams(diagram, element);
 			}
@@ -437,6 +461,9 @@ public class Competence implements IEditableElement, INamedElement {
 		addGoal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				ActionElement actionElement = new ActionElement(true, "SomeSense" + compElement++);
+				ArrayList temp =(ArrayList) getGoal().clone();
+				temp.add(actionElement);
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), alElementLists, temp, tTimeout, strName, enabled, documentation)));
 				getGoal().add(actionElement);
 				window.updateDiagrams(diagram, actionElement);
 			}
@@ -447,7 +474,7 @@ public class Competence implements IEditableElement, INamedElement {
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (JOptionPane.showConfirmDialog(showOn.getParent(), "Delete Competence", "Are you sure you want to delete the competence?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					lap.getElements().remove(showOn.getValue());
-
+					_undoListener.undoableEditHappened(new UndoableEditEvent(lap.getElements(), new DeleteEdit(_diagram, window, null, showOn.getValue(), lap.getElements().indexOf(showOn.getValue()), lap.getElements())));
 					window.updateDiagrams(diagram, null);
 				}
 
