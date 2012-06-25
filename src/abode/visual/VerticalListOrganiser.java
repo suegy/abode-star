@@ -144,8 +144,6 @@ public class VerticalListOrganiser extends ListOrganiser {
 			if (!(myGroup.indexOf(element) < (myGroup.size() - 1))) {
 				bttnMoveDownGroup.setEnabled(false);
 			}
-		} else {
-			addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 		}
 
 

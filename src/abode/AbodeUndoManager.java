@@ -22,8 +22,6 @@ public class AbodeUndoManager extends AbstractUndoableEdit implements UndoableEd
 
 	@Override
 	public void undoableEditHappened(UndoableEditEvent e) {
-		if(undoButton instanceof JMenuItem)
-			undoButton.setText(undoButton.getText().trim()+" "+e.getEdit().getUndoPresentationName());
 		undo.addEdit(e.getEdit());
 	}
 	
@@ -59,14 +57,14 @@ public class AbodeUndoManager extends AbstractUndoableEdit implements UndoableEd
 		if (undo.canRedo()){
 			undo.redo();
 			if(redoButton instanceof JMenuItem)
-				redoButton.setText("Redo "+undo.getRedoPresentationName());
+				redoButton.setText(" "+undo.getRedoPresentationName());
 		}
 	}
 	public void undo(){
 		if (undo.canUndo()){
 			undo.undo();
 			if(undoButton instanceof JMenuItem)
-				undoButton.setText("Undo "+undo.getUndoPresentationName());
+				undoButton.setText(" "+undo.getUndoPresentationName());
 			
 		}
 	}
