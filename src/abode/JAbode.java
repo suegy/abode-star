@@ -414,7 +414,6 @@ public class JAbode extends JFrame {
 
 		commandsPanel.add(comButtonPanel, java.awt.BorderLayout.CENTER);
 		
-		// TODO: Test
 		editPanel.setLayout(new BorderLayout());
 		editTitle.setFont(new java.awt.Font("MS Sans Serif", 1, 13));
 		editTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon/refactor.gif")));
@@ -566,7 +565,8 @@ public class JAbode extends JFrame {
 			}
 		});
 
-		toolbar1.add(printButton);
+		// TODO: Print button doesn't do anything, removed for now
+//		toolbar1.add(printButton);
 
 		jPanel1.add(toolbar1);
 
@@ -803,6 +803,21 @@ public class JAbode extends JFrame {
 
 		setJMenuBar(menubar);
 		pack();
+		
+		// Set default dividier locations
+		innerSplitpane.setDividerLocation(0.5f);
+		innerSplitpane.setResizeWeight(0.5f);
+		topSideSplitpane.setDividerLocation(0.5f);
+		topSideSplitpane.setResizeWeight(0.5f);
+		commandsSplitPane.setDividerLocation(0.5f);
+		commandsSplitPane.setResizeWeight(0.5f);
+		
+		// Required to make the side panel usable on smaller displays
+		// so these panels can be resized to any size
+		documentationPanel.setMinimumSize(new Dimension(0,0));
+		propertiesPanel.setMinimumSize(new Dimension(0,0));
+		commandsPanel.setMinimumSize(new Dimension(0,0));
+		editPanel.setMinimumSize(new Dimension(0,0));
 	}
 	// </editor-fold>//GEN-END:initComponents
 
@@ -1200,10 +1215,10 @@ public class JAbode extends JFrame {
 	}
 	
 	/**
-	 * Change our properties table to be another object
+	 * Change our properties panel to be another object
 	 * 
-	 * @param table
-	 *            New table
+	 * @param panel
+	 *            New JPanel
 	 */
 	public void setPropertiesPanel(JPanel panel) {
 		propertiesPanelContents = panel;

@@ -575,7 +575,8 @@ public class JEditorWindow extends JInternalFrame{
 			}
 		});
 
-		jToolBar1.add(bttnValidate);
+		// TODO: Removed for now, as i'm not convinced this actually works
+//		jToolBar1.add(bttnValidate);
 
 		bttnListPrims.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/copy_clipboard_32.gif")));
 		bttnListPrims.setText("List Primitives");
