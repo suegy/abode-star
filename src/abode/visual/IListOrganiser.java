@@ -25,6 +25,9 @@
  */
 package abode.visual;
 
+import javax.swing.event.UndoableEditListener;
+
+import abode.AbodeUndoManager;
 import abode.JAbode;
 
 /**
@@ -36,6 +39,12 @@ import abode.JAbode;
  * @version 1.0
  */
 public interface IListOrganiser {
+	
+	public static UndoableEditListener _undoListener = AbodeUndoManager.getUndoListener();
+	public static AbodeUndoManager _undo = AbodeUndoManager.getUndoManager();
+	
+	
+	
 	/**
 	 * Populate the options panel on the right of the screen with the relevent
 	 * list re-arrangement buttons for this type of object.

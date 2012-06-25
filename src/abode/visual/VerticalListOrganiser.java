@@ -40,7 +40,10 @@ import javax.swing.event.UndoableEditEvent;
 
 import abode.AbodeUndoManager;
 import abode.JAbode;
+import abode.control.AbodeActionHandler;
+import abode.editing.MergeGroupsEdit;
 import abode.editing.PositionEdit;
+import abode.editing.UnGroupEdit;
 
 import model.IEditableElement;
 
@@ -78,10 +81,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 		JButton bttnMoveUp = new JButton("Move " + type + " up", new ImageIcon(getClass().getResource("/image/icon/group-up.gif")));
 		bttnMoveUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				int index = groupGroup.indexOf(myGroup);
-				groupGroup.add(index - 1, groupGroup.remove(index));
-				AbodeUndoManager.getUndoListener().undoableEditHappened(new UndoableEditEvent(this, new PositionEdit(myGroup, index, index-1, groupGroup)));
-				internal.updateDiagrams(diagram, subject.getValue());
+				AbodeActionHandler.getActionHandler().moveUpAction(diagram, internal, subject);
 			}
 		});
 		bttnMoveUp.setHorizontalAlignment(JButton.LEFT);
@@ -98,35 +98,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 			bttnMoveUp.setEnabled(false);
 		}
 
-		JButton bttnMergeUp = new JButton("Merge with group above", new ImageIcon(getClass().getResource("/image/icon/merge-group-up.gif")));
-		bttnMergeUp.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				// Get the group above us
-				ArrayList groupAbove = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) - 1);
-
-				// Remove us from the list of lists
-				groupGroup.remove(myGroup);
-
-				// Add each element to the end of the list above
-				Iterator it = myGroup.iterator();
-				while (it.hasNext())
-					groupAbove.add(it.next());
-
-				internal.updateDiagrams(diagram, subject.getValue());
-
-			}
-		});
-		bttnMergeUp.setHorizontalAlignment(JButton.LEFT);
 		
-		// Set tooltip and shortcut key (Mnemonic)
-		bttnMergeUp.setToolTipText("Merges an element with the element above it in the hierarchy.");
-		
-		panel.add(bttnMergeUp);
-		
-		// If there's no group above us disable the button
-		if (!(groupGroup.indexOf(myGroup) > 0)) {
-			bttnMergeUp.setEnabled(false);
-		}
 
 		// Are we in a multi-item group? If so present the option to ungroup
 		if (myGroup.size() > 1) {
@@ -134,23 +106,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 			JButton bttnMoveupGroup = new JButton("Move up in group", new ImageIcon(getClass().getResource("/image/icon/upingroup.gif")));
 			bttnMoveupGroup.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent actionEvent) {
-					ArrayList newGroup = new ArrayList();
-					Object before = myGroup.get(myGroup.indexOf(subject.getValue()) - 1);
-					Iterator it = myGroup.iterator();
-					while (it.hasNext()) {
-						Object n = it.next();
-						if (n == before) {
-							newGroup.add(subject.getValue());
-							newGroup.add(before);
-						} else if (n == subject.getValue()) {
-							// Dont add ourself
-						} else {
-							newGroup.add(n);
-						}
-					}
-
-					groupGroup.set(groupGroup.indexOf(myGroup), newGroup);
-					internal.updateDiagrams(diagram, subject.getValue());
+					AbodeActionHandler.getActionHandler().moveUpInGroupAction(diagram, internal, subject);
 				}
 			});
 			bttnMoveupGroup.setHorizontalAlignment(JButton.LEFT);
@@ -167,61 +123,14 @@ public class VerticalListOrganiser extends ListOrganiser {
 				bttnMoveupGroup.setEnabled(false);
 			}
 
-			addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 
-			addDeleteGroupButton(mainGui.getEditPanel(), internal, subject, diagram);
-
-			// Dissolve the group
-			JButton bttnUngroup = new JButton("Ungroup Elements", new ImageIcon(getClass().getResource("/image/icon/ungroup.gif")));
-			bttnUngroup.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					Iterator it = myGroup.iterator();
-					int done = 0;
-					while (it.hasNext()) {
-						ArrayList newGroup = new ArrayList();
-						newGroup.add(it.next());
-						groupGroup.add(groupGroup.indexOf(myGroup) + (done++), newGroup);
-					}
-					groupGroup.remove(myGroup);
-					internal.updateDiagrams(diagram, subject.getValue());
-
-				}
-			});
-			bttnUngroup.setHorizontalAlignment(JButton.LEFT);
-			bttnUngroup.setToolTipText("Dissolves a group. All of the elements will return to being singular elements.");
-			
-			panel.add(bttnUngroup);
 
 			// Move down inside group
 			JButton bttnMoveDownGroup = new JButton("Move down in group", new ImageIcon(getClass().getResource("/image/icon/downingroup.gif")));
 			bttnMoveDownGroup.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent actionEvent) {
-					
-					int index = myGroup.indexOf(subject.getValue());
-					Object elem = myGroup.remove(index);
-					myGroup.add(index+1, elem);
-					
-					AbodeUndoManager.getUndoListener().undoableEditHappened(new UndoableEditEvent(this, new PositionEdit(subject.getValue(), index, index+1, myGroup)));
-					
-					
-					
-//					ArrayList newGroup = new ArrayList();
-//					Object after = myGroup.get(myGroup.indexOf(subject.getValue()) + 1);
-//					
-//					for (Object object : myGroup) {
-//						if (object == after) {
-//							newGroup.add(after);
-//							newGroup.add(subject.getValue());
-//						} else if (object == subject.getValue()) {
-//							// Dont add ourself twice
-//						} else {
-//							newGroup.add(object);
-//						}
-//					}
-//					
-//					groupGroup.set(groupGroup.indexOf(myGroup), newGroup);
-					internal.updateDiagrams(diagram, subject.getValue());
-				}
+					AbodeActionHandler.getActionHandler().moveDownInGroupAction(diagram, internal, subject);
+		}
 			});
 			bttnMoveDownGroup.setHorizontalAlignment(JButton.LEFT);
 			// Set tooltip and shortcut key (Mnemonic)
@@ -239,20 +148,74 @@ public class VerticalListOrganiser extends ListOrganiser {
 			addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 		}
 
+
+
+		// Move element/group down the list of lists
+		JButton bttnMoveDown = new JButton("Move " + type + " down", new ImageIcon(getClass().getResource("/image/icon/group-down.gif")));
+		bttnMoveDown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				AbodeActionHandler.getActionHandler().moveDownAction(diagram, internal, subject);
+			}
+		});
+		bttnMoveDown.setHorizontalAlignment(JButton.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnMoveDown.setToolTipText("Moves an element down the hierarchy" +
+				" (Alt + Down)");
+		bttnMoveDown.setMnemonic(KeyEvent.VK_DOWN);
+		
+		panel.add(bttnMoveDown);
+		
+		//Disable if the group / element cannot be moved down
+		if (!(groupGroup.indexOf(myGroup) < (groupGroup.size() - 1))) {
+			bttnMoveDown.setEnabled(false);
+		}
+		
+		
+		
+		JButton bttnMergeUp = new JButton("Merge with group above", new ImageIcon(getClass().getResource("/image/icon/merge-group-up.gif")));
+		bttnMergeUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				// Get the group above us
+				ArrayList groupAbove = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) - 1);
+				_undoListener.undoableEditHappened(new UndoableEditEvent(groupGroup, new MergeGroupsEdit(diagram, internal, myGroup, groupGroup.indexOf(myGroup) , groupAbove, groupGroup, subject)));
+				// Remove us from the list of lists
+				groupGroup.remove(myGroup);
+
+				// Add each element to the end of the list above
+				for (Object object : myGroup)
+					groupAbove.add(object);
+
+
+				internal.updateDiagrams(diagram, subject.getValue());
+
+			}
+		});
+		bttnMergeUp.setHorizontalAlignment(JButton.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnMergeUp.setToolTipText("Merges an element with the element above it in the hierarchy.");
+		
+		panel.add(bttnMergeUp);
+		
+		// If there's no group above us disable the button
+		if (!(groupGroup.indexOf(myGroup) > 0)) {
+			bttnMergeUp.setEnabled(false);
+		}
+		
 		// Button for merging with group below
 		JButton bttnMergeDown = new JButton("Merge with group below", new ImageIcon(getClass().getResource("/image/icon/merge-group-down.gif")));
 		bttnMergeDown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get the group above us
 				ArrayList groupBelow = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) + 1);
-
+				_undoListener.undoableEditHappened(new UndoableEditEvent(groupGroup, new MergeGroupsEdit(diagram, internal, myGroup, groupGroup.indexOf(myGroup) , groupBelow, groupGroup, subject)));
 				// Remove us from the list of lists
 				groupGroup.remove(myGroup);
 
 				// Add each element to the end of the list above
-				Iterator it = myGroup.iterator();
-				while (it.hasNext())
-					groupBelow.add(it.next());
+				for (Object object : myGroup)
+					groupBelow.add(object);
 
 				internal.updateDiagrams(diagram, subject.getValue());
 			}
@@ -269,32 +232,37 @@ public class VerticalListOrganiser extends ListOrganiser {
 			bttnMergeDown.setEnabled(false);
 		}
 
-		// Move element/group down the list of lists
-		JButton bttnMoveDown = new JButton("Move " + type + " down", new ImageIcon(getClass().getResource("/image/icon/group-down.gif")));
-		bttnMoveDown.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				int index = groupGroup.indexOf(myGroup);
-				
-				groupGroup.add(index, groupGroup.remove(index + 1));
 
-				AbodeUndoManager.getUndoListener().undoableEditHappened(new UndoableEditEvent(this, new PositionEdit(myGroup, index, index+1, groupGroup)));
+		// Dissolve the group
+		JButton bttnUngroup = new JButton("Ungroup Elements", new ImageIcon(getClass().getResource("/image/icon/ungroup.gif")));
+		bttnUngroup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				int index= groupGroup.indexOf(myGroup);
+				ArrayList<IEditableElement> [] unGrouped=new ArrayList[myGroup.size()];
+				for (Object item : myGroup) {
+					unGrouped[myGroup.indexOf(item)]=new ArrayList<IEditableElement>();
+					unGrouped[myGroup.indexOf(item)].add((IEditableElement)item);
+				}
+				groupGroup.remove(myGroup);
+				for (Object object : unGrouped) {
+					groupGroup.add(index,object);
+				}
+				
+				_undoListener.undoableEditHappened(new UndoableEditEvent(groupGroup, new UnGroupEdit(diagram, internal, myGroup, index, unGrouped, groupGroup, subject)));
+				
 				
 				internal.updateDiagrams(diagram, subject.getValue());
-				
+
 			}
 		});
-		bttnMoveDown.setHorizontalAlignment(JButton.LEFT);
+		bttnUngroup.setHorizontalAlignment(JButton.LEFT);
+		bttnUngroup.setToolTipText("Dissolves a group. All of the elements will return to being singular elements.");
 		
-		// Set tooltip and shortcut key (Mnemonic)
-		bttnMoveDown.setToolTipText("Moves an element down the hierarchy" +
-				" (Alt + Down)");
-		bttnMoveDown.setMnemonic(KeyEvent.VK_DOWN);
+		panel.add(bttnUngroup);
 		
-		panel.add(bttnMoveDown);
 		
-		//Disable if the group / element cannot be moved down
-		if (!(groupGroup.indexOf(myGroup) < (groupGroup.size() - 1))) {
-			bttnMoveDown.setEnabled(false);
-		}
+		addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
+
+		addDeleteGroupButton(mainGui.getEditPanel(), internal, subject, diagram);
 	}
 }

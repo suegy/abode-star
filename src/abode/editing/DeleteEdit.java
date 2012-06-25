@@ -6,10 +6,11 @@ import javax.swing.undo.AbstractUndoableEdit;
 
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
+import abode.visual.JTreeNode;
 
 import model.IEditableElement;
 
-public class PositionEdit extends AbstractUndoableEdit {
+public class DeleteEdit extends AbstractUndoableEdit {
 	
 	/**
 	 * diagram and editor are used to update the visual presentation of Abode
@@ -22,6 +23,7 @@ public class PositionEdit extends AbstractUndoableEdit {
 	private int o_Pos;
 	private int pos;
 	private Object elem;
+	private JTreeNode parent;
 	private ArrayList store;
 	
 	
@@ -32,38 +34,35 @@ public class PositionEdit extends AbstractUndoableEdit {
 	 *  
 	 * @param diagram The Diagram contains the JTreeNode components which are the visual representation of a LAP file.
 	 * @param editor The EditorWindow contains the diagram and is just called to update the structure.
-	 * @param element The PoshElement which is moved inside the action plan.
-	 * @param oldPos The old Position inside the Arraylist structure which caries the action element.
-	 * @param newPos The new Position inside the Arraylist structure which caries the action element.
-	 * @param storage The Arraylist which represents an ordered set of action plan elements.
+	 * @param parent The node which is linked to the parent of the PoshElement which is deleted from the action plan.
+	 * @param element The Element which is deleted. The Element can be a PoshElement or an ArrayList containing a group of elements.
+	 * @param oldPos The old Position inside the ArrayList structure which caries the action element.
+	 * @param storage The ArrayList which represents an ordered set of action plan elements.
 	 */
-	public PositionEdit(JDiagram diagram, JEditorWindow editor, Object element, int oldPos, int newPos,ArrayList storage) {
+	public DeleteEdit(JDiagram diagram, JEditorWindow editor, JTreeNode parent, Object element, int oldPos, ArrayList storage) {
 		
 		_diagram=diagram;
 		_editor=editor;
 		
 		store=storage;
+		this.parent=parent;
 		elem=element;
 		o_Pos=oldPos;
-		pos=newPos;
+		
 	}
 	
 	public void undo(){
 		super.undo();
-		store.remove(elem);
 		store.add(o_Pos, elem);
 		
-		if (elem instanceof IEditableElement)
-			_editor.updateDiagrams(_diagram, (IEditableElement)elem);
+		_editor.updateDiagrams(_diagram,(parent instanceof JTreeNode) ? parent.getValue() : null);
 		
 	}
 	public void redo(){
 		super.redo();
 		store.remove(elem);
-		store.add(pos, elem);
 		
-		if (elem instanceof IEditableElement)
-			_editor.updateDiagrams(_diagram, (IEditableElement)elem);
+		_editor.updateDiagrams(_diagram, (parent instanceof JTreeNode) ? parent.getValue() : null);
 		
 	}
 

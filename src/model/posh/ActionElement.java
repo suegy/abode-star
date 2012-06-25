@@ -54,6 +54,7 @@ import model.IEditableElement;
 import abode.AbodeUndoManager;
 import abode.Configuration;
 import abode.JAbode;
+import abode.control.AbodeActionHandler;
 import abode.editing.ActionElementEdit;
 import abode.visual.HorizontalListOrganiser;
 import abode.visual.JDiagram;
@@ -439,8 +440,7 @@ public class ActionElement implements IEditableElement {
 				JMenuItem moveLeft = new JMenuItem("Move Left");
 				moveLeft.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						group.add(group.indexOf(showOn.getValue()) - 1, group.remove(group.indexOf(showOn.getValue())));
-						window.updateDiagrams(diagram, showOn.getValue());
+						AbodeActionHandler.getActionHandler().moveUpInGroupAction(diagram, window, showOn);
 					}
 				});
 				menu.add(moveLeft);
@@ -450,8 +450,7 @@ public class ActionElement implements IEditableElement {
 				JMenuItem moveRight = new JMenuItem("Move Right");
 				moveRight.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						group.add(group.indexOf(showOn.getValue()) + 1, group.remove(group.indexOf(showOn.getValue())));
-						window.updateDiagrams(diagram, showOn.getValue());
+						AbodeActionHandler.getActionHandler().moveDownInGroupAction(diagram, window, showOn);						
 					}
 				});
 				menu.add(moveRight);
@@ -461,10 +460,7 @@ public class ActionElement implements IEditableElement {
 		JMenuItem deleteElement = new JMenuItem("Delete Action/Sense Element");
 		deleteElement.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this element?") == JOptionPane.YES_OPTION) {
-					showOn.getGroup().remove(getSelf());
-					window.updateDiagrams(diagram, showOn.getParentNode().getValue());
-				}
+				AbodeActionHandler.getActionHandler().deleteElementAction(diagram, window, showOn);
 			}
 		});
 		
