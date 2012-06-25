@@ -243,15 +243,26 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 
 		// Action listener to update the actual data when the field is updated
 		ArrayList <String> existing_values = new ArrayList<String>();
+
+		// Add action patterns and competences to the drop down list
+		ArrayList apsCompetences = subGui.getLearnableActionPattern().getElements();
+		Iterator it = apsCompetences.iterator();
 		
-		ArrayList elements = subGui.getLearnableActionPattern().getElements();
-		Iterator it = elements.iterator();
 		while (it.hasNext()) {
 			IEditableElement current = (IEditableElement) it.next();
 			if (current instanceof INamedElement) {
 				INamedElement namedCurrent = (INamedElement) current;
 				existing_values.add(namedCurrent.getName());
 			}
+		}
+		
+		// Add action primitives to the drop down list
+		ArrayList<String> actionPrims = subGui.getListOfActions();
+		
+		it = actionPrims.iterator();
+		
+		while (it.hasNext()) {
+				existing_values.add((String)it.next());
 		}
 		
 		final JComboBox actionfield = new JComboBox(existing_values.toArray());

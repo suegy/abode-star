@@ -941,8 +941,6 @@ public class JEditorWindow extends JInternalFrame{
 						DriveElement driveElement = (DriveElement) driveElements.next();
 						if (!actionList.contains(driveElement.getAction()) && (!lapCurrent.containsElementNamed(driveElement.getAction())))
 							actionList.add(driveElement.getAction());
-
-						Iterator triggerElements = driveElement.getTrigger().iterator();
 					}
 				}
 			} else if (element instanceof Competence) {
@@ -954,7 +952,6 @@ public class JEditorWindow extends JInternalFrame{
 						CompetenceElement compElement = (CompetenceElement) competences.next();
 						if (!actionList.contains(compElement.getAction()) && (!lapCurrent.containsElementNamed(compElement.getAction())))
 							actionList.add(compElement.getAction());
-						Iterator triggerElements = compElement.getTrigger().iterator();
 					}
 				}
 			} else if (element instanceof ActionPattern) {
@@ -980,6 +977,14 @@ public class JEditorWindow extends JInternalFrame{
 			IEditableElement element = (IEditableElement) it.next();
 			if (element instanceof DriveCollection) {
 				DriveCollection collection = (DriveCollection) element;
+				
+				Iterator goalList = collection.getGoal().iterator();
+				while(goalList.hasNext()){
+					ActionElement goal = (ActionElement)goalList.next();
+					if (!senseList.contains(goal.getElementName()))
+						senseList.add(goal.getElementName());
+				}
+				
 				Iterator driveElementLists = collection.getDriveElements().iterator();
 				while (driveElementLists.hasNext()) {
 					Iterator driveElements = ((ArrayList) driveElementLists.next()).iterator();

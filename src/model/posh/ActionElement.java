@@ -382,6 +382,7 @@ public class ActionElement implements IEditableElement {
 							new ActionElementEdit(getSelf(), getSelf().bIsSense, getSelf().strElementName, getSelf().strValue, (String)predicateSelector.getSelectedItem(), getSelf().enabled, getSelf().documentation)));
 					// Get the actual value
 					setPredicate((String)predicateSelector.getSelectedItem());
+					setValue(Double.toString((Double)spinnerModel.getValue()));
 					subGui.repaint();
 					subGui.updateDiagrams(diagram, getSelf());
 				}
