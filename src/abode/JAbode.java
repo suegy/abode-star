@@ -35,7 +35,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -51,10 +50,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
-import javax.print.attribute.standard.JobHoldUntil;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultDesktopManager;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
@@ -66,7 +62,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
@@ -78,8 +73,6 @@ import model.IEditableElement;
 import model.posh.ActionPattern;
 import model.posh.Competence;
 import model.posh.DriveCollection;
-import model.posh.DriveElement;
-
 import abode.control.DotLapReader;
 import abode.control.ILAPReader;
 import abode.control.JManual;
@@ -669,6 +662,7 @@ public class JAbode extends JFrame {
 		item.setMnemonic('u');
 		item.setText("Undo");
 		item.setName("undoItem");
+		item.setEnabled(false);
 		item.addActionListener(new ActionListener() {
 			
 			@Override
@@ -687,6 +681,7 @@ public class JAbode extends JFrame {
 		item.setMnemonic('r');
 		item.setText("Redo");
 		item.setName("redoItem");
+		item.setEnabled(false);
 		item.addActionListener(new ActionListener() {
 			
 			@Override

@@ -37,13 +37,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
+import model.IEditableElement;
 import abode.JAbode;
 import abode.editing.IRenderer;
-
-import model.IEditableElement;
 
 
 /**

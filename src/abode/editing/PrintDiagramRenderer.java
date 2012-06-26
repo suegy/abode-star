@@ -38,10 +38,13 @@ import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 import model.IEditableElement;
-import model.posh.*;
-
+import model.posh.ActionElement;
+import model.posh.ActionPattern;
+import model.posh.Competence;
+import model.posh.CompetenceElement;
+import model.posh.DriveElement;
+import model.posh.LearnableActionPattern;
 import abode.Configuration;
 import abode.visual.JDiagram;
 import abode.visual.JTreeNode;

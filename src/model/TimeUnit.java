@@ -25,11 +25,11 @@
  */
 package model;
 
+import model.posh.LearnableActionPattern;
 import abode.JAbode;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
-import model.posh.LearnableActionPattern;
 
 /**
  * A TimeUnit is a measurement of time with two attributes, the interval and the

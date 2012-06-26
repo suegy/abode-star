@@ -41,17 +41,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.UndoableEditEvent;
-import javax.swing.undo.AbstractUndoableEdit;
 
 import model.IEditableElement;
-
-import abode.AbodeUndoManager;
 import abode.Configuration;
 import abode.JAbode;
 import abode.control.AbodeActionHandler;

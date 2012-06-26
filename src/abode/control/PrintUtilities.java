@@ -25,9 +25,15 @@
  */
 package abode.control;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.print.*;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+
+import javax.swing.RepaintManager;
 
 /**
  * This class uses code taken from TheCodeProject.com, please support open

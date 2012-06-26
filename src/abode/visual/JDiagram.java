@@ -31,12 +31,13 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import abode.JAbode;
-import abode.SplashScreen;
-import abode.editing.IRenderer;
-
 import model.IEditableElement;
-import model.posh.*;
+import model.posh.ActionElement;
+import model.posh.CompetenceElement;
+import model.posh.DriveElement;
+import model.posh.LearnableActionPattern;
+import abode.JAbode;
+import abode.editing.IRenderer;
 
 /**
  * A GuiDiagram is a diagramatic rendering of a JTreeNode hieararchy

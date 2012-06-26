@@ -35,8 +35,13 @@ import java.util.Iterator;
 
 import model.IEditableElement;
 import model.TimeUnit;
-
-import model.posh.*;
+import model.posh.ActionElement;
+import model.posh.ActionPattern;
+import model.posh.Competence;
+import model.posh.CompetenceElement;
+import model.posh.DriveCollection;
+import model.posh.DriveElement;
+import model.posh.LearnableActionPattern;
 
 /**
  * DotLapWriter is responsible for exporting our learnable action pattern object

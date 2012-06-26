@@ -33,15 +33,11 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.event.UndoableEditEvent;
-
-import abode.JAbode;
-import abode.control.AbodeActionHandler;
-import abode.editing.PositionEdit;
 
 import model.IEditableElement;
+import abode.JAbode;
+import abode.control.AbodeActionHandler;
 
 /**
  * The horizontal list organiser is used for arranging elements within action

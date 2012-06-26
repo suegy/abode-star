@@ -41,6 +41,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
+import model.IEditableElement;
+import model.posh.ActionElement;
+import model.posh.ActionPattern;
+import model.posh.Competence;
+import model.posh.CompetenceElement;
+import model.posh.DriveCollection;
+import model.posh.DriveElement;
+import model.posh.LearnableActionPattern;
 import abode.JAbode;
 import abode.control.ConsoleWriter;
 import abode.control.DotLapReader;
@@ -51,9 +59,6 @@ import abode.control.PrimitiveManager;
 import abode.control.PrintUtilities;
 import abode.editing.PrintDiagramRenderer;
 import abode.editing.StandardDiagramRenderer;
-
-import model.IEditableElement;
-import model.posh.*;
 
 /**
  * The JEditorWindow is where we edit files.

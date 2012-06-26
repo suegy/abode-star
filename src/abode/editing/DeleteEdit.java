@@ -8,8 +8,6 @@ import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
 
-import model.IEditableElement;
-
 public class DeleteEdit extends AbstractUndoableEdit {
 	
 	/**

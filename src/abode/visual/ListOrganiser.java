@@ -28,17 +28,13 @@ package abode.visual;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.event.UndoableEditEvent;
 
 import abode.JAbode;
 import abode.control.AbodeActionHandler;
-import abode.editing.DeleteEdit;
 
 /**
  * The super list organiser object for providing simple "delete me" functionality

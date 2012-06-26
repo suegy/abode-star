@@ -25,7 +25,7 @@
  */
 package abode.control;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * A Primitive Reader is an object that can produce a list of actions or senses

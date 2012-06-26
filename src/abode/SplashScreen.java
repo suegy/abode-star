@@ -30,13 +30,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.HashSet;
-import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
-import javax.swing.undo.UndoManager;
 
 
 /**

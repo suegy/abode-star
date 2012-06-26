@@ -1,6 +1,5 @@
 package abode;
 
-import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -23,6 +22,7 @@ public class AbodeUndoManager extends AbstractUndoableEdit implements UndoableEd
 	@Override
 	public void undoableEditHappened(UndoableEditEvent e) {
 		undo.addEdit(e.getEdit());
+		updateButtons();
 	}
 	
 	private AbodeUndoManager(){
@@ -59,6 +59,7 @@ public class AbodeUndoManager extends AbstractUndoableEdit implements UndoableEd
 			if(redoButton instanceof JMenuItem)
 				redoButton.setText(" "+undo.getRedoPresentationName());
 		}
+		updateButtons();
 	}
 	public void undo(){
 		if (undo.canUndo()){
@@ -67,6 +68,12 @@ public class AbodeUndoManager extends AbstractUndoableEdit implements UndoableEd
 				undoButton.setText(" "+undo.getUndoPresentationName());
 			
 		}
+		updateButtons();
+	}
+	
+	public void updateButtons(){
+		undoButton.setEnabled(undo.canUndo());
+		redoButton.setEnabled(undo.canRedo());
 	}
 
 }

@@ -30,22 +30,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.UndoableEditEvent;
 
-import abode.AbodeUndoManager;
+import model.IEditableElement;
 import abode.JAbode;
 import abode.control.AbodeActionHandler;
 import abode.editing.MergeGroupsEdit;
-import abode.editing.PositionEdit;
 import abode.editing.UnGroupEdit;
-
-import model.IEditableElement;
 
 /**
  * When arraylists of arraylists of anonymous elements are laid out as a single

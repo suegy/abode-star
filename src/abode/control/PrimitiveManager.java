@@ -25,7 +25,8 @@
  */
 package abode.control;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * A PrimitiveManager is an object that provides an abstraction to interface

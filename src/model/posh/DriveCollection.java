@@ -42,7 +42,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import model.IEditableElement;
-
 import abode.Configuration;
 import abode.JAbode;
 import abode.visual.JDiagram;

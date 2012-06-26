@@ -44,8 +44,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
-
 import abode.Configuration;
 import abode.visual.JDiagram;
 import abode.visual.JTreeNode;

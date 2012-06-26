@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import javax.swing.undo.AbstractUndoableEdit;
 
 import model.TimeUnit;
-import model.posh.ActionElement;
-import model.posh.ActionPattern;
 import model.posh.Competence;
 
 public class CompetenceEdit extends AbstractUndoableEdit {

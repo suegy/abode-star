@@ -27,14 +27,13 @@ package model;
 
 
 import javax.swing.event.UndoableEditListener;
-import javax.swing.undo.UndoManager;
 
+import model.posh.LearnableActionPattern;
 import abode.AbodeUndoManager;
 import abode.JAbode;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
-import model.posh.LearnableActionPattern;
 
 /**
  * the IEditableElement interface defines methods for use when visually editing

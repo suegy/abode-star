@@ -4,11 +4,10 @@ import java.util.ArrayList;
 
 import javax.swing.undo.AbstractUndoableEdit;
 
+import model.IEditableElement;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
-
-import model.IEditableElement;
 
 public class MergeGroupsEdit extends AbstractUndoableEdit {
 	

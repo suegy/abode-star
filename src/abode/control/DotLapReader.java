@@ -38,16 +38,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import model.IEditableElement;
+import model.TimeUnit;
+import model.posh.ActionElement;
+import model.posh.ActionPattern;
+import model.posh.Competence;
+import model.posh.CompetenceElement;
+import model.posh.DriveCollection;
+import model.posh.DriveElement;
+import model.posh.LearnableActionPattern;
 import abode.JAbode;
 import abode.editing.CommentScraper;
 import abode.editing.Documentation;
 import abode.editing.LispBlob;
-
-
-import model.IEditableElement;
-import model.TimeUnit;
-
-import model.posh.*;
 
 /**
  * The DotLapReader reads in lisp-formatted .lap files and then produces a
