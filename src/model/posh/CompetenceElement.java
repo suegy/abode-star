@@ -109,10 +109,12 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		setRetries(ret);
 	}
 	
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		this.documentation = newDocumentation;
 	}
 	
+	@Override
 	public String getElementDocumentation() {
 		return this.documentation;
 	}
@@ -129,6 +131,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	 * Sets whether the element is enabled
 	 * @param Boolean indicating whether or not element should be enabled
 	 */
+	@Override
 	public void setEnabled(boolean value) {
 		this.enabled = value;
 	}
@@ -147,6 +150,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	 *
 	 * @return Name of this competence element
 	 **/
+	@Override
 	public String getName() {
 		return strName;
 	}
@@ -183,6 +187,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	 * 
 	 * @param name New name of this competence element
 	 **/
+	@Override
 	public void setName(String name) {
 		strName = name;
 	}
@@ -212,6 +217,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	 * @param subGui Reference to the editor window
 	 * @param diagram Diagram refernece on our editing window
 	 **/
+	@Override
 	public void onSelect(JAbode mainGui, final JEditorWindow subGui, final JDiagram diagram) {
 		mainGui.popOutProperties();
 		diagram.repaint();
@@ -226,6 +232,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 
 		// Action listener to update the actual data when the field is updated
 		namefield.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setName(namefield.getText());
 				subGui.repaint();
@@ -277,6 +284,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		actionfield.setEditable(true);
 		
 		actionfield.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setAction((String)actionfield.getSelectedItem());
 				subGui.repaint();
@@ -311,6 +319,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		
 		// Action listener to update the actual data when the field is updated
 		spinnerModel.addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent e) {
 				int value = (Integer) spinnerModel.getValue();
 				if (Integer.toString(value).length() < 1) {
@@ -364,6 +373,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	 * @param window    The window we're being dispalyed in
 	 * @param diagram   The diagram in the window we'return being shown on
 	 **/
+	@Override
 	public void showContextMenu(final JTreeNode showOn, final LearnableActionPattern lap, final JEditorWindow window, final JDiagram diagram) {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Competence Element"));
@@ -374,6 +384,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 
 		JMenuItem itemAddAP = new JMenuItem("New Action Pattern...");
 		itemAddAP.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent ae) {
 				String name = JOptionPane.showInputDialog(window, "Please enter a name for this new action pattern.", "");
 				if ((name != null) && (name.length() > 0)) {
@@ -388,6 +399,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 
 		JMenuItem itemAddComp = new JMenuItem("New Competence...");
 		itemAddComp.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent ae) {
 				String name = JOptionPane.showInputDialog(window, "Please enter a name for this new competence", "");
 				if ((name != null) && (name.length() > 0)) {
@@ -408,6 +420,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 				final INamedElement namedCurrent = (INamedElement) current;
 				JMenuItem focus = new JMenuItem(namedCurrent.getName() + ((namedCurrent instanceof ActionPattern) ? " (AP)" : " (C)"));
 				focus.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent ae) {
 						getSelf().setAction(namedCurrent.getName());
 						window.updateDiagrams(diagram, showOn.getValue());
@@ -420,6 +433,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 
 		JMenuItem addTrigger = new JMenuItem("Add Trigger Element");
 		addTrigger.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				ActionElement actionElement = new ActionElement(true, "SomeSense" + senseCount++);
 				getTrigger().add(actionElement);
@@ -429,6 +443,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 
 		JMenuItem itemDelete = new JMenuItem("Delete " + getName());
 		itemDelete.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if ((showOn.getGroup() != null) && (showOn.getParentNode().getGroup() != null)) {
 					if (JOptionPane.showConfirmDialog(window, "Are you sure you want to delete this Drive Element?", "Delete " + getName() + "?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -446,6 +461,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 			disableThis = new JMenuItem("Enable element");
 		}
 		disableThis.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (isEnabled()) {
 					setEnabled(false);
@@ -463,6 +479,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 			collapseThis = new JMenuItem("Collapse element");
 		}
 		collapseThis.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (collapsed) {
 					collapsed = false;
@@ -493,6 +510,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	 * @param expanded Is this diagram expanded (i.e. show sub-tree chained elements)
 	 * @return A constructed sub-tree showing this element and any sub-elements that need to be demonstrated.
 	 **/
+	@Override
 	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {
 		Color colorToDraw;
 		if (this.isEnabled()) {

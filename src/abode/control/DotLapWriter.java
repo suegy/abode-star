@@ -59,6 +59,7 @@ public class DotLapWriter implements ILapWriter {
 	 * @param data
 	 *            Object model of this file
 	 */
+	@Override
 	public void save(String fileName, LearnableActionPattern data) {
 		try {
 			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
@@ -80,6 +81,7 @@ public class DotLapWriter implements ILapWriter {
 	 *            The object model
 	 * @return Lisp string representation
 	 */
+	@Override
 	public String generateLispFromLAP(LearnableActionPattern data) {
 
 		// Initial opening bracket

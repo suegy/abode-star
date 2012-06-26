@@ -63,6 +63,7 @@ public class ActionElementEdit extends AbstractUndoableEdit {
 		
 	}
 	
+	@Override
 	public void undo(){
 		super.undo();
 		actionElement.setIsSense(o_bIsSense);
@@ -74,6 +75,7 @@ public class ActionElementEdit extends AbstractUndoableEdit {
 		actionElement.refresh();
 	}
 	
+	@Override
 	public void redo(){
 		super.redo();
 		actionElement.setIsSense(bIsSense);

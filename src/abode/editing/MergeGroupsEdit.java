@@ -56,6 +56,7 @@ public class MergeGroupsEdit extends AbstractUndoableEdit {
 		
 	}
 	
+	@Override
 	public void undo(){
 		super.undo();
 		int index = store.indexOf(target);
@@ -67,6 +68,7 @@ public class MergeGroupsEdit extends AbstractUndoableEdit {
 		_editor.updateDiagrams(_diagram,parent.getValue());
 		
 	}
+	@Override
 	public void redo(){
 		super.redo();
 		store.remove(elem);

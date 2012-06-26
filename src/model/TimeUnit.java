@@ -47,7 +47,9 @@ public class TimeUnit implements IEditableElement {
 	
 	
 	//Not really relevant but easier
+	@Override
 	public void setDocumentation(String newDocumentation) {}
+	@Override
 	public String getElementDocumentation() { return ""; }
 
 	/**
@@ -63,6 +65,7 @@ public class TimeUnit implements IEditableElement {
 	 * properties grid with editors allowing the user to change our interval and
 	 * unit.
 	 */
+	@Override
 	public void onSelect(JAbode mainGui, JEditorWindow subGui, JDiagram diagram) {
 
 	}
@@ -84,6 +87,7 @@ public class TimeUnit implements IEditableElement {
 	/**
 	 * Set enabled. Doesn't really do a lot but needed for interface implementation
 	 */
+	@Override
 	public void setEnabled(boolean newValue) {}
 
 	/**
@@ -105,10 +109,12 @@ public class TimeUnit implements IEditableElement {
 	/**
 	 * Produce and show a context menu for this object
 	 */
+	@Override
 	public void showContextMenu(JTreeNode showOn, LearnableActionPattern lap, JEditorWindow window, JDiagram diagram) {
 
 	}
 
+	@Override
 	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {
 		return null;
 	}

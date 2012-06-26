@@ -127,10 +127,12 @@ public class JOptionsScreen extends javax.swing.JFrame {
 		setTitle("Abode Options");
 		setResizable(false);
 		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
 			public void windowClosed(java.awt.event.WindowEvent evt) {
 				formWindowClosed(evt);
 			}
 
+			@Override
 			public void windowClosing(java.awt.event.WindowEvent evt) {
 				formWindowClosing(evt);
 			}
@@ -242,6 +244,7 @@ public class JOptionsScreen extends javax.swing.JFrame {
 
 		jButton1.setText("Ok");
 		jButton1.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton1ActionPerformed(evt);
 			}
@@ -251,6 +254,7 @@ public class JOptionsScreen extends javax.swing.JFrame {
 
 		jButton2.setText("Cancel");
 		jButton2.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton2ActionPerformed(evt);
 			}
@@ -267,6 +271,7 @@ public class JOptionsScreen extends javax.swing.JFrame {
 
 		jButton3.setText("Add");
 		jButton3.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton3ActionPerformed(evt);
 			}
@@ -276,6 +281,7 @@ public class JOptionsScreen extends javax.swing.JFrame {
 
 		jButton4.setText("Remove");
 		jButton4.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton4ActionPerformed(evt);
 			}

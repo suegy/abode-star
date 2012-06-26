@@ -99,10 +99,12 @@ public class DriveCollection implements IEditableElement {
 		this.setEnabled(shouldBeEnabled);
 	}
 
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		this.documentation = newDocumentation;
 	}
 
+	@Override
 	public String getElementDocumentation() {
 		return this.documentation;
 	}
@@ -111,6 +113,7 @@ public class DriveCollection implements IEditableElement {
 		return this.enabled;
 	}
 
+	@Override
 	public void setEnabled(boolean newValue) {
 		this.enabled = newValue;
 		// Disable the children. In a complicated fashion, naturally.
@@ -217,6 +220,7 @@ public class DriveCollection implements IEditableElement {
 	 * @param diagram
 	 *            The diagram we're being select on.
 	 */
+	@Override
 	public void onSelect(JAbode mainGui, final JEditorWindow subGui,
 			final JDiagram diagram) {
 		mainGui.popOutProperties();
@@ -232,6 +236,7 @@ public class DriveCollection implements IEditableElement {
 
 		// Action listener to update the actual data when the field is updated
 		namefield.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setName(namefield.getText());
 				subGui.repaint();
@@ -249,6 +254,7 @@ public class DriveCollection implements IEditableElement {
 
 		// Action listener for setting the data in the class
 		realtime.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setRealTime(realtime.isSelected());
 				subGui.repaint();
@@ -265,6 +271,7 @@ public class DriveCollection implements IEditableElement {
 
 		// Action listener for enabling / disabling the drive collection
 		enabled.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setEnabled(enabled.isSelected());
 				subGui.repaint();
@@ -308,6 +315,7 @@ public class DriveCollection implements IEditableElement {
 	 * @param diagram
 	 *            The diagram in the window we'return being shown on
 	 */
+	@Override
 	public void showContextMenu(final JTreeNode showOn,
 			final LearnableActionPattern lap, final JEditorWindow window,
 			final JDiagram diagram) {
@@ -322,6 +330,7 @@ public class DriveCollection implements IEditableElement {
 			disableThis = new JMenuItem("Enable element");
 		}
 		disableThis.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (isEnabled()) {
 					setEnabled(false);
@@ -334,6 +343,7 @@ public class DriveCollection implements IEditableElement {
 
 		JMenuItem addNew = new JMenuItem("Add new Drive Element");
 		addNew.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				String name = "Some Name";
 				while (name.indexOf(" ") >= 0) {
@@ -359,6 +369,7 @@ public class DriveCollection implements IEditableElement {
 
 		JMenuItem addGoal = new JMenuItem("Add Goal Sense");
 		addGoal.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				ActionElement actionElement = new ActionElement(true,
 						"SomeSense" + driveElement++);
@@ -369,6 +380,7 @@ public class DriveCollection implements IEditableElement {
 
 		JMenuItem delete = new JMenuItem("Delete drive Collection");
 		delete.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (JOptionPane.showConfirmDialog(
 						showOn.getParent(),
@@ -404,6 +416,7 @@ public class DriveCollection implements IEditableElement {
 	 * @return Tree node representing this node and the relevent sub-tree for
 	 *         the specified diagram rendering settings
 	 */
+	@Override
 	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap,
 			boolean detailed, boolean expanded) {
 		Color colorToDraw;

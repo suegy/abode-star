@@ -49,6 +49,7 @@ public class DeleteEdit extends AbstractUndoableEdit {
 		
 	}
 	
+	@Override
 	public void undo(){
 		super.undo();
 		store.add(o_Pos, elem);
@@ -56,6 +57,7 @@ public class DeleteEdit extends AbstractUndoableEdit {
 		_editor.updateDiagrams(_diagram,(parent instanceof JTreeNode) ? parent.getValue() : null);
 		
 	}
+	@Override
 	public void redo(){
 		super.redo();
 		store.remove(elem);

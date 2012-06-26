@@ -61,7 +61,9 @@ public class LearnableActionPattern implements IEditableElement {
 	private Documentation documentation = null;
 	
 	//Not really relevant but easier
+	@Override
 	public void setDocumentation(String newDocumentation) {}
+	@Override
 	public String getElementDocumentation() { return ""; }
 
 	/**
@@ -98,6 +100,7 @@ public class LearnableActionPattern implements IEditableElement {
 	 * THIS MUST BE OVERRIDDEN!!!!!
 	 * @return
 	 */
+	@Override
 	public void setEnabled(boolean newValue) {}
 	//So must this...
 	public void setDebuggerIdentifier(int debuggerIdentifier) {}
@@ -143,7 +146,7 @@ public class LearnableActionPattern implements IEditableElement {
 		Iterator it = alElements.iterator();
 		System.out.println("-------------");
 		while (it.hasNext()) {
-			System.out.println((IEditableElement)it.next());
+			System.out.println(it.next());
 		}
 		System.out.println("-------------");
 	}
@@ -327,6 +330,7 @@ public class LearnableActionPattern implements IEditableElement {
 	/**
 	 * Don't call this on ourselves
 	 */
+	@Override
 	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {
 		return null;
 	}
@@ -334,6 +338,7 @@ public class LearnableActionPattern implements IEditableElement {
 	/**
 	 * Populate the property grid
 	 */
+	@Override
 	public void onSelect(JAbode mainGui, JEditorWindow subGui, JDiagram diagram) {
 		// Depopulate the property grid, so that the previous
 		// menu options are no longer present
@@ -346,6 +351,7 @@ public class LearnableActionPattern implements IEditableElement {
 	/**
 	 * Produce and show a context menu for this object
 	 */
+	@Override
 	public void showContextMenu(final JTreeNode showOn, final LearnableActionPattern lap, final JEditorWindow window, final JDiagram diagram) {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Learnable Action Pattern"));
@@ -353,6 +359,7 @@ public class LearnableActionPattern implements IEditableElement {
 
 		JMenuItem addDriveColl = new JMenuItem("Add New Drive Collection");
 		addDriveColl.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String name = "Some Name";
 				while (name.indexOf(" ") >= 0) {
@@ -370,6 +377,7 @@ public class LearnableActionPattern implements IEditableElement {
 
 		JMenuItem addComp = new JMenuItem("Add New Competence");
 		addComp.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String name = "Some Name";
 				while (name.indexOf(" ") >= 0) {
@@ -388,6 +396,7 @@ public class LearnableActionPattern implements IEditableElement {
 
 		JMenuItem addAp = new JMenuItem("Add New Action Pattern");
 		addAp.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String name = "Some Name";
 				while (name.indexOf(" ") >= 0) {

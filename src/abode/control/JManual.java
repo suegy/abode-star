@@ -85,6 +85,7 @@ public class JManual extends javax.swing.JFrame {
 
 		jButton1.setText("Close");
 		jButton1.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton1ActionPerformed(evt);
 			}

@@ -64,6 +64,7 @@ public class JColorSelectForm extends javax.swing.JFrame {
 		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
 			public void windowClosing(java.awt.event.WindowEvent evt) {
 				formWindowClosing(evt);
 			}
@@ -73,6 +74,7 @@ public class JColorSelectForm extends javax.swing.JFrame {
 
 		jButton1.setText("Ok");
 		jButton1.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton1ActionPerformed(evt);
 			}
@@ -82,6 +84,7 @@ public class JColorSelectForm extends javax.swing.JFrame {
 
 		jButton2.setText("Cancel");
 		jButton2.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton2ActionPerformed(evt);
 			}

@@ -197,6 +197,7 @@ public class SplashScreen extends javax.swing.JFrame {
 	 * @param g
 	 *            Graphics object for rendering with.
 	 */
+	@Override
 	public void paint(Graphics g) {
 		// Draw background image
 		g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), null, null);

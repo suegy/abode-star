@@ -125,10 +125,12 @@ public class Competence implements IEditableElement, INamedElement {
 		this.setEnabled(shouldBeEnabled);
 	}
 	
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		this.documentation = newDocumentation;
 	}
 	
+	@Override
 	public String getElementDocumentation() {
 		return this.documentation;
 	}
@@ -144,6 +146,7 @@ public class Competence implements IEditableElement, INamedElement {
 	/**
 	 * Sets whether this element is enabled
 	 */
+	@Override
 	public void setEnabled(boolean newValue) {
 		this.enabled = newValue;
 		Iterator childrenIterator = this.getElementLists().iterator();
@@ -178,6 +181,7 @@ public class Competence implements IEditableElement, INamedElement {
 	 * 
 	 * @return Name of this competence
 	 **/
+	@Override
 	public String getName() {
 		return strName;
 	}
@@ -214,6 +218,7 @@ public class Competence implements IEditableElement, INamedElement {
 	 *
 	 * @param name Name of the object
 	 **/
+	@Override
 	public void setName(String name) {
 		strName = name;
 	}
@@ -236,6 +241,7 @@ public class Competence implements IEditableElement, INamedElement {
 	 * @param subGui Reference to the editor window
 	 * @param diagram Diagram refernece on our editing window
 	 **/
+	@Override
 	public void onSelect(JAbode mainGui, final JEditorWindow subGui, final JDiagram diagram) {
 		mainGui.popOutProperties();
 		diagram.repaint();
@@ -252,6 +258,7 @@ public class Competence implements IEditableElement, INamedElement {
 
 		// Action listener to update the actual data when the field is updated
 		namefield.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), alElementLists, alGoal, tTimeout, namefield.getText(), enabled, documentation)));
 				setName(namefield.getText());
@@ -279,6 +286,7 @@ public class Competence implements IEditableElement, INamedElement {
 		
 		// Action listener to update the actual data when the field is updated
 		spinnerModel.addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent e) {
 				double value = (Double) spinnerModel.getValue();
 				if (Double.toString(value).length() < 1) {
@@ -335,6 +343,7 @@ public class Competence implements IEditableElement, INamedElement {
 		
 		// Action listener to update the actual data when the field is updated
 		timeoutUnit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Get the actual value
 				double value;
@@ -356,6 +365,7 @@ public class Competence implements IEditableElement, INamedElement {
 
 		// Action listener for enabling / disabling the Competence
 		enabled.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceEdit((Competence)getSelf(), alElementLists, alGoal, tTimeout, strName, enabled.isSelected(), documentation)));
 				setEnabled(enabled.isSelected());
@@ -409,6 +419,7 @@ public class Competence implements IEditableElement, INamedElement {
 	 * @param window    The window we're being dispalyed in
 	 * @param diagram   The diagram in the window we'return being shown on
 	 **/
+	@Override
 	public void showContextMenu(final JTreeNode showOn, final LearnableActionPattern lap, final JEditorWindow window, final JDiagram diagram) {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Competence"));
@@ -421,6 +432,7 @@ public class Competence implements IEditableElement, INamedElement {
 			disableThis = new JMenuItem("Enable element");
 		}
 		disableThis.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (isEnabled()) {
 					setEnabled(false);
@@ -434,6 +446,7 @@ public class Competence implements IEditableElement, INamedElement {
 
 		JMenuItem addNew = new JMenuItem("Add new Competence Element");
 		addNew.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				String name = "Some Name";
 				while (name.indexOf(" ") >= 0) {
@@ -458,6 +471,7 @@ public class Competence implements IEditableElement, INamedElement {
 
 		JMenuItem addGoal = new JMenuItem("Add Goal Sense");
 		addGoal.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				ActionElement actionElement = new ActionElement(true, "SomeSense" + compElement++);
 				ArrayList temp =(ArrayList) getGoal().clone();
@@ -470,6 +484,7 @@ public class Competence implements IEditableElement, INamedElement {
 
 		JMenuItem delete = new JMenuItem("Delete Competence");
 		delete.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (JOptionPane.showConfirmDialog(showOn.getParent(), "Delete Competence", "Are you sure you want to delete the competence?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					lap.getElements().remove(showOn.getValue());
@@ -487,6 +502,7 @@ public class Competence implements IEditableElement, INamedElement {
 			collapseThis = new JMenuItem("Collapse element");
 		}
 		collapseThis.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (collapsed) {
 					collapsed = false;
@@ -518,6 +534,7 @@ public class Competence implements IEditableElement, INamedElement {
 	 * @param expanded Is this diagram expanded (i.e. show sub-tree chained elements)
 	 * @return A constructed sub-tree showing this element and any sub-elements that need to be demonstrated.
 	 **/
+	@Override
 	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {
 		Color drawingColor;
 		if (isEnabled()) {

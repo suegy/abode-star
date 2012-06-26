@@ -118,10 +118,12 @@ public class ActionElement implements IEditableElement {
 		strComparator = pred;
 	}
 	
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		this.documentation = newDocumentation;
 	}
 	
+	@Override
 	public String getElementDocumentation() {
 		return this.documentation;
 	}
@@ -138,6 +140,7 @@ public class ActionElement implements IEditableElement {
 	 * Sets whether the element is enabled
 	 * @param Boolean indicating whether or not element should be enabled
 	 */
+	@Override
 	public void setEnabled(boolean value) {
 		this.enabled = value;
 	}
@@ -230,6 +233,7 @@ public class ActionElement implements IEditableElement {
 	 * @param subGui   The internal frame we're referring to
 	 * @param diagram  The diagram we're being select on.
 	 **/
+	@Override
 	public void onSelect(JAbode mainGui, final JEditorWindow subGui, final JDiagram diagram) {
 		// Refresh the diagram and make the right hand side menus come out
 		mainGui.popOutProperties();
@@ -277,6 +281,7 @@ public class ActionElement implements IEditableElement {
 		namefield.setEditable(true);
 		
 		namefield.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), 
 						new ActionElementEdit(getSelf(), getSelf().bIsSense, namefield.getSelectedItem().toString(), getSelf().strValue, getSelf().strComparator, getSelf().enabled, getSelf().documentation)));
@@ -318,6 +323,7 @@ public class ActionElement implements IEditableElement {
 			
 			// Action listener to update the actual data when the field is updated
 			spinnerModel.addChangeListener(new ChangeListener() {
+				@Override
 				public void stateChanged(ChangeEvent e) {
 					double value = (Double) spinnerModel.getValue();
 					
@@ -373,6 +379,7 @@ public class ActionElement implements IEditableElement {
 			
 			// Action listener to update the actual data when the field is updated
 			predicateSelector.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					ActionElement a=ActionElement.this;
 					_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), 
@@ -425,6 +432,7 @@ public class ActionElement implements IEditableElement {
 	 * @param window    The window we're being dispalyed in
 	 * @param diagram   The diagram in the window we'return being shown on
 	 **/
+	@Override
 	public void showContextMenu(final JTreeNode showOn, final LearnableActionPattern lap, final JEditorWindow window, final JDiagram diagram) {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Rearrange Elements"));
@@ -435,6 +443,7 @@ public class ActionElement implements IEditableElement {
 			if (group.indexOf(showOn.getValue()) > 0) {
 				JMenuItem moveLeft = new JMenuItem("Move Left");
 				moveLeft.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						AbodeActionHandler.getActionHandler().moveUpInGroupAction(diagram, window, showOn);
 					}
@@ -445,6 +454,7 @@ public class ActionElement implements IEditableElement {
 			if (group.indexOf(showOn.getValue()) < (group.size() - 1)) {
 				JMenuItem moveRight = new JMenuItem("Move Right");
 				moveRight.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						AbodeActionHandler.getActionHandler().moveDownInGroupAction(diagram, window, showOn);						
 					}
@@ -455,6 +465,7 @@ public class ActionElement implements IEditableElement {
 
 		JMenuItem deleteElement = new JMenuItem("Delete Action/Sense Element");
 		deleteElement.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbodeActionHandler.getActionHandler().deleteElementAction(diagram, window, showOn);
 			}
@@ -462,6 +473,7 @@ public class ActionElement implements IEditableElement {
 		
 		JMenuItem refactorElements = new JMenuItem("Rename all " + getElementName());
 		refactorElements.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				String strName = " ";
@@ -590,6 +602,7 @@ public class ActionElement implements IEditableElement {
 			disableThis = new JMenuItem("Enable element");
 		}
 		disableThis.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (isEnabled()) {
 					setEnabled(false);
@@ -649,6 +662,7 @@ public class ActionElement implements IEditableElement {
 	 * @param expanded Is this diagram expanded (i.e. show sub-tree chained elements)
 	 * @return A constructed sub-tree showing this element and any sub-elements that need to be demonstrated.
 	 **/
+	@Override
 	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {
 		Color colorToDraw;
 		if (this.isEnabled()) {

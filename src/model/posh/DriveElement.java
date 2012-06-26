@@ -123,10 +123,12 @@ public class DriveElement implements IEditableElement {
 		tFrequency = freq;
 	}
 	
+	@Override
 	public void setDocumentation(String newDocumentation) {
 		this.documentation = newDocumentation;
 	}
 	
+	@Override
 	public String getElementDocumentation() {
 		return this.documentation;
 	}
@@ -143,6 +145,7 @@ public class DriveElement implements IEditableElement {
 	 * Sets whether the element is enabled
 	 * @param Boolean indicating whether or not element should be enabled
 	 */
+	@Override
 	public void setEnabled(boolean value) {
 		this.enabled = value;
 		//Disable children
@@ -247,6 +250,7 @@ public class DriveElement implements IEditableElement {
 	 * @param diagram
 	 *            The diagram we're being select on.
 	 */
+	@Override
 	public void onSelect(JAbode mainGui, final JEditorWindow subGui, final JDiagram diagram) {
 		mainGui.popOutProperties();
 		diagram.repaint();
@@ -261,6 +265,7 @@ public class DriveElement implements IEditableElement {
 
 		// Action listener to update the actual data when the field is updated
 		namefield.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setName(namefield.getText());
 				subGui.repaint();
@@ -303,6 +308,7 @@ public class DriveElement implements IEditableElement {
 		actionfield.setEditable(true);
 		
 		actionfield.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setAction((String)actionfield.getSelectedItem());
 				subGui.repaint();
@@ -333,6 +339,7 @@ public class DriveElement implements IEditableElement {
 		
 		// Action listener to update the actual data when the field is updated
 		spinnerModel.addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent e) {
 				double value = (Double) spinnerModel.getValue();
 				if (Double.toString(value).length() < 1 ||
@@ -388,6 +395,7 @@ public class DriveElement implements IEditableElement {
 		
 		// Action listener to update the actual data when the field is updated
 		frequencyUnit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(frequencyUnit.getSelectedIndex() == 3 || getFrequency() == null){
 					setFrequency(null);
@@ -445,6 +453,7 @@ public class DriveElement implements IEditableElement {
 	 * @param diagram
 	 *            The diagram in the window we'return being shown on
 	 */
+	@Override
 	public void showContextMenu(final JTreeNode showOn, LearnableActionPattern lap, final JEditorWindow window, final JDiagram diagram) {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Drive Element"));
@@ -455,6 +464,7 @@ public class DriveElement implements IEditableElement {
 
 		JMenuItem itemAddAP = new JMenuItem("New Action Pattern...");
 		itemAddAP.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent ae) {
 				String name = JOptionPane.showInputDialog(window, "Please enter a name for this new action pattern.", "");
 				if ((name != null) && (name.length() > 0)) {
@@ -469,6 +479,7 @@ public class DriveElement implements IEditableElement {
 
 		JMenuItem itemAddComp = new JMenuItem("New Competence...");
 		itemAddComp.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent ae) {
 				String name = JOptionPane.showInputDialog(window, "Please enter a name for this new competence", "");
 				if ((name != null) && (name.length() > 0)) {
@@ -489,6 +500,7 @@ public class DriveElement implements IEditableElement {
 				final INamedElement namedCurrent = (INamedElement) current;
 				JMenuItem focus = new JMenuItem(namedCurrent.getName() + ((namedCurrent instanceof ActionPattern) ? " (AP)" : " (C)"));
 				focus.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent ae) {
 						getSelf().setAction(namedCurrent.getName());
 						window.updateDiagrams(diagram, showOn.getValue());
@@ -501,6 +513,7 @@ public class DriveElement implements IEditableElement {
 
 		JMenuItem addTrigger = new JMenuItem("Add Trigger Element");
 		addTrigger.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				ActionElement actionElement = new ActionElement(true, "SomeSense" + senseCount++);
 				getTrigger().add(actionElement);
@@ -510,6 +523,7 @@ public class DriveElement implements IEditableElement {
 
 		JMenuItem itemDelete = new JMenuItem("Delete " + getName());
 		itemDelete.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if ((showOn.getGroup() != null) && (showOn.getParentNode().getGroup() != null)) {
 					if (JOptionPane.showConfirmDialog(window, "Are you sure you want to delete this Drive Element?", "Delete " + getName() + "?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -527,6 +541,7 @@ public class DriveElement implements IEditableElement {
 			disableThis = new JMenuItem("Enable element");
 		}
 		disableThis.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (isEnabled()) {
 					setEnabled(false);
@@ -544,6 +559,7 @@ public class DriveElement implements IEditableElement {
 			collapseThis = new JMenuItem("Collapse element");
 		}
 		collapseThis.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				if (collapsed) {
 					collapsed = false;
@@ -576,6 +592,7 @@ public class DriveElement implements IEditableElement {
 	 * @return Tree node representing this node and the relevent sub-tree for
 	 *         the specified diagram rendering settings
 	 */
+	@Override
 	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {		
 		if (this.parentPattern == null) {
 			this.parentPattern = lap;

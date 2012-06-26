@@ -54,6 +54,7 @@ public class UnGroupEdit extends AbstractUndoableEdit {
 		
 	}
 	
+	@Override
 	public void undo(){
 		super.undo();
 
@@ -65,6 +66,7 @@ public class UnGroupEdit extends AbstractUndoableEdit {
 		_editor.updateDiagrams(_diagram,parent.getValue());
 		
 	}
+	@Override
 	public void redo(){
 		super.redo();
 		

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import model.IEditableElement;
 import abode.JAbode;
@@ -61,6 +62,7 @@ public class HorizontalListOrganiser extends ListOrganiser {
 	 * @param subject
 	 *            The tree-node that was clicked to produce this action
 	 */
+	@Override
 	public void populateOptionsPanel(final JAbode mainGui, final JEditorWindow internal, final JDiagram diagram, final JTreeNode subject) {
 		// Store some references to make things easier to read
 		final JPanel panel = mainGui.getCommandsPanel();
@@ -69,11 +71,12 @@ public class HorizontalListOrganiser extends ListOrganiser {
 
 		JButton bttnMoveLeft = new JButton("Move left", new ImageIcon(getClass().getResource("/image/icon/arrowLeft.gif")));
 		bttnMoveLeft.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				AbodeActionHandler.getActionHandler().moveUpInGroupAction(diagram, internal, subject);
 			}
 		});
-		bttnMoveLeft.setHorizontalAlignment(JButton.LEFT);
+		bttnMoveLeft.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		// Set tooltip and shortcut key (Mnemonic)
 		bttnMoveLeft.setToolTipText("Moves an element left in hierarchy" +
@@ -92,11 +95,12 @@ public class HorizontalListOrganiser extends ListOrganiser {
 
 		JButton bttnMoveRight = new JButton("Move right", new ImageIcon(getClass().getResource("/image/icon/arrowRight.gif")));
 		bttnMoveRight.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				AbodeActionHandler.getActionHandler().moveDownInGroupAction(diagram, internal, subject);
 			}
 		});
-		bttnMoveRight.setHorizontalAlignment(JButton.LEFT);
+		bttnMoveRight.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		// Set tooltip and shortcut key (Mnemonic)
 		bttnMoveRight.setToolTipText("Moves an element right in hierarchy" +

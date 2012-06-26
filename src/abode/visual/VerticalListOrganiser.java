@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.event.UndoableEditEvent;
 
 import model.IEditableElement;
@@ -56,6 +57,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 	 * with a list of relevent actions based on the currently selected tree
 	 * node;
 	 */
+	@Override
 	public void populateOptionsPanel(final JAbode mainGui, final JEditorWindow internal, final JDiagram diagram, final JTreeNode subject) {
 		// If we've got no node, the node isn't in a group, the node has no
 		// parent or the
@@ -75,11 +77,12 @@ public class VerticalListOrganiser extends ListOrganiser {
 		// Move element/group up the list of lists
 		JButton bttnMoveUp = new JButton("Move " + type + " up", new ImageIcon(getClass().getResource("/image/icon/group-up.gif")));
 		bttnMoveUp.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				AbodeActionHandler.getActionHandler().moveUpAction(diagram, internal, subject);
 			}
 		});
-		bttnMoveUp.setHorizontalAlignment(JButton.LEFT);
+		bttnMoveUp.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		// Set tooltip and shortcut key (Mnemonic)
 		bttnMoveUp.setToolTipText("Moves an element up the hierarchy" +
@@ -100,11 +103,12 @@ public class VerticalListOrganiser extends ListOrganiser {
 			// Move up in group
 			JButton bttnMoveupGroup = new JButton("Move up in group", new ImageIcon(getClass().getResource("/image/icon/upingroup.gif")));
 			bttnMoveupGroup.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 					AbodeActionHandler.getActionHandler().moveUpInGroupAction(diagram, internal, subject);
 				}
 			});
-			bttnMoveupGroup.setHorizontalAlignment(JButton.LEFT);
+			bttnMoveupGroup.setHorizontalAlignment(SwingConstants.LEFT);
 			
 			// Set tooltip and shortcut key (Mnemonic)
 			bttnMoveupGroup.setToolTipText("Moves an element up within a group" +
@@ -123,11 +127,12 @@ public class VerticalListOrganiser extends ListOrganiser {
 			// Move down inside group
 			JButton bttnMoveDownGroup = new JButton("Move down in group", new ImageIcon(getClass().getResource("/image/icon/downingroup.gif")));
 			bttnMoveDownGroup.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 					AbodeActionHandler.getActionHandler().moveDownInGroupAction(diagram, internal, subject);
 		}
 			});
-			bttnMoveDownGroup.setHorizontalAlignment(JButton.LEFT);
+			bttnMoveDownGroup.setHorizontalAlignment(SwingConstants.LEFT);
 			// Set tooltip and shortcut key (Mnemonic)
 			bttnMoveDownGroup.setToolTipText("Moves an element down within a group" +
 					" (Alt + {)");
@@ -146,11 +151,12 @@ public class VerticalListOrganiser extends ListOrganiser {
 		// Move element/group down the list of lists
 		JButton bttnMoveDown = new JButton("Move " + type + " down", new ImageIcon(getClass().getResource("/image/icon/group-down.gif")));
 		bttnMoveDown.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				AbodeActionHandler.getActionHandler().moveDownAction(diagram, internal, subject);
 			}
 		});
-		bttnMoveDown.setHorizontalAlignment(JButton.LEFT);
+		bttnMoveDown.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		// Set tooltip and shortcut key (Mnemonic)
 		bttnMoveDown.setToolTipText("Moves an element down the hierarchy" +
@@ -168,6 +174,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 		
 		JButton bttnMergeUp = new JButton("Merge with group above", new ImageIcon(getClass().getResource("/image/icon/merge-group-up.gif")));
 		bttnMergeUp.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get the group above us
 				ArrayList groupAbove = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) - 1);
@@ -184,7 +191,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 
 			}
 		});
-		bttnMergeUp.setHorizontalAlignment(JButton.LEFT);
+		bttnMergeUp.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		// Set tooltip and shortcut key (Mnemonic)
 		bttnMergeUp.setToolTipText("Merges an element with the element above it in the hierarchy.");
@@ -199,6 +206,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 		// Button for merging with group below
 		JButton bttnMergeDown = new JButton("Merge with group below", new ImageIcon(getClass().getResource("/image/icon/merge-group-down.gif")));
 		bttnMergeDown.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				// Get the group above us
 				ArrayList groupBelow = (ArrayList) groupGroup.get(groupGroup.indexOf(myGroup) + 1);
@@ -213,7 +221,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 				internal.updateDiagrams(diagram, subject.getValue());
 			}
 		});
-		bttnMergeDown.setHorizontalAlignment(JButton.LEFT);
+		bttnMergeDown.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		// Set tooltip and shortcut key (Mnemonic)
 		bttnMergeDown.setToolTipText("Merges an element with the element above it in the hierarchy.");
@@ -231,6 +239,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 			// Dissolve the group
 			JButton bttnUngroup = new JButton("Ungroup Elements", new ImageIcon(getClass().getResource("/image/icon/ungroup.gif")));
 			bttnUngroup.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent actionEvent) {
 					int index= groupGroup.indexOf(myGroup);
 					ArrayList<IEditableElement> [] unGrouped=new ArrayList[myGroup.size()];
@@ -250,7 +259,7 @@ public class VerticalListOrganiser extends ListOrganiser {
 	
 				}
 			});
-			bttnUngroup.setHorizontalAlignment(JButton.LEFT);
+			bttnUngroup.setHorizontalAlignment(SwingConstants.LEFT);
 			bttnUngroup.setToolTipText("Dissolves a group. All of the elements will return to being singular elements.");
 			
 			panel.add(bttnUngroup);

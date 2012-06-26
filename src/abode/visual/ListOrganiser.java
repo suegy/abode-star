@@ -32,6 +32,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import abode.JAbode;
 import abode.control.AbodeActionHandler;
@@ -56,6 +57,7 @@ public class ListOrganiser implements IListOrganiser {
 	 * @param subject
 	 *            The tree-node that was clicked to produce this action
 	 */
+	@Override
 	public void populateOptionsPanel(final JAbode mainGui, final JEditorWindow internal, final JDiagram diagram, final JTreeNode subject) {		
 		addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 	}
@@ -64,11 +66,12 @@ public class ListOrganiser implements IListOrganiser {
 	{
 		JButton bttnDelete = new JButton("Delete element", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
 		bttnDelete.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				AbodeActionHandler.getActionHandler().deleteElementAction(diagram, internal, subject);
 			}
 		});
-		bttnDelete.setHorizontalAlignment(JButton.LEFT);
+		bttnDelete.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		// Set tooltip and shortcut key (Mnemonic)
 		bttnDelete.setToolTipText("Deletes an element from the hierarchy" +
@@ -81,8 +84,9 @@ public class ListOrganiser implements IListOrganiser {
 	public void addDeleteGroupButton(final JPanel panel, final JEditorWindow internal, final JTreeNode subject,final JDiagram diagram)
 	{
 		JButton bttnDelete = new JButton("Delete group", new ImageIcon(getClass().getResource("/image/icon/delete.gif")));
-		bttnDelete.setHorizontalAlignment(JButton.LEFT);
+		bttnDelete.setHorizontalAlignment(SwingConstants.LEFT);
 		bttnDelete.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				AbodeActionHandler.getActionHandler().deleteGroupAction(diagram, internal, subject);
 			}

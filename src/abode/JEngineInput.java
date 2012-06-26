@@ -105,6 +105,7 @@ public class JEngineInput extends javax.swing.JFrame {
 		jPanel3.setMinimumSize(new java.awt.Dimension(250, 33));
 		jButton1.setText("Ok");
 		jButton1.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton1ActionPerformed(evt);
 			}

@@ -77,6 +77,7 @@ public class CompetenceEdit extends AbstractUndoableEdit {
 		
 	}
 	
+	@Override
 	public void undo(){
 		super.undo();
 
@@ -89,6 +90,7 @@ public class CompetenceEdit extends AbstractUndoableEdit {
 		competence.refresh();
 	}
 	
+	@Override
 	public void redo(){
 		super.redo();
 		competence.setName(strName);

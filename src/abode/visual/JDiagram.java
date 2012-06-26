@@ -293,6 +293,7 @@ public class JDiagram extends javax.swing.JPanel {
 		setToolTipText("Click to expand diagram view");
 		setName("diagramPanel");
 		addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				formMouseClicked(evt);
 			}
@@ -314,6 +315,7 @@ public class JDiagram extends javax.swing.JPanel {
 	 * @param g
 	 *            Swing graphics object
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
 		if (renderer == null)
 			return;
@@ -325,6 +327,7 @@ public class JDiagram extends javax.swing.JPanel {
 	/**
 	 * Repaint the diagram
 	 */
+	@Override
 	public void repaint() {
 		super.repaint();
 	}

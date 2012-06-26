@@ -119,6 +119,7 @@ public class PrintDiagramRenderer implements IRenderer {
 	/**
 	 * Get our currnet zoom level
 	 */
+	@Override
 	public double getZoomLevel() {
 		return SCALAR;
 	}
@@ -150,6 +151,7 @@ public class PrintDiagramRenderer implements IRenderer {
 	/**
 	 * Reset the zoom level of the diagram
 	 */
+	@Override
 	public void setZoomLevel(double zoom) {
 		// Sensible constrictions upon the zoom levels
 		double minZoom = Double.parseDouble(Configuration.getByKey("environment/zoomLevelBounds").get(1).toString()) / 100;
@@ -178,6 +180,7 @@ public class PrintDiagramRenderer implements IRenderer {
 	/**
 	 * Paint a JDiagram for the user
 	 */
+	@Override
 	public void paintDiagram(JDiagram diagram, Graphics g) {
 
 		// Render this object with anti-aliasing turned on!
@@ -230,6 +233,7 @@ public class PrintDiagramRenderer implements IRenderer {
 	/**
 	 * Paint an individual tree node
 	 */
+	@Override
 	public void paintTreeNode(JTreeNode node, Graphics g) {
 
 		node.setBorder(null);
@@ -434,6 +438,7 @@ public class PrintDiagramRenderer implements IRenderer {
 	/**
 	 * Lay out a hierarchy of nodes onto the diagram
 	 */
+	@Override
 	public void layoutNodes(JDiagram diagram, JTreeNode root) {
 		layoutInvalid = false;
 

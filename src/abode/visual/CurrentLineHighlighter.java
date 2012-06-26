@@ -69,6 +69,7 @@ public class CurrentLineHighlighter {
 	}
 
 	private static CaretListener caretListener = new CaretListener() {
+		@Override
 		public void caretUpdate(CaretEvent e) {
 			JTextComponent c = (JTextComponent) e.getSource();
 			CurrentLineHighlighter.caretUpdate(c);
@@ -77,6 +78,7 @@ public class CurrentLineHighlighter {
 
 	private static MouseListener mouseListener = new MouseAdapter() {
 		// highlight the line the user clicks on
+		@Override
 		public void mousePressed(MouseEvent e) {
 			JTextComponent c = (JTextComponent) e.getSource();
 			caretUpdate(c);
@@ -84,6 +86,7 @@ public class CurrentLineHighlighter {
 	};
 
 	private static MouseMotionListener mouseMotionListener = new MouseMotionAdapter() {
+		@Override
 		public void mouseDragged(MouseEvent e) {
 			JTextComponent c = (JTextComponent) e.getSource();
 			caretUpdate(c);
@@ -113,6 +116,7 @@ public class CurrentLineHighlighter {
 	}
 
 	private static Highlighter.HighlightPainter painter = new Highlighter.HighlightPainter() {
+		@Override
 		public void paint(Graphics g, int p0, int p1, Shape bounds, JTextComponent c) {
 			try {
 				Rectangle r = c.modelToView(c.getCaretPosition());

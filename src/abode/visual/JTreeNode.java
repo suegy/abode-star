@@ -133,16 +133,19 @@ public class JTreeNode extends JButton {
 
 		// Start listening for when anything happens to this (i.e. clicked)
 		this.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				treeNodeActionPerformed(evt);
 			}
 		});
 
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
 			public void mouseReleased(java.awt.event.MouseEvent evt) {
 				actionMouseClicked(evt);
 			}
 
+			@Override
 			public void mousePressed(MouseEvent evt) {
 				actionMouseClicked(evt);
 			}
@@ -151,10 +154,12 @@ public class JTreeNode extends JButton {
 		// When we're selected and de-selected, hook these so we
 		// can update the display of this button accordingly.
 		this.addFocusListener(new java.awt.event.FocusAdapter() {
+			@Override
 			public void focusGained(java.awt.event.FocusEvent evt) {
 				treeNodeFocusGained(evt);
 			}
 
+			@Override
 			public void focusLost(java.awt.event.FocusEvent evt) {
 				treeNodeFocusLost(evt);
 			}
@@ -330,6 +335,7 @@ public class JTreeNode extends JButton {
 	/**
 	 * Get the name of the node
 	 */
+	@Override
 	public String getName() {
 		return label;
 	}
@@ -449,8 +455,8 @@ public class JTreeNode extends JButton {
 	private void treeNodeFocusGained(FocusEvent event) {
 		getParent().repaint();
 		JDiagram diagram = (JDiagram) getParent();
-		JEditorWindow window = (JEditorWindow) diagram.getInternalFrame();
-		JAbode abode = (JAbode) window.getMainFrame();
+		JEditorWindow window = diagram.getInternalFrame();
+		JAbode abode = window.getMainFrame();
 		abode.setStatus("Editing " + getName());
 	}
 
@@ -462,8 +468,8 @@ public class JTreeNode extends JButton {
 
 		if ((opposite == null) || (opposite instanceof JTreeNode) || (opposite instanceof JDiagram)) {
 			JDiagram diagram = (JDiagram) getParent();
-			JEditorWindow window = (JEditorWindow) diagram.getInternalFrame();
-			JAbode abode = (JAbode) window.getMainFrame();
+			JEditorWindow window = diagram.getInternalFrame();
+			JAbode abode = window.getMainFrame();
 
 			abode.clearProperties();
 			abode.getCommandsPanel().removeAll();
@@ -475,6 +481,7 @@ public class JTreeNode extends JButton {
 	/**
 	 * Repaint the node
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
 		IRenderer renderObject = getRenderer();
 		if (renderObject != null)
@@ -491,6 +498,7 @@ public class JTreeNode extends JButton {
 	/**
 	 * Is this a valid node?
 	 */
+	@Override
 	public boolean isValid() {
 		return valid;
 	}

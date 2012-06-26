@@ -104,6 +104,7 @@ public class JAbode extends JFrame {
 		alFileReader.add(new DotLapReader());
 	}
 
+	@Override
 	public void setBounds(int x, int y, int w, int h) {
 		super.setBounds(x, y, w, h);
 		checkDesktopSize();
@@ -154,6 +155,7 @@ public class JAbode extends JFrame {
 		return retval;
 	}
 
+	@Override
 	public void remove(Component c) {
 		super.remove(c);
 		checkDesktopSize();
@@ -440,12 +442,15 @@ public class JAbode extends JFrame {
 		// Add key listener which will update the elements comments field
 		// when this is updated
 		documentationEditor.addKeyListener(new KeyListener() {
+			@Override
 			public void keyTyped(KeyEvent e) {
 				if (currentEditingElement != null) {
 					currentEditingElement.setDocumentation(documentationEditor.getText());
 				}
 			}
+			@Override
 			public void keyReleased(KeyEvent e) {}
+			@Override
 			public void keyPressed(KeyEvent e) {}
 		});
 		
@@ -504,6 +509,7 @@ public class JAbode extends JFrame {
 		newButton.setMinimumSize(new java.awt.Dimension(20, 20));
 		newButton.setPreferredSize(new java.awt.Dimension(35, 32));
 		newButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				newButtonActionPerformed(evt);
 			}
@@ -521,6 +527,7 @@ public class JAbode extends JFrame {
 		openButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 		openButton.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
 		openButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				openButtonActionPerformed(evt);
 			}
@@ -537,6 +544,7 @@ public class JAbode extends JFrame {
 		saveButton.setMinimumSize(new java.awt.Dimension(20, 20));
 		saveButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				saveButtonActionPerformed(evt);
 			}
@@ -553,6 +561,7 @@ public class JAbode extends JFrame {
 		printButton.setMinimumSize(new java.awt.Dimension(20, 20));
 		printButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 		printButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				printButtonActionPerformed(evt);
 			}
@@ -574,6 +583,7 @@ public class JAbode extends JFrame {
 		jButton1.setText("Run!");
 		jButton1.setBorder(null);
 		jButton1.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton1ActionPerformed(evt);
 			}
@@ -592,6 +602,7 @@ public class JAbode extends JFrame {
 		fileMenuItem.setText("New");
 		fileMenuItem.setName("fileMenuItem");
 		fileMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				fileMenuItemActionPerformed(evt);
 			}
@@ -602,6 +613,7 @@ public class JAbode extends JFrame {
 		openMenuItem.setText("Open");
 		openMenuItem.setName("openMenuItem");
 		openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				openMenuItemActionPerformed(evt);
 			}
@@ -614,6 +626,7 @@ public class JAbode extends JFrame {
 
 		saveMenuItem.setText("Save");
 		saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				saveMenuItemActionPerformed(evt);
 			}
@@ -623,6 +636,7 @@ public class JAbode extends JFrame {
 
 		saveAllMenuItem.setText("Save All");
 		saveAllMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				saveAllMenuItemActionPerformed(evt);
 			}
@@ -632,6 +646,7 @@ public class JAbode extends JFrame {
 
 		saveAsMenuItem.setText("Save As...");
 		saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				saveAsMenuItemActionPerformed(evt);
 			}
@@ -643,6 +658,7 @@ public class JAbode extends JFrame {
 
 		exitMenuItem.setText("Exit");
 		exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				exitProgramEvent(evt);
 			}
@@ -704,6 +720,7 @@ public class JAbode extends JFrame {
 		viewMenu.setName("viewMenu");
 		consoleMenuItem.setText("Output");
 		consoleMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				openOutputEvent(evt);
 			}
@@ -713,6 +730,7 @@ public class JAbode extends JFrame {
 
 		propertiesMenuItem.setText("Commands/Properties");
 		propertiesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				openCommandPropertiesEvent(evt);
 			}
@@ -722,6 +740,7 @@ public class JAbode extends JFrame {
 
 		hideValidationItem.setText("Hide Validation");
 		hideValidationItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				hideValidationEvent(evt);
 			}
@@ -735,6 +754,7 @@ public class JAbode extends JFrame {
 		toolMenu.setText("Tools");
 		optionsMenuItem.setText("Options");
 		optionsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				openOptionsMenuEvent(evt);
 			}
@@ -746,6 +766,7 @@ public class JAbode extends JFrame {
 
 		windowMenu.setText("Window");
 		windowMenu.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				windowMenuActionPerformed(evt);
 			}
@@ -756,6 +777,7 @@ public class JAbode extends JFrame {
 		helpMenu.setMnemonic('h');
 		helpMenu.setText("Help");
 		helpMenu.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				helpMenuActionPerformed(evt);
 			}
@@ -763,6 +785,7 @@ public class JAbode extends JFrame {
 
 		manualMenuItem.setText("Manual");
 		manualMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				openMaualEvent(evt);
 			}
@@ -772,6 +795,7 @@ public class JAbode extends JFrame {
 
 		aboutMenuItem.setText("About");
 		aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				openAboutMenuEvent(evt);
 			}
@@ -1054,6 +1078,7 @@ public class JAbode extends JFrame {
 			index++;
 			JMenuItem item = new JMenuItem(iterator.next().toString().replaceAll("\"", ""));
 			item.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(java.awt.event.ActionEvent evt) {
 					try {
 						loadFile(((JMenuItem) evt.getSource()).getText());
@@ -1110,7 +1135,7 @@ public class JAbode extends JFrame {
 	public void popOutConsole() {
 		if (PopoutVertical == 0) {
 			Rectangle bounds = getBounds();
-			PopoutVertical = (int) 7 * (bounds.height / 10);
+			PopoutVertical = 7 * (bounds.height / 10);
 		}
 
 		if (VerticalHidden) {
@@ -1424,11 +1449,13 @@ class MDIDesktopManager extends DefaultDesktopManager {
 		this.abode = jabode;
 	}
 
+	@Override
 	public void endResizingFrame(JComponent f) {
 		super.endResizingFrame(f);
 		resizeDesktop();
 	}
 
+	@Override
 	public void endDraggingFrame(JComponent f) {
 		super.endDraggingFrame(f);
 		resizeDesktop();
@@ -1522,18 +1549,21 @@ class WindowMenu extends JMenu {
 
 		setText("Window");
 		cascade.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent ae) {
 				WindowMenu.this.abode.cascadeFrames();
 			}
 		});
 
 		tile.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent ae) {
 				WindowMenu.this.abode.tileFrames();
 			}
 		});
 
 		min.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent ae) {
 				JInternalFrame[] frames = desktop.getAllFrames();
 				for (int x = 0; x < frames.length; x++)
@@ -1546,13 +1576,16 @@ class WindowMenu extends JMenu {
 		});
 
 		addMenuListener(new MenuListener() {
+			@Override
 			public void menuCanceled(MenuEvent e) {
 			}
 
+			@Override
 			public void menuDeselected(MenuEvent e) {
 				removeAll();
 			}
 
+			@Override
 			public void menuSelected(MenuEvent e) {
 				buildChildMenus();
 			}
@@ -1578,6 +1611,7 @@ class WindowMenu extends JMenu {
 			menu = new ChildMenuItem(array[i]);
 			menu.setState(i == 0);
 			menu.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent ae) {
 					JInternalFrame frame = ((ChildMenuItem) ae.getSource()).getFrame();
 					frame.moveToFront();

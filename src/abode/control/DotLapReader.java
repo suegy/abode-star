@@ -68,6 +68,7 @@ public class DotLapReader implements ILAPReader {
 	 *            Path to the file to read
 	 * @return True if readable, false if not
 	 */
+	@Override
 	public boolean canRead(String strFileName) {
 		File f = new File (strFileName);
 		
@@ -99,6 +100,7 @@ public class DotLapReader implements ILAPReader {
 		}
 	}
 
+	@Override
 	public LearnableActionPattern load(String strFileName) throws FileNotFoundException, IOException, Exception {
 		String planFileContents = this.getFileContents(strFileName);
 		return lapFromPlan(planFileContents);

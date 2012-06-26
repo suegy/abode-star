@@ -119,6 +119,7 @@ public class StandardDiagramRenderer implements IRenderer {
 	 * 
 	 * @return Current zoom level
 	 */
+	@Override
 	public double getZoomLevel() {
 		return SCALAR;
 	}
@@ -185,6 +186,7 @@ public class StandardDiagramRenderer implements IRenderer {
 	 * @param zoom
 	 *            New zoom level
 	 */
+	@Override
 	public void setZoomLevel(double zoom) {
 		// Sensible constrictions upon the zoom levels
 		double minZoom = Double.parseDouble(Configuration.getByKey("environment/zoomLevelBounds").get(1).toString()) / 100;
@@ -213,6 +215,7 @@ public class StandardDiagramRenderer implements IRenderer {
 	/**
 	 * Paint a JDiagram for the user
 	 */
+	@Override
 	public void paintDiagram(JDiagram diagram, Graphics g) {
 
 		// Render this object with anti-aliasing turned on!
@@ -340,6 +343,7 @@ public class StandardDiagramRenderer implements IRenderer {
 	/**
 	 * Paint an individual tree node
 	 */
+	@Override
 	public void paintTreeNode(JTreeNode node, Graphics g) {
 		// Make sure the ndoe is in the right state
 		node.setSize(WIDTH, HEIGHT);
@@ -411,6 +415,7 @@ public class StandardDiagramRenderer implements IRenderer {
 	/**
 	 * Lay out a hierarchy of nodes onto the diagram
 	 */
+	@Override
 	public void layoutNodes(JDiagram diagram, JTreeNode root) {
 		layoutInvalid = false;
 

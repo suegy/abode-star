@@ -192,12 +192,14 @@ public class JEditorWindow extends JInternalFrame{
 		JFileChooser chooser = new JFileChooser();
 		chooser.setDialogTitle("Save " + title + " as...");
 		chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+			@Override
 			public boolean accept(File pathName) {
 				if (pathName.getPath().toLowerCase().indexOf(".lap") > 0)
 					return true;
 				return false;
 			}
 
+			@Override
 			public String getDescription() {
 				return "Learnable Action Pattern Files (.lap)";
 			}
@@ -367,31 +369,39 @@ public class JEditorWindow extends JInternalFrame{
 		}
 		setVisible(true);
 		addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+			@Override
 			public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
 				formInternalFrameActivated(evt);
 			}
 
+			@Override
 			public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
 				formInternalFrameClosed(evt);
 			}
 
+			@Override
 			public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
 			}
 
+			@Override
 			public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
 			}
 
+			@Override
 			public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
 			}
 
+			@Override
 			public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
 			}
 
+			@Override
 			public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
 			}
 		});
 
 		overviewPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentShown(java.awt.event.ComponentEvent evt) {
 				overviewPaneComponentShown(evt);
 			}
@@ -400,6 +410,7 @@ public class JEditorWindow extends JInternalFrame{
 		internalTabs.addTab("Overview", new javax.swing.ImageIcon(getClass().getResource("/image/diagramIcon.gif")), overviewPane);
 
 		logicPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentShown(java.awt.event.ComponentEvent evt) {
 				logicPaneComponentShown(evt);
 			}
@@ -408,6 +419,7 @@ public class JEditorWindow extends JInternalFrame{
 		internalTabs.addTab("Logical View", new javax.swing.ImageIcon(getClass().getResource("/image/pictureIcon.gif")), logicPane);
 
 		actionPatternScrollPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentShown(java.awt.event.ComponentEvent evt) {
 				actionPatternScrollPaneComponentShown(evt);
 			}
@@ -416,6 +428,7 @@ public class JEditorWindow extends JInternalFrame{
 		internalTabs.addTab("Action Patterns", new javax.swing.ImageIcon(getClass().getResource("/image/icon/actionpat.png")), actionPatternScrollPane);
 
 		competencesScrollPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentShown(java.awt.event.ComponentEvent evt) {
 				competencesScrollPaneComponentShown(evt);
 			}
@@ -426,6 +439,7 @@ public class JEditorWindow extends JInternalFrame{
 		driveScrollPane.setBackground(new java.awt.Color(255, 255, 255));
 		driveScrollPane.setAutoscrolls(true);
 		driveScrollPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentShown(java.awt.event.ComponentEvent evt) {
 				driveScrollPaneComponentShown(evt);
 			}
@@ -435,6 +449,7 @@ public class JEditorWindow extends JInternalFrame{
 
 		printScrollPane.setBackground(new java.awt.Color(102, 102, 102));
 		printScrollPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentShown(java.awt.event.ComponentEvent evt) {
 				printScrollPaneComponentShown(evt);
 			}
@@ -444,10 +459,12 @@ public class JEditorWindow extends JInternalFrame{
 
 		sourceScrollPane.setBackground(new java.awt.Color(255, 255, 255));
 		sourceScrollPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentHidden(java.awt.event.ComponentEvent evt) {
 				sourceScrollPaneComponentHidden(evt);
 			}
 
+			@Override
 			public void componentShown(java.awt.event.ComponentEvent evt) {
 				sourceScrollPaneComponentShown(evt);
 			}
@@ -472,10 +489,12 @@ public class JEditorWindow extends JInternalFrame{
 		internalTabs.addTab("Source", new javax.swing.ImageIcon(getClass().getResource("/image/source.gif")), sourceScrollPane, "LAP Source Code");
 
 		commentsPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentHidden(java.awt.event.ComponentEvent evt) {
 				commentsPaneComponentHidden(evt);
 			}
 
+			@Override
 			public void componentShown(java.awt.event.ComponentEvent evt) {
 				commentsPaneComponentShown(evt);
 			}
@@ -491,6 +510,7 @@ public class JEditorWindow extends JInternalFrame{
 		txtTitle.setMinimumSize(new java.awt.Dimension(11, 11));
 		txtTitle.setPreferredSize(new java.awt.Dimension(150, 20));
 		txtTitle.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				txtTitleActionPerformed(evt);
 			}
@@ -503,6 +523,7 @@ public class JEditorWindow extends JInternalFrame{
 
 		txtAuthor.setPreferredSize(new java.awt.Dimension(150, 20));
 		txtAuthor.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				txtAuthorActionPerformed(evt);
 			}
@@ -518,6 +539,7 @@ public class JEditorWindow extends JInternalFrame{
 		jPanel3.add(jLabel3, java.awt.BorderLayout.NORTH);
 
 		txtMemo.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
 			public void keyTyped(java.awt.event.KeyEvent evt) {
 				txtMemoKeyTyped(evt);
 			}
@@ -544,6 +566,7 @@ public class JEditorWindow extends JInternalFrame{
 		bttnZoomIn.setMaximumSize(new java.awt.Dimension(250, 38));
 		bttnZoomIn.setMinimumSize(new java.awt.Dimension(20, 20));
 		bttnZoomIn.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				bttnZoomInActionPerformed(evt);
 			}
@@ -560,6 +583,7 @@ public class JEditorWindow extends JInternalFrame{
 		bttnZoomOut.setMinimumSize(new java.awt.Dimension(20, 20));
 		bttnZoomOut.setPreferredSize(new java.awt.Dimension(100, 32));
 		bttnZoomOut.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				bttnZoomOutActionPerformed(evt);
 			}
@@ -575,6 +599,7 @@ public class JEditorWindow extends JInternalFrame{
 		bttnValidate.setMaximumSize(new java.awt.Dimension(250, 38));
 		bttnValidate.setMinimumSize(new java.awt.Dimension(20, 20));
 		bttnValidate.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				bttnValidateActionPerformed(evt);
 			}
@@ -589,6 +614,7 @@ public class JEditorWindow extends JInternalFrame{
 		bttnListPrims.setMaximumSize(new java.awt.Dimension(250, 38));
 		bttnListPrims.setPreferredSize(new java.awt.Dimension(129, 38));
 		bttnListPrims.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				bttnListPrimsActionPerformed(evt);
 			}
@@ -602,6 +628,7 @@ public class JEditorWindow extends JInternalFrame{
 		bttnExport.setMaximumSize(new java.awt.Dimension(250, 38));
 		bttnExport.setMinimumSize(new java.awt.Dimension(81, 30));
 		bttnExport.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				bttnExportActionPerformed(evt);
 			}
@@ -617,6 +644,7 @@ public class JEditorWindow extends JInternalFrame{
 		bttnPrint.setMaximumSize(new java.awt.Dimension(250, 38));
 		bttnPrint.setMinimumSize(new java.awt.Dimension(20, 20));
 		bttnPrint.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				bttnPrintActionPerformed(evt);
 			}
@@ -694,12 +722,14 @@ public class JEditorWindow extends JInternalFrame{
 		JFileChooser chooser = new JFileChooser();
 		chooser.setDialogTitle("Save " + title + " as...");
 		chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+			@Override
 			public boolean accept(File pathName) {
 				if (pathName.getPath().toLowerCase().indexOf(".png") > 0)
 					return true;
 				return false;
 			}
 
+			@Override
 			public String getDescription() {
 				return "PNG Image Files (.PNG)";
 			}

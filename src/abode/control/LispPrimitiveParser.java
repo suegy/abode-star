@@ -68,6 +68,7 @@ public class LispPrimitiveParser implements IPrimitiveReader {
 	 *            Path to file to read
 	 * @return True if file contains primitives, false if not
 	 */
+	@Override
 	public boolean canRead(String strFile) {
 		try {
 			// This appears to be a check to see if a file exists. No. No.
@@ -86,6 +87,7 @@ public class LispPrimitiveParser implements IPrimitiveReader {
 	 *            Path to file to read.
 	 * @return Arraylist of actions found in the file
 	 */
+	@Override
 	public ArrayList getActions(String strFile) {
 		ArrayList results = new ArrayList();
 		LispBlob blob = new LispBlob(getFileContents(strFile));
@@ -98,6 +100,7 @@ public class LispPrimitiveParser implements IPrimitiveReader {
 	 * 
 	 * @return Description of the types of file this parser can read.
 	 */
+	@Override
 	public String getDescription() {
 		return "Primitive Parser for .lisp files";
 	}
@@ -109,6 +112,7 @@ public class LispPrimitiveParser implements IPrimitiveReader {
 	 *            Path to file to read.
 	 * @return Arraylist of sense primitives found in the file
 	 */
+	@Override
 	public ArrayList getSenses(String strFile) {
 		ArrayList results = new ArrayList();
 		LispBlob blob = new LispBlob(getFileContents(strFile));

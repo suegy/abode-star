@@ -64,6 +64,7 @@ public class JColorSelectButton extends JButton {
 
 		// Start listening for when anything happens to this (i.e. clicked)
 		this.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				colorButtonActionPerformed(evt);
 			}

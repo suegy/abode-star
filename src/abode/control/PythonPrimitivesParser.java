@@ -56,6 +56,7 @@ public class PythonPrimitivesParser implements IPrimitiveReader {
 		}
 	}
 
+	@Override
 	public boolean canRead(String fileName) {
 		String text = getFileContents(fileName);
 		if ((text.indexOf("add_sense(") > 0) || (text.indexOf("add_act(") > 0))
@@ -63,10 +64,12 @@ public class PythonPrimitivesParser implements IPrimitiveReader {
 		return false;
 	}
 
+	@Override
 	public ArrayList getSenses(String fileName) {
 		return Scan("\\Qadd_sense(\"\\E(.*)\\Q\"\\E", getFileContents(fileName));
 	}
 
+	@Override
 	public ArrayList getActions(String fileName) {
 		return Scan("\\Qadd_act(\"\\E(.*)\\Q\"\\E", getFileContents(fileName));
 	}
@@ -84,6 +87,7 @@ public class PythonPrimitivesParser implements IPrimitiveReader {
 	/**
 	 * Get a description of this parser
 	 */
+	@Override
 	public String getDescription() {
 		return "Simple .py Primitives Reader";
 	}

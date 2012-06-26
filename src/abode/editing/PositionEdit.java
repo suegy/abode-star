@@ -47,6 +47,7 @@ public class PositionEdit extends AbstractUndoableEdit {
 		pos=newPos;
 	}
 	
+	@Override
 	public void undo(){
 		super.undo();
 		store.remove(elem);
@@ -56,6 +57,7 @@ public class PositionEdit extends AbstractUndoableEdit {
 			_editor.updateDiagrams(_diagram, (IEditableElement)elem);
 		
 	}
+	@Override
 	public void redo(){
 		super.redo();
 		store.remove(elem);

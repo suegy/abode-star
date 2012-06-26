@@ -67,6 +67,7 @@ public class ActionPatternEdit extends AbstractUndoableEdit {
 		
 	}
 	
+	@Override
 	public void undo(){
 		super.undo();
 
@@ -78,6 +79,7 @@ public class ActionPatternEdit extends AbstractUndoableEdit {
 		action.refresh();
 	}
 	
+	@Override
 	public void redo(){
 		super.redo();
 		action.setName(strName);
