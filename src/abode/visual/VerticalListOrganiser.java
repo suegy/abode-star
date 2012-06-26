@@ -231,32 +231,35 @@ public class VerticalListOrganiser extends ListOrganiser {
 		}
 
 
-		// Dissolve the group
-		JButton bttnUngroup = new JButton("Ungroup Elements", new ImageIcon(getClass().getResource("/image/icon/ungroup.gif")));
-		bttnUngroup.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				int index= groupGroup.indexOf(myGroup);
-				ArrayList<IEditableElement> [] unGrouped=new ArrayList[myGroup.size()];
-				for (Object item : myGroup) {
-					unGrouped[myGroup.indexOf(item)]=new ArrayList<IEditableElement>();
-					unGrouped[myGroup.indexOf(item)].add((IEditableElement)item);
+		// Are we in a multi-item group? If so present the option to ungroup
+		if (myGroup.size() > 1) {
+			// Dissolve the group
+			JButton bttnUngroup = new JButton("Ungroup Elements", new ImageIcon(getClass().getResource("/image/icon/ungroup.gif")));
+			bttnUngroup.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent actionEvent) {
+					int index= groupGroup.indexOf(myGroup);
+					ArrayList<IEditableElement> [] unGrouped=new ArrayList[myGroup.size()];
+					for (Object item : myGroup) {
+						unGrouped[myGroup.indexOf(item)]=new ArrayList<IEditableElement>();
+						unGrouped[myGroup.indexOf(item)].add((IEditableElement)item);
+					}
+					groupGroup.remove(myGroup);
+					for (Object object : unGrouped) {
+						groupGroup.add(index,object);
+					}
+					
+					_undoListener.undoableEditHappened(new UndoableEditEvent(groupGroup, new UnGroupEdit(diagram, internal, myGroup, index, unGrouped, groupGroup, subject)));
+					
+					
+					internal.updateDiagrams(diagram, subject.getValue());
+	
 				}
-				groupGroup.remove(myGroup);
-				for (Object object : unGrouped) {
-					groupGroup.add(index,object);
-				}
-				
-				_undoListener.undoableEditHappened(new UndoableEditEvent(groupGroup, new UnGroupEdit(diagram, internal, myGroup, index, unGrouped, groupGroup, subject)));
-				
-				
-				internal.updateDiagrams(diagram, subject.getValue());
-
-			}
-		});
-		bttnUngroup.setHorizontalAlignment(JButton.LEFT);
-		bttnUngroup.setToolTipText("Dissolves a group. All of the elements will return to being singular elements.");
-		
-		panel.add(bttnUngroup);
+			});
+			bttnUngroup.setHorizontalAlignment(JButton.LEFT);
+			bttnUngroup.setToolTipText("Dissolves a group. All of the elements will return to being singular elements.");
+			
+			panel.add(bttnUngroup);
+		}
 		
 		
 		addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);

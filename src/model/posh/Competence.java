@@ -524,7 +524,6 @@ public class Competence implements IEditableElement, INamedElement {
 				result.setGroup(group);
 			}
 		}
-
 		return compNode;
 	}
 
