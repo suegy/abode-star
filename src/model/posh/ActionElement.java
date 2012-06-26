@@ -471,7 +471,7 @@ public class ActionElement implements IEditableElement {
 			}
 		});
 		
-		JMenuItem refactorElements = new JMenuItem("Rename all " + getElementName());
+		JMenuItem refactorElements = new JMenuItem("Rename all \"" + getElementName() + "\" elements");
 		refactorElements.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -1,5 +1,6 @@
 package abode;
 
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -16,8 +17,11 @@ public class AbodeUndoManager extends AbstractUndoableEdit implements UndoableEd
 	private static AbodeUndoManager manager;
 	
 	
-	private JMenuItem undoButton;
-	private JMenuItem redoButton;
+	private JMenuItem undoMenuItem;
+	private JMenuItem redoMenuItem;
+	
+	private JButton undoButton;
+	private JButton redoButton;
 
 	@Override
 	public void undoableEditHappened(UndoableEditEvent e) {
@@ -29,10 +33,18 @@ public class AbodeUndoManager extends AbstractUndoableEdit implements UndoableEd
 		undo = new UndoManager();
 	}
 	
-	protected void registerUndoButton(JMenuItem undo){
+	protected void registerUndoMenuItem(JMenuItem undo){
+		this.undoMenuItem=undo;
+	}
+	protected void registerRedoMenuItem(JMenuItem redo){
+		this.redoMenuItem=redo;
+	}
+	
+	
+	protected void registerUndoButton(JButton undo){
 		this.undoButton=undo;
 	}
-	protected void registerRedoButton(JMenuItem redo){
+	protected void registerRedoButton(JButton redo){
 		this.redoButton=redo;
 	}
 	
@@ -57,8 +69,8 @@ public class AbodeUndoManager extends AbstractUndoableEdit implements UndoableEd
 	public void redo(){
 		if (undo.canRedo()){
 			undo.redo();
-			if(redoButton instanceof JMenuItem)
-				redoButton.setText(" "+undo.getRedoPresentationName());
+			if(redoMenuItem instanceof JMenuItem)
+				redoMenuItem.setText(" "+undo.getRedoPresentationName());
 		}
 		updateButtons();
 	}
@@ -66,14 +78,16 @@ public class AbodeUndoManager extends AbstractUndoableEdit implements UndoableEd
 	public void undo(){
 		if (undo.canUndo()){
 			undo.undo();
-			if(undoButton instanceof JMenuItem)
-				undoButton.setText(" "+undo.getUndoPresentationName());
+			if(undoMenuItem instanceof JMenuItem)
+				undoMenuItem.setText(" "+undo.getUndoPresentationName());
 			
 		}
 		updateButtons();
 	}
 	
 	public void updateButtons(){
+		undoMenuItem.setEnabled(undo.canUndo());
+		redoMenuItem.setEnabled(undo.canRedo());
 		undoButton.setEnabled(undo.canUndo());
 		redoButton.setEnabled(undo.canRedo());
 	}

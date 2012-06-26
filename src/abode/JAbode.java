@@ -51,6 +51,7 @@ import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultDesktopManager;
+import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
@@ -551,6 +552,53 @@ public class JAbode extends JFrame {
 		});
 
 		toolbar1.add(saveButton);
+		
+		toolbar1.addSeparator();
+		
+		JButton undoButton = new JButton();
+		undoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/undo_32_s.gif")));
+		undoButton.setToolTipText("Undo the last action");
+		undoButton.setBorder(null);
+		undoButton.setFocusPainted(false);
+		undoButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+		undoButton.setMaximumSize(new java.awt.Dimension(30, 20));
+		undoButton.setMinimumSize(new java.awt.Dimension(20, 20));
+		undoButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+		undoButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				AbodeUndoManager.getUndoManager().undo();
+			}
+		});
+		
+		AbodeUndoManager.getUndoManager().registerUndoButton(undoButton);
+		
+		undoButton.setEnabled(false);
+		
+		toolbar1.add(undoButton);
+		
+		
+		JButton redoButton = new JButton();
+		redoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/redo_32_s.gif")));
+		redoButton.setToolTipText("Redo the last undone action");
+		redoButton.setBorder(null);
+		redoButton.setFocusPainted(false);
+		redoButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+		redoButton.setMaximumSize(new java.awt.Dimension(30, 20));
+		redoButton.setMinimumSize(new java.awt.Dimension(20, 20));
+		redoButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+		redoButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				AbodeUndoManager.getUndoManager().redo();
+			}
+		});
+		
+		AbodeUndoManager.getUndoManager().registerRedoButton(redoButton);
+		
+		redoButton.setEnabled(false);
+		
+		toolbar1.add(redoButton);
 
 		printButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/print_32.gif")));
 		printButton.setToolTipText("Print the selected plan");
@@ -690,7 +738,7 @@ public class JAbode extends JFrame {
 		
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 		
-		AbodeUndoManager.getUndoManager().registerUndoButton(item);
+		AbodeUndoManager.getUndoManager().registerUndoMenuItem(item);
 		editMenu.add(item);
 				
 		item = new JMenuItem();
@@ -709,7 +757,7 @@ public class JAbode extends JFrame {
 		
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 		
-		AbodeUndoManager.getUndoManager().registerRedoButton(item);
+		AbodeUndoManager.getUndoManager().registerRedoMenuItem(item);
 		editMenu.add(item);
 		editMenu.add(new JSeparator());
 		
