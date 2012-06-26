@@ -79,6 +79,9 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	// Element enabled?
 	private boolean enabled = true;
 	
+	// Is this element collapsed / hidden
+	private boolean collapsed = false;
+	
 	//Docs
 	private String documentation;
 
@@ -455,9 +458,28 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 				window.updateDiagrams(diagram, null);
 			}
 		});
+		
+		JMenuItem collapseThis = null;
+		if (collapsed) {
+			collapseThis = new JMenuItem("Show element");
+		} else {
+			collapseThis = new JMenuItem("Collapse element");
+		}
+		collapseThis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				if (collapsed) {
+					collapsed = false;
+				} else {
+					collapsed = true;
+				}
+				window.updateDiagrams(diagram, null);
+			}
+		});
 
 		/* TODO: This has been disabled because this functionality doesn't actually work */
 //		menu.add(disableThis);
+		menu.addSeparator();
+		menu.add(collapseThis);
 		menu.addSeparator();
 		menu.add(trigger);
 		menu.add(addTrigger);
@@ -481,9 +503,20 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		} else {
 			colorToDraw = Color.LIGHT_GRAY;
 		}
-		JTreeNode result = new JTreeNode(getName(), "Competence Element", colorToDraw, this, root);
+		
+		// Change the name to show if it is collapsed
+		String name;
+		if(!collapsed){
+			name = "Competence Element";
+		}
+		else{
+			name = "Competence Element +";
+		}
+		
+		
+		JTreeNode result = new JTreeNode(getName(), name, colorToDraw, this, root);
 		JTreeNode action = null;
-		if (detailed) {
+		if (detailed && !collapsed) {
 			if (this.isEnabled()) {
 				colorToDraw = Configuration.getRGB("colours/triggeredAction");
 			} else {
@@ -492,7 +525,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 			ActionElement.actionListToTree("Trigger Elements", "", getTrigger(), result, this, this.isEnabled());
 			action = new JTreeNode(getAction(), "Action to Trigger", colorToDraw, this, result);
 		}
-		if (expanded) {
+		if (detailed && !collapsed) {
 			// If we're expanded and we'return also detailed, then chain the action tree from the "Action to trigger node"
 			if (action == null)
 				action = result;

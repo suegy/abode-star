@@ -85,6 +85,8 @@ public class Competence implements IEditableElement, INamedElement {
 	 * Variable to track whether or not to comment this out in the lisp file
 	 */
 	private boolean enabled = true;
+	
+	private boolean collapsed = false;
 
 	//docs
 	private String documentation;
@@ -480,9 +482,28 @@ public class Competence implements IEditableElement, INamedElement {
 
 			}
 		});
+		
+		JMenuItem collapseThis = null;
+		if (collapsed) {
+			collapseThis = new JMenuItem("Show element");
+		} else {
+			collapseThis = new JMenuItem("Collapse element");
+		}
+		collapseThis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				if (collapsed) {
+					collapsed = false;
+				} else {
+					collapsed = true;
+				}
+				window.updateDiagrams(diagram, null);
+			}
+		});
 
 		/* TODO: This has been disabled because this functionality doesn't actually work */
 //		menu.add(disableThis);
+		menu.addSeparator();
+		menu.add(collapseThis);
 		menu.addSeparator();
 		menu.add(addNew);
 		menu.add(addGoal);
@@ -508,20 +529,31 @@ public class Competence implements IEditableElement, INamedElement {
 			drawingColor = Color.LIGHT_GRAY;
 		}
 
-		JTreeNode compNode = new JTreeNode(getName(), "Competence", drawingColor, this, root);
+		// Change the name to show if it is collapsed
+		String name;
+		if(!collapsed){
+			name = "Competence";
+		}
+		else{
+			name = "Competence +";
+		}
+		
+		JTreeNode compNode = new JTreeNode(getName(), name, drawingColor, this, root);
 		compNode.setGroup(getElementLists());
 
-		if (detailed)
+		if (detailed && !collapsed)
 			ActionElement.actionListToTree("Goal", "Goal of competence", getGoal(), compNode, this, this.isEnabled());
 
-		Iterator outer = getElementLists().iterator();
-		while (outer.hasNext()) {
-			ArrayList group = (ArrayList) outer.next();
-			Iterator inner = group.iterator();
-			while (inner.hasNext()) {
-				CompetenceElement comp = (CompetenceElement) inner.next();
-				JTreeNode result = comp.buildTree(compNode, lap, detailed, expanded);
-				result.setGroup(group);
+		if(detailed && !collapsed){
+			Iterator outer = getElementLists().iterator();
+			while (outer.hasNext()) {
+				ArrayList group = (ArrayList) outer.next();
+				Iterator inner = group.iterator();
+				while (inner.hasNext()) {
+					CompetenceElement comp = (CompetenceElement) inner.next();
+					JTreeNode result = comp.buildTree(compNode, lap, detailed, expanded);
+					result.setGroup(group);
+				}
 			}
 		}
 		return compNode;

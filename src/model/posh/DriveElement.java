@@ -80,6 +80,9 @@ public class DriveElement implements IEditableElement {
 	// Element enabled
 	private boolean enabled = true;
 	
+	// Element tree collapsed in the view
+	private boolean collapsed = false;
+	
 //	Docs
 	private String documentation;
 	
@@ -535,8 +538,27 @@ public class DriveElement implements IEditableElement {
 			}
 		});
 		
+		JMenuItem collapseThis = null;
+		if (collapsed) {
+			collapseThis = new JMenuItem("Show element");
+		} else {
+			collapseThis = new JMenuItem("Collapse element");
+		}
+		collapseThis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				if (collapsed) {
+					collapsed = false;
+				} else {
+					collapsed = true;
+				}
+				window.updateDiagrams(diagram, null);
+			}
+		});
+		
 		/* TODO: This has been disabled because this functionality doesn't actually work */
 //		menu.add(disableThis);
+		menu.addSeparator();
+		menu.add(collapseThis);
 		menu.addSeparator();
 		menu.add(trigger);
 		menu.add(addTrigger);
@@ -555,7 +577,7 @@ public class DriveElement implements IEditableElement {
 	 * @return Tree node representing this node and the relevent sub-tree for
 	 *         the specified diagram rendering settings
 	 */
-	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {
+	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap, boolean detailed, boolean expanded) {		
 		if (this.parentPattern == null) {
 			this.parentPattern = lap;
 		}
@@ -566,7 +588,17 @@ public class DriveElement implements IEditableElement {
 		} else {
 			colorToDraw = Color.LIGHT_GRAY;
 		}
-		JTreeNode chainStart = new JTreeNode(getName(), "Drive-Element", colorToDraw, this, root);
+		
+		// Change the name to show if it is collapsed
+		String name;
+		if(!collapsed){
+			name = "Drive-Element";
+		}
+		else{
+			name = "Drive-Element +";
+		}
+		
+		JTreeNode chainStart = new JTreeNode(getName(), name, colorToDraw, this, root);
 
 		if (this.isEnabled()) {
 			colorToDraw = Configuration.getRGB("colours/triggeredAction");
@@ -574,13 +606,13 @@ public class DriveElement implements IEditableElement {
 			colorToDraw = Color.LIGHT_GRAY;
 		}
 		// A detailed tree will show the trigger information for this
-		if (detailed)
+		if (detailed && !collapsed)
 			ActionElement.actionListToTree("Trigger Elements", "", getTrigger(), chainStart, this, this.isEnabled());
 		
 		JTreeNode actionNode = new JTreeNode(getAction(), "Action to Trigger", colorToDraw, this, chainStart);
 		
 		// An expanded tree will show our invoked element fully
-		if (expanded)
+		if (!collapsed)
 			lap.scanActionTree(actionNode, getAction(), detailed, expanded);
 
 		chainStart.setOrganiser(new VerticalListOrganiser());

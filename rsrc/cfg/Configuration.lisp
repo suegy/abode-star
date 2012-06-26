@@ -13,7 +13,6 @@
 			)
 			(
 				recentlyUsed
-				"/Users/James/Documents/BOD Plans/educate-me+monk.lap"
 			)
 			(
 				zoomLevelDefaultPercent
@@ -39,15 +38,15 @@
 			colours
 			(
 				backgroundTop
-				255
-				255
-				255
+				44
+				75
+				91
 			)
 			(
 				backgroundBottom
-				102
-				102
-				255
+				55
+				88
+				111
 			)
 			(
 				actionElement
@@ -63,9 +62,9 @@
 			)
 			(
 				buttonBorder
-				255
-				255
-				255
+				0
+				0
+				0
 			)
 			(
 				buttonBorderFocused
