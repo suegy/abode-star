@@ -464,6 +464,129 @@ public class ActionElement implements IEditableElement {
 			}
 		});
 		
+		JMenuItem refactorElements = new JMenuItem("Rename all " + getElementName());
+		refactorElements.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String strName = " ";
+				String strOldName = getElementName();
+				
+				// Prompt for new name
+				while (strName.indexOf(" ") >= 0) {
+					strName = JOptionPane.showInputDialog(showOn.getParent(), "What would you like to rename" +
+							" all of the elements with the name " + getElementName() + " to?" , strOldName);
+					if (strName.indexOf(" ") >= 0)
+						JOptionPane.showMessageDialog(showOn.getParent(), "Element name cannot contain spaces!");
+					else if(strName.length() < 1){
+						JOptionPane.showMessageDialog(showOn.getParent(), "Element name cannot be empty!");
+					}
+				}
+				
+				// For actions
+				if(!getIsSense()){
+					// Rename all of the elements with the old name to the new name
+					Iterator it = lap.getElements().iterator();
+					while (it.hasNext()) {
+						IEditableElement element = (IEditableElement) it.next();
+						if (element instanceof DriveCollection) {
+							DriveCollection collection = (DriveCollection) element;
+							Iterator driveElementLists = collection.getDriveElements().iterator();
+							while (driveElementLists.hasNext()) {
+								Iterator driveElements = ((ArrayList) driveElementLists.next()).iterator();
+								while (driveElements.hasNext()) {
+									DriveElement driveElement = (DriveElement) driveElements.next();
+									if(driveElement.getAction().equals(strOldName)){
+										driveElement.setAction(strName);
+									}
+								}
+							}
+						} else if (element instanceof Competence) {
+							Competence competence = (Competence) element;
+							Iterator competenceLists = competence.getElementLists().iterator();
+							while (competenceLists.hasNext()) {
+								Iterator competences = ((ArrayList) competenceLists.next()).iterator();
+								while (competences.hasNext()) {
+									CompetenceElement compElement = (CompetenceElement) competences.next();
+									if(compElement.getAction().equals(strOldName)){
+										compElement.setAction(strName);
+									}
+								}
+							}
+						} else if (element instanceof ActionPattern) {
+							ActionPattern ap = (ActionPattern) element;
+	
+							Iterator elements = ap.getElements().iterator();
+							while (elements.hasNext()) {
+								ActionElement actionElement = (ActionElement) elements.next();
+								if(actionElement.getElementName().equals(strOldName)){
+									actionElement.setElementName(strName);
+								}
+							}
+						}
+					}
+				}
+				// Sense replace
+				else{
+					Iterator it = lap.getElements().iterator();
+					while (it.hasNext()) {
+						IEditableElement element = (IEditableElement) it.next();
+						if (element instanceof DriveCollection) {
+							DriveCollection collection = (DriveCollection) element;
+							
+							Iterator goalList = collection.getGoal().iterator();
+							while(goalList.hasNext()){
+								ActionElement goal = (ActionElement)goalList.next();
+								if(goal.getElementName().equals(strOldName)){
+									goal.setElementName(strName);
+								}
+							}
+							
+							Iterator driveElementLists = collection.getDriveElements().iterator();
+							while (driveElementLists.hasNext()) {
+								Iterator driveElements = ((ArrayList) driveElementLists.next()).iterator();
+								while (driveElements.hasNext()) {
+									DriveElement driveElement = (DriveElement) driveElements.next();
+									Iterator triggerElements = driveElement.getTrigger().iterator();
+									while (triggerElements.hasNext()) {
+										ActionElement actionElement = (ActionElement) triggerElements.next();
+										if(actionElement.getElementName().equals(strOldName)){
+											actionElement.setElementName(strName);
+										}
+									}
+								}
+							}
+						} else if (element instanceof Competence) {
+							Competence competence = (Competence) element;
+							// Get all of the goal senses as well
+							Iterator goalList = competence.getGoal().iterator();
+							while(goalList.hasNext()){
+								ActionElement goal = (ActionElement)goalList.next();
+								if(goal.getElementName().equals(strOldName)){
+									goal.setElementName(strName);
+								}
+							}
+							
+							Iterator competenceLists = competence.getElementLists().iterator();
+							while (competenceLists.hasNext()) {
+								Iterator competences = ((ArrayList) competenceLists.next()).iterator();
+								while (competences.hasNext()) {
+									CompetenceElement compElement = (CompetenceElement) competences.next();
+									Iterator triggerElements = compElement.getTrigger().iterator();
+									while (triggerElements.hasNext()) {
+										ActionElement actionElement = (ActionElement) triggerElements.next();
+										if(actionElement.getElementName().equals(strOldName)){
+											actionElement.setElementName(strName);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				window.updateDiagrams(diagram, null);
+			}
+		});
+		
 		JMenuItem disableThis = null;
 		if (this.isEnabled()) {
 			disableThis = new JMenuItem("Disable element");
@@ -485,6 +608,8 @@ public class ActionElement implements IEditableElement {
 //		menu.add(disableThis);
 		menu.addSeparator();
 		menu.add(deleteElement);
+		menu.addSeparator();
+		menu.add(refactorElements);
 
 		menu.show(showOn, 0, 0);
 	}
