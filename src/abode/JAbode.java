@@ -67,6 +67,8 @@ import javax.swing.JTextArea;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -90,7 +92,7 @@ import abode.visual.JOptionsScreen;
  * @author CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
  */
-public class JAbode extends JFrame {
+public class JAbode extends JFrame implements InternalFrameListener {
 	// Added to get rid of warnings and properly implement Serializable
 	private static final long serialVersionUID = 1;
 
@@ -877,8 +879,29 @@ public class JAbode extends JFrame {
 		propertiesPanel.setMinimumSize(new Dimension(0,0));
 		commandsPanel.setMinimumSize(new Dimension(0,0));
 		editPanel.setMinimumSize(new Dimension(0,0));
+		
+		updateFileMenuButtons();
 	}
 	// </editor-fold>//GEN-END:initComponents
+	
+	/** Updates all of the save buttons and disables / enables
+	 * them as appropriate depending on whether a file is currently open
+	 * or not.
+	 */
+	private void updateFileMenuButtons(){
+		if(desktop.getComponents().length > 0){
+			saveButton.setEnabled(true);
+			saveAllMenuItem.setEnabled(true);
+			saveMenuItem.setEnabled(true);
+			saveAsMenuItem.setEnabled(true);
+		}
+		else{
+			saveButton.setEnabled(false);
+			saveAllMenuItem.setEnabled(false);
+			saveMenuItem.setEnabled(false);
+			saveAsMenuItem.setEnabled(false);
+		}
+	}
 
 	private void hideValidationEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem4ActionPerformed
 		JEditorWindow window = (JEditorWindow) desktop.getSelectedFrame();
@@ -994,10 +1017,12 @@ public class JAbode extends JFrame {
 		popOutConsole();
 		writeEnvironmentLine("New LAP file created");
 		JEditorWindow internal = new JEditorWindow(this, null, null);
+		internal.addInternalFrameListener(this);
 		desktop.add(internal);
 		internal.toFront();
 		internal.grabFocus();
 		setStatus("Created new LAP");
+		updateFileMenuButtons();
 	}
 
 	private void fileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_fileMenuItemActionPerformed
@@ -1049,6 +1074,7 @@ public class JAbode extends JFrame {
 					if (current.canRead(filePath)) {
 						// Create internal pane and load the file into it
 						JEditorWindow internal = new JEditorWindow(this, filePath, current.load(filePath));
+						internal.addInternalFrameListener(this);
 						desktop.add(internal);
 						internal.toFront();
 						internal.grabFocus();
@@ -1077,8 +1103,10 @@ public class JAbode extends JFrame {
 					}
 				}
 
-				if (done)
+				if (done){
 					writeEnvironmentLine("Loaded " + filePath);
+					updateFileMenuButtons();
+				}
 				else {
 					writeEnvironmentLine("Error Loading " + filePath);
 					if (JOptionPane.showConfirmDialog(this, "The specified file could not be loaded/parsed. Do you wish to retry?", "Loading Error", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
@@ -1480,6 +1508,51 @@ public class JAbode extends JFrame {
 
 	private javax.swing.JMenu windowMenu;
 	// End of variables declaration//GEN-END:variables
+
+	/** Internal Frame Listeners
+	 * Used for listening on the actions of the internal frames
+	 * (JEditorWindows)
+	 */
+	
+	@Override
+	public void internalFrameOpened(InternalFrameEvent e) {
+	}
+
+	@Override
+	public void internalFrameClosing(InternalFrameEvent e) {
+		int confirm = JOptionPane.showConfirmDialog(null, "Do you want to save before existing?", "Save before closing?",
+		        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+		
+		JEditorWindow window = (JEditorWindow)e.getInternalFrame();
+		if(confirm == JOptionPane.NO_OPTION){
+			window.dispose();
+		}
+		else if(confirm == JOptionPane.YES_OPTION){
+			window.saveFile();
+			window.dispose();
+		}
+	}
+
+	@Override
+	public void internalFrameClosed(InternalFrameEvent e) {
+		updateFileMenuButtons();
+	}
+
+	@Override
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+
+	@Override
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+
+	@Override
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+
+	@Override
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
 
 }
 

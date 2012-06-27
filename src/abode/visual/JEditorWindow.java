@@ -40,6 +40,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import javax.swing.WindowConstants;
 
 import model.IEditableElement;
 import model.posh.ActionElement;
@@ -156,6 +157,10 @@ public class JEditorWindow extends JInternalFrame{
 		// Add the line counter for the source code pane and set the highlighter
 		countLines();
 		CurrentLineHighlighter.install(sourceArea);
+		
+		// Set the default option when closing to do nothing
+		// We want the parent JAbode object to deal with this
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 	}
 
 	/**
