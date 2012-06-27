@@ -268,6 +268,8 @@ public class VerticalListOrganiser extends ListOrganiser {
 		
 		addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 
-		addDeleteGroupButton(mainGui.getEditPanel(), internal, subject, diagram);
+		if (myGroup.size() > 1) {
+			addDeleteGroupButton(mainGui.getEditPanel(), internal, subject, diagram);
+		}
 	}
 }
