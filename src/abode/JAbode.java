@@ -871,14 +871,6 @@ public class JAbode extends JFrame {
 		setJMenuBar(menubar);
 		pack();
 		
-		// Set default dividier locations
-		innerSplitpane.setDividerLocation(0.5f);
-		innerSplitpane.setResizeWeight(0.5f);
-		topSideSplitpane.setDividerLocation(0.5f);
-		topSideSplitpane.setResizeWeight(0.5f);
-		commandsSplitPane.setDividerLocation(0.5f);
-		commandsSplitPane.setResizeWeight(0.5f);
-		
 		// Required to make the side panel usable on smaller displays
 		// so these panels can be resized to any size
 		documentationPanel.setMinimumSize(new Dimension(0,0));
@@ -1175,6 +1167,17 @@ public class JAbode extends JFrame {
 			innerSplitpane.setDividerLocation(VerticalSplit);
 		}
 		propertiesMenuItem.setSelected(true);
+		
+		// Update the size of the split panes
+		// Set default dividier locations
+		innerSplitpane.setDividerLocation(0.875f);
+		innerSplitpane.setResizeWeight(0.875f);
+		// Commands <-> Properties
+		topSideSplitpane.setDividerLocation(0.5f);
+		topSideSplitpane.setResizeWeight(0.5f);
+		// Commands <-> Edit
+		commandsSplitPane.setDividerLocation(0.7f);
+		commandsSplitPane.setResizeWeight(0.7f);
 	}
 
 	/**
