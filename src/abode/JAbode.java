@@ -554,6 +554,24 @@ public class JAbode extends JFrame implements InternalFrameListener {
 		});
 
 		toolbar1.add(saveButton);
+
+		printButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/print_32.gif")));
+		printButton.setToolTipText("Print the selected plan");
+		printButton.setBorder(null);
+		printButton.setFocusPainted(false);
+		printButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+		printButton.setMaximumSize(new java.awt.Dimension(20, 20));
+		printButton.setMinimumSize(new java.awt.Dimension(20, 20));
+		printButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+		printButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				printButtonActionPerformed(evt);
+			}
+		});
+
+		// TODO: Print button doesn't do anything, removed for now
+		toolbar1.add(printButton);
 		
 		toolbar1.addSeparator();
 		
@@ -601,24 +619,6 @@ public class JAbode extends JFrame implements InternalFrameListener {
 		redoButton.setEnabled(false);
 		
 		toolbar1.add(redoButton);
-
-		printButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/print_32.gif")));
-		printButton.setToolTipText("Print the selected plan");
-		printButton.setBorder(null);
-		printButton.setFocusPainted(false);
-		printButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-		printButton.setMaximumSize(new java.awt.Dimension(20, 20));
-		printButton.setMinimumSize(new java.awt.Dimension(20, 20));
-		printButton.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-		printButton.addActionListener(new java.awt.event.ActionListener() {
-			@Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				printButtonActionPerformed(evt);
-			}
-		});
-
-		// TODO: Print button doesn't do anything, removed for now
-//		toolbar1.add(printButton);
 
 		jPanel1.add(toolbar1);
 
@@ -894,12 +894,14 @@ public class JAbode extends JFrame implements InternalFrameListener {
 			saveAllMenuItem.setEnabled(true);
 			saveMenuItem.setEnabled(true);
 			saveAsMenuItem.setEnabled(true);
+			printButton.setEnabled(true);
 		}
 		else{
 			saveButton.setEnabled(false);
 			saveAllMenuItem.setEnabled(false);
 			saveMenuItem.setEnabled(false);
 			saveAsMenuItem.setEnabled(false);
+			printButton.setEnabled(false);
 		}
 	}
 
@@ -954,7 +956,8 @@ public class JAbode extends JFrame implements InternalFrameListener {
 	}// GEN-LAST:event_jMenuItem3ActionPerformed
 
 	private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_printButtonActionPerformed
-		// TODO add your handling code here:
+		if (desktop.getSelectedFrame() instanceof JEditorWindow)
+			((JEditorWindow) desktop.getSelectedFrame()).printDocument();
 	}// GEN-LAST:event_printButtonActionPerformed
 
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed

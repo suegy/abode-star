@@ -861,13 +861,17 @@ public class JEditorWindow extends JInternalFrame{
 	public void addError() {
 		errorCount++;
 	}
-
-	private void bttnPrintActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_bttnPrintActionPerformed
+	
+	public void printDocument(){
 		JScrollPane pane = (JScrollPane) internalTabs.getSelectedComponent();
 		JViewport view = pane.getViewport();
 		JDiagram diagram = (JDiagram) view.getView();
 
 		PrintUtilities.printComponent(diagram);
+	}
+
+	private void bttnPrintActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_bttnPrintActionPerformed
+		printDocument();
 	}// GEN-LAST:event_bttnPrintActionPerformed
 
 	private void txtMemoKeyTyped(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtMemoKeyTyped
