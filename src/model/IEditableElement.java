@@ -44,7 +44,7 @@ import abode.visual.JTreeNode;
  * @author CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
  */
-public interface IEditableElement {
+public interface IEditableElement{
 	
 	public static UndoableEditListener _undoListener = AbodeUndoManager.getUndoListener();
 	public static AbodeUndoManager _undo = AbodeUndoManager.getUndoManager();

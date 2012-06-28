@@ -64,7 +64,7 @@ import abode.visual.JTreeNode;
  * @author  CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
  */
-public class ActionElement implements IEditableElement {
+public class ActionElement implements IEditableElement, Cloneable {
 	// Is this a sense?
 	private boolean bIsSense = false;
 
@@ -127,6 +127,26 @@ public class ActionElement implements IEditableElement {
 	public String getElementDocumentation() {
 		return this.documentation;
 	}
+	
+	/** Clone interface implementation,
+	 * used for duplicating ActionElements.
+	 */
+	public ActionElement clone() throws CloneNotSupportedException {
+
+		ActionElement clone=(ActionElement)super.clone();
+		
+		clone.setIsSense(this.getIsSense());
+		clone.setElementName(this.getElementName());
+		
+		clone.strValue = this.strValue;
+		clone.strComparator = this.strComparator;
+		clone.documentation = this.documentation;
+		clone.enabled = this.enabled;
+		
+	    return clone;
+
+	}
+
 
 	/**
 	 * Return whether or not this element should be enabled
@@ -613,12 +633,21 @@ public class ActionElement implements IEditableElement {
 			}
 		});
 		
+		JMenuItem duplicateElement = new JMenuItem("Duplicate element");
+		duplicateElement.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				AbodeActionHandler.getActionHandler().duplicateElement(diagram,window,showOn);
+			}
+		});
+		
 		/* TODO: This has been disabled because this functionality doesn't actually work */
 //		menu.add(disableThis);
 		menu.addSeparator();
 		menu.add(deleteElement);
 		menu.addSeparator();
 		menu.add(refactorElements);
+		menu.add(duplicateElement);
 
 		menu.show(showOn, 0, 0);
 	}

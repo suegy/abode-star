@@ -90,6 +90,24 @@ public class HorizontalListOrganiser extends ListOrganiser {
 		if (!(myGroup.indexOf(element) > 0)) {
 				bttnMoveLeft.setEnabled(false);
 		}
+		
+		JButton bttnDuplicate = new JButton("Duplicate Element", new ImageIcon(getClass().getResource("/image/icon/duplicate.gif")));
+		
+		bttnDuplicate.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		// Set tooltip and shortcut key (Mnemonic)
+		bttnDuplicate.setToolTipText("Creates a copy of an action / sense element." +
+				" (Alt + D)");
+		bttnDuplicate.setMnemonic(KeyEvent.VK_D);
+		
+		bttnDuplicate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				AbodeActionHandler.getActionHandler().duplicateElement(diagram, internal, subject);
+			}
+		});
+		
+		mainGui.getEditPanel().add(bttnDuplicate);
 
 		addDeleteButton(mainGui.getEditPanel(), internal, subject, diagram);
 
