@@ -33,6 +33,7 @@ import java.util.Iterator;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.event.UndoableEditEvent;
 
 import model.IEditableElement;
 import model.INamedElement;
@@ -40,6 +41,8 @@ import model.TimeUnit;
 import abode.Configuration;
 import abode.JAbode;
 import abode.editing.Documentation;
+import abode.editing.posh.CompetenceEdit;
+import abode.editing.posh.LearnableActionPatternEdit;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
@@ -65,6 +68,9 @@ public class LearnableActionPattern implements IEditableElement {
 	public void setDocumentation(String newDocumentation) {}
 	@Override
 	public String getElementDocumentation() { return ""; }
+	
+	private JEditorWindow _subGui;
+	private JDiagram _diagram;
 
 	/**
 	 * Initialize this BOD object with an empty set of definitions.
@@ -118,6 +124,13 @@ public class LearnableActionPattern implements IEditableElement {
 	 */
 	public ArrayList getElements() {
 		return alElements;
+	}
+	
+	/**
+	 * Replace the arraylist 
+	 */
+	public void setElements(ArrayList elements) {
+		this.alElements = elements;
 	}
 
 	/**
@@ -335,6 +348,12 @@ public class LearnableActionPattern implements IEditableElement {
 		return null;
 	}
 
+	public void refresh(){
+		_subGui.repaint();
+		_subGui.updateDiagrams(_diagram, null);
+		
+	}
+	
 	/**
 	 * Populate the property grid
 	 */
@@ -343,10 +362,16 @@ public class LearnableActionPattern implements IEditableElement {
 		// Depopulate the property grid, so that the previous
 		// menu options are no longer present
 		mainGui.clearProperties();
+		_subGui = subGui;
+		_diagram = diagram;
 	}
 
 	// Used for creating new names
 	private static int elementsMade = 1;
+	
+	private LearnableActionPattern getSelf(){
+		return this;
+	}
 
 	/**
 	 * Produce and show a context menu for this object
@@ -356,6 +381,8 @@ public class LearnableActionPattern implements IEditableElement {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Learnable Action Pattern"));
 		menu.addSeparator();
+		_subGui = window;
+		_diagram = diagram;
 
 		JMenuItem addDriveColl = new JMenuItem("Add New Drive Collection");
 		addDriveColl.addActionListener(new ActionListener() {
@@ -368,10 +395,12 @@ public class LearnableActionPattern implements IEditableElement {
 					if (name.indexOf(" ") >= 0)
 						JOptionPane.showMessageDialog(showOn.getParent(), "Drive Collection Names can not contain spaces!");
 				}
-
-				DriveCollection dc = new DriveCollection(name, true, new ArrayList(), new ArrayList());
-				lap.getElements().add(dc);
-				window.updateDiagrams(diagram, dc);
+				ArrayList temp = (ArrayList) lap.getElements().clone();
+				temp.add(new DriveCollection(name, true, new ArrayList(), new ArrayList()));
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new LearnableActionPatternEdit(getSelf(), temp, documentation)));
+				
+				lap.setElements(temp);
+				window.updateDiagrams(diagram, null);
 			}
 		});
 
@@ -386,11 +415,12 @@ public class LearnableActionPattern implements IEditableElement {
 					if (name.indexOf(" ") >= 0)
 						JOptionPane.showMessageDialog(showOn.getParent(), "Competence Names can not contain spaces!");
 				}
-
-				Competence dc = new Competence(name, new TimeUnit("seconds", 1));
-
-				lap.getElements().add(dc);
-				window.updateDiagrams(diagram, dc);
+				ArrayList temp = (ArrayList) lap.getElements().clone();
+				temp.add(new Competence(name, new TimeUnit("seconds", 1)));
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new LearnableActionPatternEdit(getSelf(), temp, documentation)));
+				
+				lap.setElements(temp);
+				window.updateDiagrams(diagram, null);
 			}
 		});
 
@@ -406,10 +436,12 @@ public class LearnableActionPattern implements IEditableElement {
 						JOptionPane.showMessageDialog(showOn.getParent(), "Action Pattern names can not contain spaces!");
 				}
 
-				ActionPattern ap = new ActionPattern(name, new TimeUnit("seconds", 1));
-
-				lap.getElements().add(ap);
-				window.updateDiagrams(diagram, ap);
+				ArrayList temp = (ArrayList) lap.getElements().clone();
+				temp.add(new ActionPattern(name, new TimeUnit("seconds", 1)));
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new LearnableActionPatternEdit(getSelf(), temp, documentation)));
+				
+				lap.setElements(temp);
+				window.updateDiagrams(diagram, null);
 			}
 		});
 

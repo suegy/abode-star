@@ -1,4 +1,4 @@
-package abode.editing;
+package abode.editing.posh;
 
 import java.util.ArrayList;
 

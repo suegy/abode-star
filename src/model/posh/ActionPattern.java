@@ -52,8 +52,8 @@ import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
 import abode.JAbode;
-import abode.editing.ActionPatternEdit;
 import abode.editing.DeleteEdit;
+import abode.editing.posh.ActionPatternEdit;
 import abode.visual.HorizontalListOrganiser;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
@@ -201,7 +201,7 @@ public class ActionPattern implements IEditableElement, INamedElement {
 	
 	public void refresh(){
 		_subGui.repaint();
-		_subGui.updateDiagrams(_diagram, getSelf());
+		_subGui.updateDiagrams(_diagram, null);
 	}
 	
 	/**
@@ -383,6 +383,8 @@ public class ActionPattern implements IEditableElement, INamedElement {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Action Pattern"));
 		menu.addSeparator();
+		_subGui=window;
+		_diagram=diagram;
 
 		JMenuItem disableThis = null;
 		if (this.isEnabled()) {
@@ -411,7 +413,7 @@ public class ActionPattern implements IEditableElement, INamedElement {
 				ArrayList newElements = (ArrayList) getSelf().getElements().clone();
 				newElements.add(ae);
 				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new ActionPatternEdit(getSelf(), newElements, tTimeOut, strName, enabled, documentation)));
-				getSelf().getElements().add(ae);
+				getSelf().setElements(newElements);
 				window.updateDiagrams(diagram, ae);
 			}
 		});

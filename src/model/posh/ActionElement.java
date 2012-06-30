@@ -51,7 +51,7 @@ import model.IEditableElement;
 import abode.Configuration;
 import abode.JAbode;
 import abode.control.AbodeActionHandler;
-import abode.editing.ActionElementEdit;
+import abode.editing.posh.ActionElementEdit;
 import abode.visual.HorizontalListOrganiser;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;

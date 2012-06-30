@@ -45,12 +45,14 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.UndoableEditEvent;
 
 import model.IEditableElement;
 import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
 import abode.JAbode;
+import abode.editing.posh.CompetenceElementEdit;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
@@ -81,6 +83,9 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	
 	//Docs
 	private String documentation;
+	
+	private JEditorWindow _subGui;
+	private JDiagram _diagram;
 
 	/**
 	 * Initialize this Competence Element with a name, a list of triggers, an action
@@ -207,6 +212,12 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	public void setTrigger(ArrayList list) {
 		alTrigger = list;
 	}
+	public void refresh(){
+		collapsed = false;
+		_subGui.repaint();
+		_subGui.updateDiagrams(_diagram, null);
+		
+	}
 
 	/**
 	 * When we click this Competence in the GUI populate the properties
@@ -221,6 +232,8 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 	public void onSelect(JAbode mainGui, final JEditorWindow subGui, final JDiagram diagram) {
 		mainGui.popOutProperties();
 		diagram.repaint();
+		_subGui=subGui;
+		_diagram=diagram;
 		
 		mainGui.setDocumentationField(this);
 		
@@ -234,6 +247,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		namefield.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceElementEdit(getSelf(), namefield.getText(), alTrigger, strAction, iRetries, enabled, documentation)));
 				setName(namefield.getText());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
@@ -286,6 +300,8 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		actionfield.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceElementEdit(getSelf(), strName, alTrigger, (String)actionfield.getSelectedItem(), iRetries, enabled, documentation)));
+				
 				setAction((String)actionfield.getSelectedItem());
 				subGui.repaint();
 				subGui.updateDiagrams(diagram, getSelf());
@@ -323,9 +339,12 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 			public void stateChanged(ChangeEvent e) {
 				int value = (Integer) spinnerModel.getValue();
 				if (Integer.toString(value).length() < 1) {
+					_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceElementEdit(getSelf(), strName, alTrigger, strAction, 0, enabled, documentation)));
 					setRetries(0);
+					
 				} else {
 					//Set the new frequency
+					_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new CompetenceElementEdit(getSelf(), strName, alTrigger, strAction, value, enabled, documentation)));
 					setRetries(value);
 				}
 				subGui.repaint();
@@ -378,6 +397,8 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Competence Element"));
 		menu.addSeparator();
+		_subGui=window;
+		_diagram=diagram;
 
 		JMenu trigger = new JMenu("Set Triggered Action...");
 		final ArrayList elements = lap.getElements();
@@ -389,6 +410,7 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 				String name = JOptionPane.showInputDialog(window, "Please enter a name for this new action pattern.", "");
 				if ((name != null) && (name.length() > 0)) {
 					ActionPattern ap = new ActionPattern(name, new TimeUnit("minutes", 1), new ArrayList());
+	//				_undoListener.undoableEditHappened(new UndoableEditEvent(lap, new CompetenceElementEdit(competence, name, triggers, action, retries, enabled, doc)))
 					elements.add(ap);
 					setAction(ap.getName());
 					window.updateDiagrams(diagram, showOn.getValue());

@@ -52,8 +52,8 @@ import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
 import abode.JAbode;
-import abode.editing.CompetenceEdit;
 import abode.editing.DeleteEdit;
+import abode.editing.posh.CompetenceEdit;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
@@ -408,7 +408,7 @@ public class Competence implements IEditableElement, INamedElement {
 
 	public void refresh(){
 		_subGui.repaint();
-		_subGui.updateDiagrams(_diagram, getSelf());
+		_subGui.updateDiagrams(_diagram, null);
 	}
 	
 	/**
@@ -424,6 +424,8 @@ public class Competence implements IEditableElement, INamedElement {
 		JPopupMenu menu = new JPopupMenu();
 		menu.add(new JMenuItem("Competence"));
 		menu.addSeparator();
+		_subGui=window;
+		_diagram=diagram;
 
 		JMenuItem disableThis = null;
 		if (this.isEnabled()) {

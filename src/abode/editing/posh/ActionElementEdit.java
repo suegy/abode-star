@@ -1,4 +1,4 @@
-package abode.editing;
+package abode.editing.posh;
 
 import javax.swing.undo.AbstractUndoableEdit;
 
