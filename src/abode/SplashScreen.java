@@ -30,7 +30,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.swing.ImageIcon;
 
@@ -51,11 +56,11 @@ public class SplashScreen extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1;
 
 	// List of all classes within the application that are to be pre-initialized
-	private File models;
+//	private File models;
 	private HashSet<String> classes;
 	
 	// Our lovely splash image
-	private ImageIcon icon = new ImageIcon(getClass().getResource("/image/splash/monkey.png"));
+	private ImageIcon icon = new ImageIcon(ClassLoader.getSystemResource("image/splash/monkey.png"));
 
 	/**
 	 * Constructs the splash screen and starts the various actions rolling.
@@ -66,14 +71,9 @@ public class SplashScreen extends javax.swing.JFrame {
 	public SplashScreen() {
 		// NetBeans Form Designer
 		initComponents();
-		
-		models = new File(getClass().getResource("/model").getFile().replaceAll("%20", " "));
-		
-		if (models.isDirectory())
-			classes = getRecursiveChildren(models, "", new HashSet<String>());
 
-		
 			
+					
 		// Centre us on the screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension labelSize = getPreferredSize();
@@ -87,19 +87,18 @@ public class SplashScreen extends javax.swing.JFrame {
 		doInitialization();
 	}
 	
-	private HashSet<String> getRecursiveChildren(File dir,String packageName,HashSet<String> children)
+	private HashSet<String> getRecursiveChildren(Enumeration<JarEntry> enumeration,String packageName,HashSet<String> children)
 	{
-		for (File file : dir.listFiles()) {
-			if (file.isFile())
+		while (enumeration.hasMoreElements()) {
+			JarEntry entry = enumeration.nextElement();
+			if (!entry.isDirectory())
 			{
-				String name=packageName+file.getParentFile().getName()+"."+file.getName();
+				String name=entry.getName();
 				name=name.replace(".class", "").replaceAll("[$0-9]+", "");
 				
 				children.add(name);
 			}
 				
-			if (file.isDirectory())
-				children = getRecursiveChildren(file, packageName+file.getParentFile().getName()+".",children);
 		}
 		return children;
 		
@@ -110,10 +109,40 @@ public class SplashScreen extends javax.swing.JFrame {
 	 * class loader and a list of named classes from our system.
 	 */
 	private void doInitialization() {
+		boolean extraDefinition = false;
+		
+		//TODO : @Swen: This is real dirty and needs to be modified. 
+				//       I am not sure why it was needed to load an external configuration for POSH elements
+				JarFile jarFile= null;
+				URL additional = ClassLoader.getSystemResource("ABODE-posh.jar");
+				
+				if (additional instanceof URL)
+					try {
+						jarFile = new JarFile(additional.getFile());
+					
+						if (jarFile.getEntry("model/posh/") instanceof JarEntry)
+							extraDefinition = true;
+					} catch (IOException e) {
+						System.out.println("Additional ABODE-posh.jar seems corrupted!");
+						e.printStackTrace();
+					} 
+				else
+				{
+					classes=new HashSet<String>();
+					classes.add("No additional posh configuration found!");
+					for (int i=0;i<10;i++)
+						classes.add("Loading predefined POSH files: "+i+"0%");	
+				}
+
+		if (extraDefinition){
+				classes = getRecursiveChildren(jarFile.entries(), "", new HashSet<String>());
+		}
+	
 		// Set the correct bounds on the progress bar
 		jProgressBar1.setMinimum(0);
 		jProgressBar1.setMaximum(classes.size());
-
+	
+		
 		// For each of the classes we're going to initialize
 		for (String model : classes) {
 			
@@ -130,11 +159,15 @@ public class SplashScreen extends javax.swing.JFrame {
 
 			// Initialize the class
 			try {
-				Class.forName(model);
-
+				if  (extraDefinition){
+					jarFile.getEntry(model).getClass();
+					jProgressBar1.setString("Initialized " + model);
+				} else
+					jProgressBar1.setString(model);
+				
 				// Success, notify user
-				jProgressBar1.setString("Initialized " + model);
 				repaint();
+				
 			} catch (Exception e) {
 				jProgressBar1.setBackground(Color.RED);
 				jProgressBar1.setString("Failure initializing " + model);

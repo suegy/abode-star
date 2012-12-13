@@ -62,12 +62,20 @@ import abode.editing.LispBlob;
  */
 public class DotLapReader implements ILAPReader {
 	
+	private boolean debug;
+	
 	/*	*
 	 * Is the specified file readable to this class?
 	 * @param fileName
 	 *            Path to the file to read
 	 * @return True if readable, false if not
 	 */
+	
+	public DotLapReader()
+	{
+		debug = false;
+	}
+	
 	@Override
 	public boolean canRead(String strFileName) {
 		File f = new File (strFileName);
@@ -78,7 +86,12 @@ public class DotLapReader implements ILAPReader {
 		
 		return true;
 	}
-
+	
+	protected void setDebug(boolean value)
+	{
+		this.debug = value;
+	}
+	
 	/**
 	 * Read the contents of a text file
 	 * 
@@ -126,8 +139,6 @@ public class DotLapReader implements ILAPReader {
 		// Default to blank documentation
 		Documentation documentation = new Documentation();
 
-		// Iterate over the list and see if we can find the documentation
-		Iterator children = blob.getIterator();
 		
 		// Get the comments in readable format
 		CommentScraper topLevelComments = new CommentScraper(strFileContent, 1);
@@ -137,10 +148,9 @@ public class DotLapReader implements ILAPReader {
 		int elementIndex = 1;
 
 		// Carry on scanning
-		while (children.hasNext()) {
+		for (LispBlob child : blob) {
 			// Get this child of the list
-			LispBlob child = (LispBlob) children.next();
-
+			
 			// Add it to our children list after parsing it
 			Object element = parseElement(child, topLevelComments.getCommentString(elementIndex));
 			if (element instanceof Documentation) {
@@ -212,10 +222,19 @@ public class DotLapReader implements ILAPReader {
 	/**
 	 * Parse a DC or (R) DC block
 	 */
-	private DriveCollection parseDriveCollection(ArrayList elements, boolean realTime, boolean wasCommented) throws Exception {
+	private DriveCollection parseDriveCollection(ArrayList elements, boolean realTime, boolean wasCommented)  {
 		// Get the name, parse the goal and the get the list of drive lists
 		String strName = ((LispBlob) elements.get(1)).getText();
-		ArrayList goal = parseGoal((LispBlob) elements.get(2));
+		ArrayList goal;
+		try {
+			goal = parseGoal((LispBlob) elements.get(2));
+		} catch (IndexOutOfBoundsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ArrayList lists = ((LispBlob) elements.get(3)).toList();
 
 		// Remove the constant "Drives" which is at the start of the list

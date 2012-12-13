@@ -26,7 +26,10 @@
 package abode.editing;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Provides simple API for dealing with lisp code in a string and enables us to
@@ -34,16 +37,20 @@ import java.util.Iterator;
  * 
  * @author CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
+ * 
+ * Changed to allow for more robust execution of ABODE using generics and better feedback of the System
+ * @author Swen Gaudl (swen.gaudl@gmail.com)
+ * @version 1.1
  */
-public class LispBlob {
+public class LispBlob implements Collection<LispBlob>{
 	// Do we want the parser to write out information to System.out.println?
-	private static boolean DEBUG_PARSER = false;
+	private static boolean DEBUG_PARSER = true;
 
 	// Raw text of this lisp blob
-	private String strText = null;
+	private String sourceText = null;
 
 	// Child blobs of this node
-	private ArrayList alChildren = null;
+	private ArrayList<LispBlob> childNodes = null;
 
 	/**
 	 * Initialize a lisp blob from a given string, so we can process the list
@@ -54,19 +61,11 @@ public class LispBlob {
 	 */
 	public LispBlob(String lispString) {
 		// Copy the text to the instance for safe keeping
-		strText = lispString;
-
+		sourceText = lispString;
+		// Create a list for our children
+		childNodes = new ArrayList<LispBlob>();
 		// Parse and validate
 		updateDOM();
-	}
-
-	/**
-	 * Get an iterator over our children
-	 * 
-	 * @return Iterator over children
-	 */
-	public Iterator getIterator() {
-		return alChildren.iterator();
 	}
 
 	/**
@@ -75,7 +74,7 @@ public class LispBlob {
 	 * @return True if this lisp blob is a list
 	 */
 	public boolean isList() {
-		if (alChildren == null)
+		if (childNodes == null)
 			return false;
 		return true;
 	}
@@ -83,8 +82,9 @@ public class LispBlob {
 	/**
 	 * Get the text this blob is comprised of
 	 */
-	public String getText() {
-		return strText;
+	@Override
+	public String toString() {
+		return sourceText;
 	}
 
 	/**
@@ -94,12 +94,12 @@ public class LispBlob {
 	 */
 	public void setText(String strNewText) {
 		// If we're the same text, don't bother changing
-		if (strNewText.equals(strText))
+		if (strNewText.equals(sourceText))
 			return;
 
 		// Save to instance then update the DOM so our children
 		// are correctly regenerated.
-		strText = strNewText;
+		sourceText = strNewText;
 		updateDOM();
 	}
 
@@ -109,25 +109,20 @@ public class LispBlob {
 	public boolean hasChildren() {
 		// If we're not a list, or the child list is empty, we
 		// clearly don't have children.
-		if ((!isList()) || (alChildren.isEmpty()))
+		if ((!isList()) || (childNodes.isEmpty()))
 			return false;
 
 		return true;
 	}
 
-	/**
-	 * Clear the DOM ready for a re-parsing
-	 */
-	private void clearDOM() {
-		alChildren = null;
-	}
+
 
 	/**
 	 * Update the child lists or the node text for this lisp string
 	 */
 	private void updateDOM() {
 		// Clear the DOM and remove existing children
-		clearDOM();
+		clear();
 
 		String child = ""; // For building up a child object
 		int bracketDepth = 0; // How deep we are in the sub-lists
@@ -135,7 +130,7 @@ public class LispBlob {
 		boolean skipQuote = false; // Are we skipping a quote?
 
 		// Remove whitespace from the string start and end
-		String currentString = stripWhiteSpace(stripComments(strText.trim()));
+		String currentString = stripWhiteSpace(stripComments(sourceText.trim()));
 
 		if (DEBUG_PARSER)
 			System.out.println("PARSING: " + currentString);
@@ -152,12 +147,11 @@ public class LispBlob {
 		if (currentString.length() < 2) {
 			if (DEBUG_PARSER) {
 				System.out.println("Error Encounted in: ");
-				System.out.println(strText);
+				System.out.println(sourceText);
 			}
 		}
 
-		// Create a list for our children
-		alChildren = new ArrayList();
+		
 
 		// For each character in between
 		for (int index = 1; index < currentString.length() - 1; index++) {
@@ -190,7 +184,7 @@ public class LispBlob {
 							System.out.println("Adding child node:- " + child);
 
 						// Add to list and reset for next child
-						alChildren.add(new LispBlob(child));
+						childNodes.add(new LispBlob(child));
 						child = "";
 					}
 				}
@@ -213,7 +207,7 @@ public class LispBlob {
 				if (bracketDepth < 0) {
 					if (DEBUG_PARSER) {
 						System.out.println("Error Encounted in: ");
-						System.out.println(strText);
+						System.out.println(sourceText);
 					}
 
 					throw new RuntimeException("No opener for closing ) in expression. Check your lisp syntax");
@@ -235,7 +229,7 @@ public class LispBlob {
 						System.out.println("Adding child node:- " + child);
 
 					// Add to list and reset for next child
-					alChildren.add(new LispBlob(child));
+					childNodes.add(new LispBlob(child));
 					child = "";
 				}
 			}
@@ -244,7 +238,7 @@ public class LispBlob {
 		// Now that we've finished parsing, there might be some text left
 		child = child.trim();
 		if (child.length() > 0) {
-			alChildren.add(new LispBlob(child));
+			childNodes.add(new LispBlob(child));
 			if (DEBUG_PARSER)
 				System.out.println("Added child " + child);
 		}
@@ -345,12 +339,80 @@ public class LispBlob {
 	/**
 	 * Convert this list to an arraylist
 	 */
-	public ArrayList toList() {
-		ArrayList children = new ArrayList();
-		Iterator it = getIterator();
-		while (it.hasNext()) {
-			children.add(it.next());
-		}
-		return children;
+	@SuppressWarnings("unchecked")
+	public List<Object> toList() {
+		return (List<Object>)childNodes.clone();
+	}
+
+	@Override
+	public int size() {
+		return childNodes.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return childNodes.isEmpty();
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		return childNodes.contains(o);
+	}
+
+	@Override
+	public Iterator<LispBlob> iterator() {
+		return childNodes.iterator();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return childNodes.toArray();
+	}
+
+	@Override
+	public <T> T[] toArray(T[] a) {
+		return toArray(a);
+	}
+
+	@Override
+	public boolean add(LispBlob e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends LispBlob> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clear() {
+		this.childNodes.clear();
+		
 	}
 }

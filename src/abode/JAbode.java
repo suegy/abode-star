@@ -55,6 +55,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
@@ -1038,17 +1039,17 @@ public class JAbode extends JFrame implements InternalFrameListener {
 
 		// Show open dialog; this method does not return until the dialog is
 		// closed
-		fc.showOpenDialog(this);
+		int resultingAction = fc.showOpenDialog(this);
 
 		// If no file was selected, don't bother loading it
 		File selFile = fc.getSelectedFile();
-		if (selFile == null)
+		if (resultingAction != JFileChooser.APPROVE_OPTION && selFile == null)
 			return;
 		try {
 			loadFile(selFile.getAbsolutePath());
 
 		} catch (Exception e) {
-
+			System.out.println("File could not be opened");
 		}
 	}// GEN-LAST:event_openButtonActionPerformed
 
