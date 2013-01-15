@@ -31,6 +31,9 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import exception.AbodeException;
+
+import abode.JAbode;
 import abode.editing.LispBlob;
 
 
@@ -132,26 +135,36 @@ public class LispPrimitiveParser implements IPrimitiveReader {
 	 */
 	private void scanFor(LispBlob blob, ArrayList storeTo, String scanText) {
 		if (blob.isList()) {
-			ArrayList subList = blob.toList();
 			// If there are more than one items in this list, it's a candidate
-			if (subList.size() > 1) {
-				LispBlob first = (LispBlob) subList.get(0);
+			if (blob.size() > 1) {
+				LispBlob first;
+				LispBlob second;
+				try {
+					first = blob.getChild(0);
+					if (first.getText().equals(scanText)) {
+						second = blob.getChild(1);
+						// Remove the leading ' - It seems people just can't make up
+						// their minds about whether or not identifiers need these!
+						String name = second.getText().replaceAll("'", "");
+						storeTo.remove(name);
+						storeTo.add(name);
+					}
+				} catch (AbodeException e) {
+					JAbode.writeEnvironmentLine("Error while scanning for POSH element "+scanText+"!");
+					
+					//e.printStackTrace();
+				}
 
 				// If the first item is the prologue we'return looking for
-				if (first.getText().equals(scanText)) {
-					LispBlob second = (LispBlob) subList.get(1);
+				
 
-					// Remove the leading ' - It seems people just can't make up
-					// their minds about whether or not identifiers need these!
-					String name = second.getText().replaceAll("'", "");
-					storeTo.remove(name);
-					storeTo.add(name);
-				}
+
 			}
 
-			Iterator iterator = subList.iterator();
-			while (iterator.hasNext())
-				scanFor((LispBlob) iterator.next(), storeTo, scanText);
+			for (LispBlob elem : blob) {
+				scanFor(elem, storeTo, scanText);
+			}
+				
 		}
 	}
 }

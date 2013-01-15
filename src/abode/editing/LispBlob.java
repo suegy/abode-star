@@ -27,9 +27,10 @@ package abode.editing;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import exception.AbodeException;
 
 /**
  * Provides simple API for dealing with lisp code in a string and enables us to
@@ -74,9 +75,9 @@ public class LispBlob implements Collection<LispBlob>{
 	 * @return True if this lisp blob is a list
 	 */
 	public boolean isList() {
-		if (childNodes == null)
-			return false;
-		return true;
+		if (childNodes != null && childNodes.size() > 0)
+			return true;
+		return false;
 	}
 
 	/**
@@ -101,6 +102,11 @@ public class LispBlob implements Collection<LispBlob>{
 		// are correctly regenerated.
 		sourceText = strNewText;
 		updateDOM();
+	}
+	
+	public String getText()
+	{
+		return sourceText;
 	}
 
 	/**
@@ -375,44 +381,57 @@ public class LispBlob implements Collection<LispBlob>{
 	}
 
 	@Override
-	public boolean add(LispBlob e) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean add(LispBlob child) {
+		
+		return this.childNodes.add(child);
 	}
 
 	@Override
-	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean remove(Object child) {
+		return this.childNodes.remove(child);
+	}
+	
+	/**
+	 * Removes a child at the specified index
+	 * @param index position of child in LispBlob
+	 * @return if the child was removed successfully
+	 */
+	public boolean remove(int index) {
+		return (this.childNodes.remove(index) instanceof LispBlob);
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return this.childNodes.containsAll(c);
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends LispBlob> c) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.childNodes.addAll(c);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.childNodes.removeAll(c);
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.childNodes.retainAll(c);
 	}
 
 	@Override
 	public void clear() {
 		this.childNodes.clear();
 		
+	}
+	
+	public LispBlob getChild(int number) throws AbodeException
+	{
+		if (childNodes.size() > number)
+			return childNodes.get(number);
+		else
+			throw new AbodeException("Child node could not be retrieved!",new IndexOutOfBoundsException());
 	}
 }

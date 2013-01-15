@@ -197,17 +197,18 @@ public class DotLapWriter implements ILapWriter {
 		while (outer.hasNext()) {
 			ArrayList outerList = (ArrayList) outer.next();
 			Iterator inner = outerList.iterator();
+			if (competence.isEnabled()) {
+				result += "\t\t(";
+			} else {
+				result += "\t\t;(";
+			}
 			while (inner.hasNext()) {
 				CompetenceElement element = (CompetenceElement)inner.next();
+				result += "\t";
 				System.out.println("Competence: " + element.getName() + ", Enabled: " + element.isEnabled());
-				if (element.isEnabled() && competence.isEnabled()) {
-					result += "\t\t(";
-				} else {
-					result += "\t\t;(";
-				}
 				result += generateLispFromCompetenceElement(element);
 			}
-			result += ")\n";
+			result += "\t)\n";
 		}
 
 		//Close elements and C

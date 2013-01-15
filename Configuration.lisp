@@ -13,7 +13,9 @@
 			)
 			(
 				recentlyUsed
-				"C:\Users\swen\Desktop\testplan"
+				"C:\Users\swen\Documents\attackbot2.lap"
+				"C:\Users\swen\Desktop\attackbot_v0.lap"
+				"C:\Users\swen\Desktop\attackbot.lap"
 			)
 			(
 				zoomLevelDefaultPercent

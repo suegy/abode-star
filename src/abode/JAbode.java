@@ -244,7 +244,8 @@ public class JAbode extends JFrame implements InternalFrameListener {
 		menubar.add(helpMenu);
 
 		// Populate the engines list and load the most recently used list
-		populateComboBox();
+		//TODO: fix that I removed engines to load
+		//populateComboBox();
 		refreshMRU();
 
 		// Set our default size
@@ -1084,7 +1085,7 @@ public class JAbode extends JFrame implements InternalFrameListener {
 						internal.grabFocus();
 						setStatus("Loaded " + filePath);
 
-						ArrayList list = Configuration.getByKey("environment/recentlyUsed");
+						ArrayList<String> list = Configuration.getByKey("environment/recentlyUsed");
 
 						// If we'return in the list, remove us
 						String file = "\"" + filePath + "\"";
@@ -1138,7 +1139,10 @@ public class JAbode extends JFrame implements InternalFrameListener {
 		recentlyUsedMenu.removeAll();
 
 		// Get the recently used list
-		ArrayList list = Configuration.getByKey("environment/recentlyUsed");
+		ArrayList<String> list = Configuration.getByKey("environment/recentlyUsed");
+		
+		if (list == null)
+			return;
 		Iterator iterator = list.iterator();
 
 		// Skip first element
@@ -1167,7 +1171,11 @@ public class JAbode extends JFrame implements InternalFrameListener {
 	 */
 	public void populateComboBox() {
 		jComboBox1.removeAllItems();
-		ArrayList al = Configuration.getByKey("environment/engines");
+		ArrayList<String> al = Configuration.getByKey("environment/engines");
+		
+		if (al == null)
+			return;
+		
 		Iterator it = al.iterator();
 
 		// Skip "engines"

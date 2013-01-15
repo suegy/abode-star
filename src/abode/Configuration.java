@@ -83,9 +83,8 @@ public class Configuration {
 				strFileContent += temp + "\n";
 
 			LispBlob blob = new LispBlob(strFileContent);
-			ArrayList list = blob.toList();
-			list.remove(0);
-			sections = recurse(list, 0);
+			blob.remove(0);
+			sections = recurse(blob, 0);
 			brInputFile.close();
 		} catch (Exception e) {
 			System.out.println("Could not read configuration file.");
@@ -99,7 +98,7 @@ public class Configuration {
 	 * @param input Array of LispBlob objects that must be traversed
 	 * @param index Recusive depth inside lists
 	 */
-	private static ArrayList recurse(ArrayList input, int index) {
+	private static ArrayList recurse(LispBlob input, int index) {
 		ArrayList output = new ArrayList();
 
 		Iterator it = input.iterator();
@@ -108,7 +107,7 @@ public class Configuration {
 			if (!next.isList())
 				output.add(next.getText());
 			else
-				output.add(recurse(next.toList(), index + 1));
+				output.add(recurse(next, index + 1));
 		}
 
 		return output;

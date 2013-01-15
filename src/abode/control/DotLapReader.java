@@ -38,6 +38,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import exception.AbodeException;
+
 import model.IEditableElement;
 import model.TimeUnit;
 import model.posh.ActionElement;
@@ -114,7 +116,7 @@ public class DotLapReader implements ILAPReader {
 	}
 
 	@Override
-	public LearnableActionPattern load(String strFileName) throws FileNotFoundException, IOException, Exception {
+	public LearnableActionPattern load(String strFileName) throws FileNotFoundException, IOException, AbodeException {
 		String planFileContents = this.getFileContents(strFileName);
 		return lapFromPlan(planFileContents);
 	}
@@ -126,14 +128,14 @@ public class DotLapReader implements ILAPReader {
 	 *            File to load
 	 * @return Loaded file in the form of an object model
 	 */
-	public LearnableActionPattern lapFromPlan(String strFileContent) throws FileNotFoundException, IOException, Exception {
+	public LearnableActionPattern lapFromPlan(String strFileContent) throws FileNotFoundException, IOException,AbodeException {
 		
 		// Parse the Lisp document object model
 		LispBlob blob = new LispBlob(strFileContent);
 
 		ArrayList elements = new ArrayList();
 		if (!blob.isList()) {
-			throw new Exception("Invalid file structure (Initial element not a list.). Cannot parse this file.");
+			throw new AbodeException("Invalid file structure (Initial element not a list.). Cannot parse this file.");
 		}
 		
 		// Default to blank documentation
@@ -167,19 +169,16 @@ public class DotLapReader implements ILAPReader {
 	/**
 	 * Parse a construct from the file
 	 */
-	private Object parseElement(LispBlob block, String comments) throws Exception {
+	private Object parseElement(LispBlob block, String comments) throws AbodeException{
 		// All of the various constructs must be lists, so we exception
 		// if there is no list inside this list.
 		if (!block.isList()) {
-			throw new Exception("Invalid file structure (Elements must be composed of lists!). Cannot parse this file.");
+			throw new AbodeException("Invalid file structure (Elements must be composed of lists!). Cannot parse this file.");
 		}
 		
-		// Copy out each of the children into an arraylist for processing as an
-		// array
-		ArrayList children = block.toList();
-
+		
 		// The first item of the first child will be a constant
-		LispBlob first = (LispBlob) children.get(0);
+		LispBlob first = block.getChild(0);
 
 		// This constant is our type identifier
 		String strType = first.getText();
@@ -187,23 +186,26 @@ public class DotLapReader implements ILAPReader {
 		IEditableElement returnedElement =  null;
 		
 		if (strType.equals("documentation")) {
-			return parseDocumentation(children);
+			return parseDocumentation(block);
 		}
 		if (strType.equals("AP")) {
-			returnedElement = parseActionPattern(children, false);
+			returnedElement = parseActionPattern(block, false);
 			returnedElement.setDocumentation(comments);
 		}
 		if (strType.equals("C")) {
-			returnedElement = parseCompetence(children, false);
+			returnedElement = parseCompetence(block, false);
 			returnedElement.setDocumentation(comments);
 		}
 		if (strType.equals("DC")) {
-			returnedElement = parseDriveCollection(children, false, false);
+			returnedElement = parseDriveCollection(block, false, false);
 			returnedElement.setDocumentation(comments);
 		}
 		if (strType.equals("RDC")) {
-			returnedElement = parseDriveCollection(children, true, false);
+			returnedElement = parseDriveCollection(block, true, false);
 			returnedElement.setDocumentation(comments);
+		}
+		if (returnedElement == null) {
+			throw new AbodeException("File does not contain POSH elements!");
 		}
 		return returnedElement;
 	}
@@ -214,40 +216,64 @@ public class DotLapReader implements ILAPReader {
 	 * @param elements
 	 *            Arraylist containg documentation elements
 	 * @return Documentation construct
+	 * @throws AbodeException 
 	 */
-	private Documentation parseDocumentation(ArrayList elements) {
-		return new Documentation(((LispBlob) elements.get(1)).getText().replaceAll("\"", ""), ((LispBlob) elements.get(2)).getText().replaceAll("\"", ""), ((LispBlob) elements.get(3)).getText().replaceAll("\"", ""));
+	private Documentation parseDocumentation(LispBlob elements) throws AbodeException {
+		String title = "";
+		String author= "";
+		String memo = "";
+		
+		try
+		{
+			title =  elements.getChild(1).getText().replaceAll("\"", "");
+			author = elements.getChild(2).getText().replaceAll("\"", "");
+			memo = elements.getChild(3).getText().replaceAll("\"", "");
+		}
+		catch (AbodeException e)
+		{
+			JAbode.writeEnvironmentLine("Error while parsing documentation "+title+"!");
+			
+			if (debug)
+				throw new AbodeException("Error while parsing documentation "+title+"!",e);
+		}
+		return new Documentation(title, author, memo);
 	}
 
 	/**
 	 * Parse a DC or (R) DC block
+	 * @throws AbodeException 
 	 */
-	private DriveCollection parseDriveCollection(ArrayList elements, boolean realTime, boolean wasCommented)  {
+	private DriveCollection parseDriveCollection(LispBlob elements, boolean realTime, boolean wasCommented) throws AbodeException  {
 		// Get the name, parse the goal and the get the list of drive lists
-		String strName = ((LispBlob) elements.get(1)).getText();
-		ArrayList goal;
-		try {
-			goal = parseGoal((LispBlob) elements.get(2));
-		} catch (IndexOutOfBoundsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String strName = "";
+		ArrayList goal = new ArrayList();
+		try 
+		{
+			strName = elements.getChild(1).getText();
+			goal 	= parseGoal( elements.getChild(2));
+		} 
+		catch (AbodeException e) {
+			JAbode.writeEnvironmentLine("A parsing error has ocured while reading the DriveCollection "+strName+"!");
+			if(debug)
+				e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JAbode.writeEnvironmentLine("An internal error has ocured while parsing the DriveCollection "+strName+"!");
+			if(debug)
+				e.printStackTrace();
 		}
-		ArrayList lists = ((LispBlob) elements.get(3)).toList();
+		
 
 		// Remove the constant "Drives" which is at the start of the list
-		lists.remove(0);
+		elements = elements.getChild(3);
+		elements.remove(0);
 
 		// For each list of drive elements
-		ArrayList elementLists = new ArrayList();
-		Iterator listIterator = lists.iterator();
-		while (listIterator.hasNext()) {
+		ArrayList<Object> elementLists = new ArrayList<Object>();
+		for (LispBlob element : elements) {
 			ArrayList subList = new ArrayList();
-			Iterator subListIterator = ((LispBlob) listIterator.next()).toList().iterator();
-			while (subListIterator.hasNext())
-				subList.add(parseDriveElement((LispBlob) subListIterator.next()));
+			for (LispBlob subElem : element) {
+				subList.add(parseDriveElement(subElem));
+			}
 			elementLists.add(subList);
 		}
 
@@ -262,21 +288,21 @@ public class DotLapReader implements ILAPReader {
 
 	/**
 	 * Parse a single drive element
+	 * @throws AbodeException 
 	 */
-	private DriveElement parseDriveElement(LispBlob blob) throws Exception {
-		// Convert to list, extract name, trigger, action name and whether or
+	private DriveElement parseDriveElement(LispBlob blob) throws AbodeException {
+		// extract name, trigger, action name and whether or
 		// not there's a timeout
-		ArrayList list = blob.toList();
-
-		String strName = ((LispBlob) list.get(0)).getText();
-		ArrayList trigger = parseTrigger((LispBlob) list.get(1));
-		String strAction = ((LispBlob) list.get(2)).getText();
+		
+		String strName = blob.getChild(0).getText();
+		ArrayList trigger = parseTrigger(blob.getChild(1));
+		String strAction = blob.getChild(2).getText();
 
 		JAbode.writeEnvironmentLine("Parsed Drive Element (" + strName + ")");
 
 		// DriveElement(String name, ArrayList trigger, String action)
-		if (list.size() == 4) {
-			TimeUnit time = parseTimeUnit((LispBlob) list.get(3));
+		if (blob.size() == 4) {
+			TimeUnit time = parseTimeUnit(blob.getChild(3));
 			return new DriveElement(strName, trigger, strAction, time);
 		}
 
@@ -285,18 +311,32 @@ public class DotLapReader implements ILAPReader {
 
 	/**
 	 * Parse a competence block
+	 * @throws AbodeException 
 	 */
-	private Competence parseCompetence(ArrayList elements, boolean commented) throws Exception {
-		// Extract some infomration from the list
-		String strName = ((LispBlob) elements.get(1)).getText();
-		TimeUnit timeUnit = parseTimeUnit((LispBlob) elements.get(2));
-		ArrayList goal = parseGoal((LispBlob) elements.get(3));
-		LispBlob elementLists = (LispBlob) elements.get(4);
+	private Competence parseCompetence(LispBlob elements, boolean commented) throws AbodeException {
+		String strName = "";
+		TimeUnit timeUnit = null;
+		ArrayList goal = null;
+		LispBlob elementLists =  null;
 
+		// Extract some information from the list
+		try
+		{
+			strName = elements.getChild(1).getText();
+			timeUnit = parseTimeUnit( elements.getChild(2));
+			goal = parseGoal( elements.getChild(3));
+			elementLists =  elements.getChild(4);
+		}
+		catch (AbodeException e)
+		{
+			if (debug) 
+				System.out.println(new AbodeException("Error while parsing competence "+strName+"!",e));
+			JAbode.writeEnvironmentLine("Error while parsing input file! \n Problem encountered at competence "+strName+"!");
+		}
 		// Recurse the lists of lists of competence elements and build our
 		// structure
 		ArrayList compElements = new ArrayList();
-		Iterator it = elementLists.getIterator();
+		Iterator<LispBlob> it = elementLists.iterator();
 
 		// Skip over constant value "elements"
 		if (it.hasNext())
@@ -304,15 +344,15 @@ public class DotLapReader implements ILAPReader {
 		// For each list of lists
 		while (it.hasNext()) {
 			// Iterate over the list inside
-			LispBlob list = (LispBlob) it.next();
-			Iterator subList = list.toList().iterator();
-
-			ArrayList buildList = new ArrayList();
-			while (subList.hasNext()) {
+			LispBlob list = it.next();
+			
+			ArrayList<CompetenceElement> buildList = new ArrayList<CompetenceElement>();
+			for (LispBlob subList : list) {
 				// Produce the competence
-				CompetenceElement ce = parseCompetenceElement((LispBlob) subList.next());
+				CompetenceElement ce = parseCompetenceElement(subList);
 				buildList.add(ce);
 			}
+			
 			compElements.add(buildList);
 		}
 		if (commented) {
@@ -327,60 +367,75 @@ public class DotLapReader implements ILAPReader {
 
 	/**
 	 * Parse a competence element
+	 * @throws AbodeException 
 	 */
-	private CompetenceElement parseCompetenceElement(LispBlob blob) throws Exception {
-		ArrayList list = blob.toList();
+	private CompetenceElement parseCompetenceElement(LispBlob blob) throws AbodeException {
 		// Get the name, trigger list and resulting action
-		String strName = ((LispBlob) list.get(0)).getText();
-		ArrayList alTrigger = parseTrigger((LispBlob) list.get(1));
-		String action = ((LispBlob) list.get(2)).getText();
+		String strName = blob.getChild(0).getText();
+		ArrayList alTrigger = parseTrigger(blob.getChild(1));
+		String action = blob.getChild(2).getText();
 
 		JAbode.writeEnvironmentLine("Parsed competence element (" + strName + ")");
 
-		if (list.size() == 3)
+		if (blob.size() == 3)
 			return new CompetenceElement(strName, alTrigger, action);
 
-		if (list.size() == 4) {
-			int iRet = Integer.parseInt(((LispBlob) list.get(3)).getText());
+		if (blob.size() == 4) {
+			int iRet = Integer.parseInt( blob.getChild(3).getText());
 			return new CompetenceElement(strName, alTrigger, action, iRet);
 		}
 
-		throw new Exception("Invalid number of elements for competence element!");
+		throw new AbodeException("Invalid number of elements for competence element!");
 	}
 
 	/**
 	 * Parse a trigger block
+	 * @throws AbodeException 
 	 */
-	private ArrayList parseTrigger(LispBlob blob) throws Exception {
-		ArrayList source = blob.toList();
-		LispBlob blob2 = (LispBlob) source.get(1);
+	private ArrayList parseTrigger(LispBlob blob) throws AbodeException {
+
+		LispBlob blob2 = blob.getChild(1);
 		if (!blob2.isList())
-			return new ArrayList(); // "nil"
+			return new ArrayList<ActionElement>(); // "nil"
 		return parseActionElementList(blob2);
 	}
 
 	/**
 	 * Parse a goal block - This is essentially an actionelement list with a bit
 	 * of wrapping
+	 * @throws AbodeException 
 	 */
-	private ArrayList parseGoal(LispBlob blob) throws Exception {
-		ArrayList list = blob.toList();
-		return parseActionElementList((LispBlob) list.get(1));
+	private ArrayList parseGoal(LispBlob blob) throws AbodeException {
+		try {
+			return parseActionElementList(blob.getChild(1));
+		} catch (AbodeException e) {
+			throw new AbodeException("Error while parsing goal!", e);
+		}
 	}
 
 	/**
-	 * Parse an arraylist of elements that represents an action pattern
+	 * Parse an LispBlob of elements that represents an action pattern
+	 * @throws AbodeException 
 	 */
-	private ActionPattern parseActionPattern(ArrayList elements, boolean wasCommented) throws Exception {
+	private ActionPattern parseActionPattern(LispBlob elements, boolean wasCommented) throws AbodeException {
+		String strName = "";
+		TimeUnit timeOut = null;
+		LispBlob ael = null;
+		try
+		{
 		// Our name is the second element of the list
-		String strName = ((LispBlob) elements.get(1)).getText();
+		strName = (elements.getChild(1)).getText();
 
 		// Our timeout can be parsed from the third element of the list
-		TimeUnit timeOut = parseTimeUnit((LispBlob) elements.get(2));
+		timeOut = parseTimeUnit(elements.getChild(2));
 
 		// Our list of ActionElements is the fourth element of the list
-		LispBlob ael = (LispBlob) elements.get(3);
-
+		ael = elements.getChild(3);
+		}
+		catch (AbodeException e)
+		{
+			throw new AbodeException("Error while parsing ActionPattern "+strName+" !", e);
+		}
 		// Parse each element of this list
 		ArrayList children = parseActionElementList(ael);
 
@@ -395,45 +450,69 @@ public class DotLapReader implements ILAPReader {
 
 	/**
 	 * Parse a list of action elements
+	 * @throws AbodeException 
 	 */
-	private ArrayList parseActionElementList(LispBlob blob) throws Exception {
-		ArrayList children = new ArrayList();
-		Iterator it = blob.getIterator();
-		while (it.hasNext())
-			children.add(parseActionElement((LispBlob) it.next()));
+	private ArrayList<ActionElement> parseActionElementList(LispBlob blob) throws AbodeException {
+		ArrayList<ActionElement> children = new ArrayList<ActionElement>();
+
+		for (LispBlob child : blob) {
+			
+		children.add(parseActionElement(child));
+		}
 		return children;
 	}
 
 	/**
 	 * Parse an action element from a blob of lisp
+	 * @throws AbodeException 
 	 */
-	private ActionElement parseActionElement(LispBlob blob) throws Exception {
+	private ActionElement parseActionElement(LispBlob blob) throws AbodeException {
 		// Simple case, we're just a name
 		if (!blob.isList())
 			return new ActionElement(false, blob.getText());
-
-		ArrayList list = blob.toList();
-		String name = ((LispBlob) list.get(0)).getText();
-		switch (list.size()) {
-		case 3:
-			String pred = ((LispBlob) list.get(2)).getText();
-			String val = ((LispBlob) list.get(1)).getText();
-			return new ActionElement(name, val, pred);
-		case 2:
-			String val2 = ((LispBlob) list.get(1)).getText();
-			return new ActionElement(name, val2);
-		default:
-			return new ActionElement(true, name);
+		String name = "";
+		try
+		{
+			name = (blob.getChild(0)).getText();
+			switch (blob.size()) {
+			case 3:
+				String pred = (blob.getChild(2)).getText();
+				String val =  (blob.getChild(1)).getText();
+				return new ActionElement(name, val, pred);
+			case 2:
+				String val2 = (blob.getChild(1)).getText();
+				return new ActionElement(name, val2);
+			default:
+				return new ActionElement(true, name);
+			}
+		}
+		catch (AbodeException e)
+		{
+			JAbode.writeEnvironmentLine("Error while parsing action element named :" + name);
+			throw new AbodeException("Error while parsing ActionElement "+name+"!");
 		}
 	}
 
 	/**
 	 * Parse a unit of time from a lisp blob
 	 */
-	private TimeUnit parseTimeUnit(LispBlob blob) throws Exception {
-		ArrayList list = blob.toList();
-		String unit = ((LispBlob) list.get(0)).getText();
-		String val = ((LispBlob) list.get(1)).getText();
+	private TimeUnit parseTimeUnit(LispBlob blob) throws AbodeException{
+
+		String unit = "";
+		String val = "";
+		try
+		{
+			unit = ( blob.getChild(0)).getText();
+			val =  ( blob.getChild(1)).getText();
+		}
+		catch (AbodeException e)
+		{
+			throw new AbodeException("Error while parsing TimeUnit!");
+		}
+		
 		return new TimeUnit(unit, Double.parseDouble(val));
+
+
 	}
+	
 }
