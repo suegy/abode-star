@@ -70,7 +70,7 @@ public class Configuration {
 
 			BufferedReader brInputFile = null;
 			try {
-				brInputFile = new BufferedReader(new FileReader("/cfg/Configuration.lisp"));
+				brInputFile = new BufferedReader(new FileReader("Abode-star.cfg"));
 			} catch (Exception e) {
 				System.out.println("Loading default configuration!");
 				InputStream is = Main.class.getResourceAsStream("/cfg/DefaultConfiguration.lisp");
@@ -164,7 +164,7 @@ public class Configuration {
 		buildString += recurseList(true, sections, 1);
 
 		try {
-			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("Configuration.lisp")));
+			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("Abode-star.cfg")));
 			writer.println(buildString);
 			writer.close();
 		} catch (IOException e) {

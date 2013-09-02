@@ -96,6 +96,8 @@ import abode.visual.JOptionsScreen;
 public class JAbode extends JFrame implements InternalFrameListener {
 	// Added to get rid of warnings and properly implement Serializable
 	private static final long serialVersionUID = 1;
+	private javax.swing.JFileChooser fileChooser;
+
 
 	// File parser objects for loading and saving files
 	private static ArrayList alFileReader = null;
@@ -1034,33 +1036,35 @@ public class JAbode extends JFrame implements InternalFrameListener {
 		newDocument();
 	}// GEN-LAST:event_fileMenuItemActionPerformed
 
-	private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_openButtonActionPerformed
-		String filename = "";
-		javax.swing.JFileChooser fc = new javax.swing.JFileChooser(new java.io.File(filename));
+	private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		if (fileChooser == null)
+			fileChooser = new javax.swing.JFileChooser();
 
 		// Show open dialog; this method does not return until the dialog is
 		// closed
-		int resultingAction = fc.showOpenDialog(this);
+		int resultingAction = fileChooser.showOpenDialog(this);
 
 		// If no file was selected, don't bother loading it
-		File selFile = fc.getSelectedFile();
+		File selFile = fileChooser.getSelectedFile();
+		
 		if (resultingAction != JFileChooser.APPROVE_OPTION && selFile == null)
 			return;
 		try {
 			loadFile(selFile.getAbsolutePath());
-
+			fileChooser.setCurrentDirectory(selFile);
+			fileChooser.setSelectedFile(null);
 		} catch (Exception e) {
 			System.out.println("File could not be opened");
 		}
-	}// GEN-LAST:event_openButtonActionPerformed
-
+	}
+	
 	/**
 	 * Load the file specified
 	 * 
 	 * @param filePath
 	 *            Path to file.
 	 */
-	private void loadFile(String filePath) throws Exception {
+	protected void loadFile(String filePath) throws Exception {
 		popOutConsole();
 
 		// Try to find a parser that can read this file!

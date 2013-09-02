@@ -54,6 +54,8 @@ public class SplashScreen extends javax.swing.JFrame {
 
 	// Added to implement serializable properly
 	private static final long serialVersionUID = 1;
+	
+	private JAbode abodeCore;
 
 	// List of all classes within the application that are to be pre-initialized
 //	private File models;
@@ -114,7 +116,7 @@ public class SplashScreen extends javax.swing.JFrame {
 		//TODO : @Swen: This is real dirty and needs to be modified. 
 				//       I am not sure why it was needed to load an external configuration for POSH elements
 				JarFile jarFile= null;
-				URL additional = ClassLoader.getSystemResource("ABODE-posh.jar");
+				URL additional = ClassLoader.getSystemResource("ABODE-star.jar");
 				
 				if (additional instanceof URL)
 					try {
@@ -184,7 +186,8 @@ public class SplashScreen extends javax.swing.JFrame {
 		setVisible(false);
 
 		// Show the main application (Which should spring up quite rapidly now)
-		new JAbode().setVisible(true);
+		abodeCore = new JAbode();
+		abodeCore.setVisible(true);
 	}
 
 	/**
@@ -256,7 +259,16 @@ public class SplashScreen extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new SplashScreen();
+    	
+        SplashScreen prog = new SplashScreen();
+        //TODO: Swen:this is another ugly fix because we should check if the file is usable first 
+        if (args != null && args.length > 0)
+			try {
+				prog.abodeCore.loadFile(args[args.length-1]);
+			} catch (Exception e) {
+				System.err.println("The supplied configuration file was incorrect!");
+			}
+        
     }
 
 }
