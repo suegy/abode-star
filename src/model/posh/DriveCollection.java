@@ -59,15 +59,18 @@ import abode.visual.VerticalListOrganiser;
 public class DriveCollection implements IEditableElement {
 	// Are we a realtime drive collection (False->Discrete Time)
 	private boolean bIsRealTime = false;
+	
+	
+	private boolean bIsStrict = false;
 
 	// Our name for this drive collection
 	private String strName = null;
 
-	// Our goal (Arraylist of actionelements)
-	private ArrayList alGoal = null;
+	// Our goal (ArrayList<Object>of actionelements)
+	private ArrayList<Object>alGoal = null;
 
 	// Our drive elements for this collection
-	private ArrayList alDriveElements = null;
+	private ArrayList<Object>alDriveElements = null;
 
 	private boolean enabled = true;
 
@@ -82,19 +85,19 @@ public class DriveCollection implements IEditableElement {
 	 * @param realTime
 	 *            Is this a real-time drive collection?
 	 * @param elements
-	 *            Arraylist of drive elements (or lists thereof, to be more
+	 *            ArrayList<Object> of drive elements (or lists thereof, to be more
 	 *            precise)
 	 */
-	public DriveCollection(String name, boolean realTime, ArrayList goal,
-			ArrayList elements) {
+	public DriveCollection(String name, boolean realTime, ArrayList<Object>goal,
+			ArrayList<Object>elements) {
 		strName = name;
 		bIsRealTime = realTime;
 		alGoal = goal;
 		alDriveElements = elements;
 	}
 
-	public DriveCollection(String name, boolean realTime, ArrayList goal,
-			ArrayList elements, boolean shouldBeEnabled) {
+	public DriveCollection(String name, boolean realTime, ArrayList<Object>goal,
+			ArrayList<Object>elements, boolean shouldBeEnabled) {
 		this(name, realTime, goal, elements);
 		this.setEnabled(shouldBeEnabled);
 	}
@@ -113,18 +116,16 @@ public class DriveCollection implements IEditableElement {
 		return this.enabled;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setEnabled(boolean newValue) {
 		this.enabled = newValue;
 		// Disable the children. In a complicated fashion, naturally.
-		Iterator directChildrenIterator = this.getDriveElements().iterator();
-		while (directChildrenIterator.hasNext()) {
-			Iterator nonDirectChildrenIterator = ((ArrayList) directChildrenIterator
-					.next()).iterator();
-			while (nonDirectChildrenIterator.hasNext()) {
-				((IEditableElement) nonDirectChildrenIterator.next())
-						.setEnabled(newValue);
-			}
+		for (Object directChildren : this.getDriveElements()) {
+			if (directChildren instanceof ArrayList)
+				for (Object grandChild : (ArrayList<Object>)directChildren) {
+					((IEditableElement) grandChild).setEnabled(newValue);
+				}
 		}
 	}
 
@@ -152,7 +153,7 @@ public class DriveCollection implements IEditableElement {
 	 * 
 	 * @return Arraylist of lists of drive elements
 	 */
-	public ArrayList getDriveElements() {
+	public ArrayList<Object>getDriveElements() {
 		return alDriveElements;
 	}
 
@@ -161,7 +162,7 @@ public class DriveCollection implements IEditableElement {
 	 * 
 	 * @return Arraylist of action elements comprising our goal
 	 */
-	public ArrayList getGoal() {
+	public ArrayList<Object>getGoal() {
 		return alGoal;
 	}
 
@@ -180,14 +181,14 @@ public class DriveCollection implements IEditableElement {
 	 * @param drive
 	 *            Drive element lists .
 	 */
-	public void setDriveElements(ArrayList drive) {
+	public void setDriveElements(ArrayList<Object>drive) {
 		alDriveElements = drive;
 	}
 
 	/**
 	 * Set our goal list
 	 */
-	public void setGoal(ArrayList goal) {
+	public void setGoal(ArrayList<Object>goal) {
 		alGoal = goal;
 	}
 
@@ -199,6 +200,15 @@ public class DriveCollection implements IEditableElement {
 	 */
 	public void setRealTime(boolean real) {
 		bIsRealTime = real;
+	}
+	
+	
+	public boolean getStrictMode() {
+		return bIsStrict;
+	}
+	
+	public void setStrictMode(boolean isStrict) {
+		bIsStrict = isStrict;
 	}
 
 	/**
@@ -357,9 +367,9 @@ public class DriveCollection implements IEditableElement {
 								"Drive Element Names can not contain spaces!");
 				}
 
-				DriveElement element = new DriveElement(name, new ArrayList(),
+				DriveElement element = new DriveElement(name, new ArrayList<Object>(),
 						"act_" + name);
-				ArrayList elementList = new ArrayList();
+				ArrayList<Object>elementList = new ArrayList<Object>();
 				elementList.add(element);
 
 				getDriveElements().add(elementList);
@@ -416,6 +426,7 @@ public class DriveCollection implements IEditableElement {
 	 * @return Tree node representing this node and the relevent sub-tree for
 	 *         the specified diagram rendering settings
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public JTreeNode buildTree(JTreeNode root, LearnableActionPattern lap,
 			boolean detailed, boolean expanded) {
@@ -434,14 +445,12 @@ public class DriveCollection implements IEditableElement {
 					getGoal(), base, this, this.isEnabled());
 		}
 
-		Iterator groups = getDriveElements().iterator();
 		base.setGroup(getDriveElements());
 
-		while (groups.hasNext()) {
-			ArrayList groupBy = (ArrayList) groups.next();
-			Iterator inGroup = groupBy.iterator();
-			while (inGroup.hasNext()) {
-				JTreeNode node = ((DriveElement) inGroup.next()).buildTree(
+		for (Object groups : this.getDriveElements()) {
+			ArrayList<Object>groupBy = (ArrayList) groups;
+			for (Object inGroup : (ArrayList<Object>)groups) {
+				JTreeNode node = ((DriveElement) inGroup).buildTree(
 						base, lap, detailed, expanded);
 				node.setGroup(groupBy);
 				node.setOrganiser(new VerticalListOrganiser());

@@ -29,7 +29,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -38,6 +37,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 
 /**
@@ -71,7 +72,19 @@ public class SplashScreen extends javax.swing.JFrame {
 	 * that this was considered an acceptable compromise.
 	 */
 	public SplashScreen() {
-		// NetBeans Form Designer
+		
+		// setting Nimbus look and feel layout
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    // handle exception
+		} 
+		
 		initComponents();
 
 			

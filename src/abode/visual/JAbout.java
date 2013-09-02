@@ -21,7 +21,7 @@ public class JAbout extends javax.swing.JFrame {
 	/** Creates new form JAbout */
 	public JAbout() {
 		initComponents();
-		setSize(390, 350);
+		setSize(400, 400);
 		Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(SCREEN_SIZE.width / 2 - getWidth() / 2, SCREEN_SIZE.height / 2 - getHeight() / 2);
 	}
@@ -50,7 +50,7 @@ public class JAbout extends javax.swing.JFrame {
 		jTextArea1.setBackground(new java.awt.Color(204, 204, 204));
 		jTextArea1.setFont(new java.awt.Font("Courier New", 0, 12));
 		jTextArea1
-				.setText("        _    ____   ___  ____  _____ \n       / \\  | __ ) / _ \\|  _ \\| ____|      Advanced\n      / _ \\ |  _ \\| | | | | | |  _|        Behaviour\n     / ___ \\| |_) | |_| | |_| | |___       Oriented\n    /_/   \\_\\____/ \\___/|____/|_____|      Design\n          www.cobaltsoftware.net           Environment\n ");
+				.setText("        _    ____   ___  ____  _____ \n       / \\  | __ ) / _ \\|  _ \\| ____|      Advanced\n      / _ \\ |  _ \\| | | | | | |  _|        Behaviour\n     / ___ \\| |_) | |_| | |_| | |___       Oriented\n    /_/   \\_\\____/ \\___/|____/|_____|      Design\n                                           Environment\n ");
 		jTextArea1.setEditable(false);
 		jPanel1.add(jTextArea1);
 
@@ -60,11 +60,14 @@ public class JAbout extends javax.swing.JFrame {
 		jTextArea2.setLineWrap(true);
 		jTextArea2
 				.setText("Behavior Oriented Design (BOD) is a methodology" +
-						" for developing control of complex intelligent agents," +
-						" such as virtual reality characters, humanoid robots or intelligent" +
-						" environments.  It combines the advantages of Behavior-Based AI" +
-						" and Object Oriented Design. ABODE is a Java based integrated " +
-						"development environment for designing and building such plans.\n" +
+						"for developing control of complex intelligent agents," +
+						"such as virtual reality characters, humanoid robots or intelligent" +
+						"environments.  It combines the advantages of Behavior-Based AI" +
+						"and Object Oriented Design. \n "+
+						"ABODE is a Java based integrated development environment for " +
+						"designing and building such plans." +
+						"you can find more information about Abode including examples at:" +
+						"http://code.google.com/p/abode-star/" +
 						"\n" +
 						"More information about Behavior Oriented Design can be found online at: " +
 						"http://www.cs.bath.ac.uk/~jjb/web/bod.html");

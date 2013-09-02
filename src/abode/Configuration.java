@@ -37,7 +37,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import abode.editing.LispBlob;
 
@@ -50,6 +49,10 @@ import abode.editing.LispBlob;
  *
  * @author  CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
+ * 
+ * modified additional casts to correct issue with Generics
+ * @author  Gaudl, Swen
+ * @version 1.1
  */
 public class Configuration {
 	/**
@@ -59,13 +62,13 @@ public class Configuration {
 	}
 
 	// Where we store the configuration file sections
-	private static ArrayList sections = null;
+	private static ArrayList<Object> sections = null;
 
 	/**
 	 * One-time initialization
 	 **/
 	static {
-		sections = new ArrayList();
+		sections = new ArrayList<Object>();
 		try {
 
 			BufferedReader brInputFile = null;
@@ -73,7 +76,7 @@ public class Configuration {
 				brInputFile = new BufferedReader(new FileReader("Abode-star.cfg"));
 			} catch (Exception e) {
 				System.out.println("Loading default configuration!");
-				InputStream is = Main.class.getResourceAsStream("/cfg/DefaultConfiguration.lisp");
+				InputStream is = Configuration.class.getResourceAsStream("/cfg/DefaultConfiguration.lisp");
 				InputStreamReader isr = new InputStreamReader(is);
 				brInputFile = new BufferedReader(isr);
 			}
@@ -98,18 +101,15 @@ public class Configuration {
 	 * @param input Array of LispBlob objects that must be traversed
 	 * @param index Recusive depth inside lists
 	 */
-	private static ArrayList recurse(LispBlob input, int index) {
-		ArrayList output = new ArrayList();
+	private static ArrayList<Object> recurse(LispBlob input, int index) {
+		ArrayList<Object> output = new ArrayList<Object>();
 
-		Iterator it = input.iterator();
-		while (it.hasNext()) {
-			LispBlob next = (LispBlob) it.next();
+		for (LispBlob next : input) {
 			if (!next.isList())
 				output.add(next.getText());
 			else
 				output.add(recurse(next, index + 1));
 		}
-
 		return output;
 	}
 
@@ -120,30 +120,30 @@ public class Configuration {
 	 * @param path Path in configuration to load
 	 * @return Arraylist of elements at this point
 	 **/
-	public static ArrayList getByKey(String path) {
+	public static ArrayList<Object> getByKey(String path) {
 		// Split the path string by slashes
 		String[] bits = path.split("/");
+		ArrayList<Object> current = sections;
 		if (bits.length < 1)
 			return null;
 
-		// Start at the root of our lists
-		ArrayList current = sections;
-
+		
 		// For each part of our path
 		for (int x = 0; x < bits.length; x++) {
-			// We havent matched this path yet
+			// We have not matched this path yet
 			boolean done = false;
 
+			
 			// Iterate over the lists at this level
-			Iterator it = current.iterator();
-			while (it.hasNext()) {
-				Object object = it.next();
-				if (!(object instanceof ArrayList))
+			for (Object obj : current) {
+				if (!(obj instanceof ArrayList))
 					continue;
 
-				ArrayList list = ((ArrayList) object);
-				if (list.get(0).toString().equals(bits[x])) {
-					current = list;
+				@SuppressWarnings("unchecked")
+				ArrayList<Object> arrayList = (ArrayList<Object>)obj;
+				
+				if (arrayList.get(0).toString().equals(bits[x])) {
+					current = arrayList;
 					done = true;
 					break;
 				}
@@ -180,7 +180,7 @@ public class Configuration {
 	 * @param depth Recursive depth in lists
 	 * @return Composited lisp syntax representing contents of arraylist
 	 **/
-	private static String recurseList(boolean first, ArrayList list, int depth) {
+	private static String recurseList(boolean first, ArrayList<Object> list, int depth) {
 		String result = "";
 
 		// Open list
@@ -192,12 +192,11 @@ public class Configuration {
 			result += "(\r\n";
 
 		// For each item in the list
-		Iterator iterator = list.iterator();
-		while (iterator.hasNext()) {
-			Object next = iterator.next();
+		for (Object next : list) {
 			if (next instanceof ArrayList) {
 				// If this is a sub-list then recurse
-				ArrayList subList = (ArrayList) next;
+				@SuppressWarnings("unchecked")
+				ArrayList<Object> subList = (ArrayList<Object>) next;
 				result += recurseList(false, subList, depth + 1);
 			} else {
 				String text = next.toString();
@@ -222,7 +221,7 @@ public class Configuration {
 	 * @return Configuration setting in the form of a colour
 	 **/
 	public static Color getRGB(String key) {
-		ArrayList setting = getByKey(key);
+		ArrayList<Object> setting = getByKey(key);
 		Color rgb = new Color(Integer.parseInt(setting.get(1).toString()), Integer.parseInt(setting.get(2).toString()), Integer.parseInt(setting.get(3).toString()));
 		return rgb;
 	}

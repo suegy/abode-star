@@ -87,11 +87,13 @@ import abode.visual.JOptionsScreen;
 
 /**
  * JAbode is the main GUI (i.e. the thing all the other windows exist within)
- * for the system, meaning that its purpose is little more than that of a shell,
- * with some basic interactions with elements within.
+ * It currently servers as a central point for all interactions.
  * 
  * @author CobaltSoftware (abode.devteam@cobaltsoftware.net)
  * @version 1.0
+ * 
+ * @author Gaudl,Swen
+ * @version 1.1
  */
 public class JAbode extends JFrame implements InternalFrameListener {
 	// Added to get rid of warnings and properly implement Serializable
@@ -100,13 +102,13 @@ public class JAbode extends JFrame implements InternalFrameListener {
 
 
 	// File parser objects for loading and saving files
-	private static ArrayList alFileReader = null;
+	private static ArrayList<Object> alFileReader = null;
 
 	/**
 	 * Perform some first time initialization tasks
 	 */
 	static {
-		alFileReader = new ArrayList();
+		alFileReader = new ArrayList<Object>();
 		alFileReader.add(new DotLapReader());
 	}
 
@@ -951,12 +953,12 @@ public class JAbode extends JFrame implements InternalFrameListener {
 
 	private void openMaualEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem2ActionPerformed
 		JManual manual = new JManual();
-		manual.show();
+		manual.setVisible(true);
 	}// GEN-LAST:event_jMenuItem2ActionPerformed
 
 	private void openAboutMenuEvent(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem3ActionPerformed
 		JAbout about = new JAbout();
-		about.show();
+		about.setVisible(true);
 	}// GEN-LAST:event_jMenuItem3ActionPerformed
 
 	private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_printButtonActionPerformed
@@ -988,7 +990,7 @@ public class JAbode extends JFrame implements InternalFrameListener {
 		Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 		options.setLocation(SCREEN_SIZE.width / 2 - options.getWidth() / 2, SCREEN_SIZE.height / 2 - options.getHeight() / 2);
 		setEnabled(false);
-		options.show();
+		options.setVisible(true);
 	}// GEN-LAST:event_jMenuItem1ActionPerformed
 
 	private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveButtonActionPerformed
@@ -1068,7 +1070,7 @@ public class JAbode extends JFrame implements InternalFrameListener {
 		popOutConsole();
 
 		// Try to find a parser that can read this file!
-		Iterator parserIterator = null;
+		Iterator<Object> parserIterator = null;
 
 		// For each parser in the file handler list
 		try {
@@ -1089,7 +1091,7 @@ public class JAbode extends JFrame implements InternalFrameListener {
 						internal.grabFocus();
 						setStatus("Loaded " + filePath);
 
-						ArrayList<String> list = Configuration.getByKey("environment/recentlyUsed");
+						ArrayList<Object> list = Configuration.getByKey("environment/recentlyUsed");
 
 						// If we'return in the list, remove us
 						String file = "\"" + filePath + "\"";
@@ -1143,19 +1145,17 @@ public class JAbode extends JFrame implements InternalFrameListener {
 		recentlyUsedMenu.removeAll();
 
 		// Get the recently used list
-		ArrayList<String> list = Configuration.getByKey("environment/recentlyUsed");
+		ArrayList<Object> list = Configuration.getByKey("environment/recentlyUsed");
 		
 		if (list == null)
 			return;
-		Iterator iterator = list.iterator();
+		Iterator<Object> iterator = list.iterator();
 
 		// Skip first element
 		if (iterator.hasNext())
 			iterator.next();
 
-		int index = 0;
 		while (iterator.hasNext()) {
-			index++;
 			JMenuItem item = new JMenuItem(iterator.next().toString().replaceAll("\"", ""));
 			item.addActionListener(new ActionListener() {
 				@Override
@@ -1175,12 +1175,12 @@ public class JAbode extends JFrame implements InternalFrameListener {
 	 */
 	public void populateComboBox() {
 		jComboBox1.removeAllItems();
-		ArrayList<String> al = Configuration.getByKey("environment/engines");
+		ArrayList<Object> al = Configuration.getByKey("environment/engines");
 		
 		if (al == null)
 			return;
 		
-		Iterator it = al.iterator();
+		Iterator<Object> it = al.iterator();
 
 		// Skip "engines"
 		if (it.hasNext())
