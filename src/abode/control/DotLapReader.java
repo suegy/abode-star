@@ -197,11 +197,19 @@ public class DotLapReader implements ILAPReader {
 			returnedElement.setDocumentation(comments);
 		}
 		if (strType.equals("DC")) {
-			returnedElement = parseDriveCollection(block, false, false);
+			returnedElement = parseDriveCollection(block, false, false, false);
 			returnedElement.setDocumentation(comments);
 		}
 		if (strType.equals("RDC")) {
-			returnedElement = parseDriveCollection(block, true, false);
+			returnedElement = parseDriveCollection(block, true, false, false);
+			returnedElement.setDocumentation(comments);
+		}
+		if (strType.equals("SDC")) {
+			returnedElement = parseDriveCollection(block, false, true, false);
+			returnedElement.setDocumentation(comments);
+		}
+		if (strType.equals("SRDC")) {
+			returnedElement = parseDriveCollection(block, true, true, false);
 			returnedElement.setDocumentation(comments);
 		}
 		if (returnedElement == null) {
@@ -243,7 +251,7 @@ public class DotLapReader implements ILAPReader {
 	 * Parse a DC or (R) DC block
 	 * @throws AbodeException 
 	 */
-	private DriveCollection parseDriveCollection(LispBlob elements, boolean realTime, boolean wasCommented) throws AbodeException  {
+	private DriveCollection parseDriveCollection(LispBlob elements, boolean realTime, boolean strict, boolean wasCommented) throws AbodeException  {
 		// Get the name, parse the goal and the get the list of drive lists
 		String strName = "";
 		ArrayList goal = new ArrayList();
@@ -279,10 +287,10 @@ public class DotLapReader implements ILAPReader {
 
 		if (wasCommented) {
 			JAbode.writeEnvironmentLine("Parsed commented drive collection (" + strName + ")");
-			return new DriveCollection(strName, realTime, goal, elementLists, false);
+			return new DriveCollection(strName, realTime, strict, goal, elementLists, false);
 		} else {
 			JAbode.writeEnvironmentLine("Parsed drive collection (" + strName + ")");
-			return new DriveCollection(strName, realTime, goal, elementLists);
+			return new DriveCollection(strName, realTime, strict, goal, elementLists);
 		}
 	}
 

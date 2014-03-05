@@ -133,7 +133,7 @@ public class JEditorWindow extends JInternalFrame{
 			sourceArea.setText((new DotLapReader()).getFileContents(fileName));
 		} else {
 			lapCurrent = new LearnableActionPattern();
-			lapCurrent.getElements().add(new DriveCollection("NewDriveCollection", false, new ArrayList(), new ArrayList()));
+			lapCurrent.getElements().add(new DriveCollection("NewDriveCollection", false,true, new ArrayList(), new ArrayList()));
 			sourceArea.setText("You must save your current working file to see the generated source code.");
 			pattern=lapCurrent;
 		}

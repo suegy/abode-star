@@ -134,7 +134,7 @@ public class DotLapWriter implements ILapWriter {
 	private String generateLispFromDriveCollection(DriveCollection driveCollection) {
 		String result;
 
-		result = "(" + (driveCollection.getRealTime() ? "R" : "") + "DC " + driveCollection.getName() + " " + generateLispFromGoal(driveCollection.getGoal()) + "\n";
+		result = "(" + (driveCollection.getStrictMode() ? "S" : "") + (driveCollection.getRealTime() ? "R" : "") + "DC " + driveCollection.getName() + " " + generateLispFromGoal(driveCollection.getGoal()) + "\n";
 		result += "\t(drives\n";
 
 		Iterator outer = driveCollection.getDriveElements().iterator();

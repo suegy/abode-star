@@ -88,17 +88,18 @@ public class DriveCollection implements IEditableElement {
 	 *            ArrayList<Object> of drive elements (or lists thereof, to be more
 	 *            precise)
 	 */
-	public DriveCollection(String name, boolean realTime, ArrayList<Object>goal,
+	public DriveCollection(String name, boolean realTime, boolean strict, ArrayList<Object>goal,
 			ArrayList<Object>elements) {
 		strName = name;
 		bIsRealTime = realTime;
+		bIsStrict = strict;
 		alGoal = goal;
 		alDriveElements = elements;
 	}
 
-	public DriveCollection(String name, boolean realTime, ArrayList<Object>goal,
+	public DriveCollection(String name, boolean realTime, boolean strict, ArrayList<Object>goal,
 			ArrayList<Object>elements, boolean shouldBeEnabled) {
-		this(name, realTime, goal, elements);
+		this(name, realTime, strict, goal, elements);
 		this.setEnabled(shouldBeEnabled);
 	}
 
@@ -271,11 +272,23 @@ public class DriveCollection implements IEditableElement {
 				subGui.updateDiagrams(diagram, getSelf());
 			}
 		});
+		// Tick box for strict mode Drive Collection
+				final JCheckBox strictMode = new JCheckBox("Strict Mode?", getStrictMode());
+
+				// Action listener for setting the data in the class
+				realtime.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						setStrictMode(strictMode.isSelected());
+						subGui.repaint();
+						subGui.updateDiagrams(diagram, getSelf());
+					}
+				});
 
 		JPanel realtimePanel = new JPanel();
 		
 		realtimePanel.add(realtime);
-		
+		realtimePanel.add(strictMode);
 		// Checkbox for enabling and disabling the Drive Collection
 		final JCheckBox enabled = new JCheckBox("Enabled?", isEnabled());
 
@@ -436,10 +449,11 @@ public class DriveCollection implements IEditableElement {
 		} else {
 			colorToDraw = Color.LIGHT_GRAY;
 		}
+		
+		//TODO: Treenode for strict mode
 		JTreeNode base = new JTreeNode(getName(),
 				(getRealTime() ? "Real-Time DC" : "Non Real-Time DC"),
 				colorToDraw, this, root);
-
 		if (detailed) {
 			ActionElement.actionListToTree("Goal", "Goal of drive collection",
 					getGoal(), base, this, this.isEnabled());

@@ -396,7 +396,7 @@ public class LearnableActionPattern implements IEditableElement {
 						JOptionPane.showMessageDialog(showOn.getParent(), "Drive Collection Names can not contain spaces!");
 				}
 				ArrayList temp = (ArrayList) lap.getElements().clone();
-				temp.add(new DriveCollection(name, true, new ArrayList(), new ArrayList()));
+				temp.add(new DriveCollection(name, true, true, new ArrayList(), new ArrayList()));
 				_undoListener.undoableEditHappened(new UndoableEditEvent(getSelf(), new LearnableActionPatternEdit(getSelf(), temp, documentation)));
 				
 				lap.setElements(temp);
