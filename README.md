@@ -10,8 +10,11 @@ http://www.cs.bath.ac.uk/~jjb/web/BOD/abode.html
 
 We currently provide a couple of showcases of what has been done using ABODEstar and POSH.
 
+#### Further Information
+use our [wiki](https://github.com/suegy/abode-star/wiki) to learn more about how to use and set up ABODE.
+
 ####Starcraft AI Show Case
-A first show case of the ABODE usage is the StarCraft AI Demo by Simon https://github.com/suegy/posh-sharp/wiki/StarCraftAIShowcase
+A first show case of the ABODE usage is the StarCraft AI Demo by Simon [StarCraftAIShowcase](https://github.com/suegy/abode-star/wiki/StarCraftAIShowcase)
 
 Use it at your own risk!
 
