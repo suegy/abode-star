@@ -52,6 +52,7 @@ import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
 import abode.JAbode;
+import abode.control.AbodeActionHandler;
 import abode.editing.DeleteEdit;
 import abode.editing.posh.CompetenceEdit;
 import abode.visual.JDiagram;
@@ -488,10 +489,13 @@ public class Competence implements IEditableElement, INamedElement {
 		delete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
+				//AbodeActionHandler.getActionHandler().deleteGroupAction(diagram, window, showOn);
+				
 				if (JOptionPane.showConfirmDialog(showOn.getParent(), "Delete Competence", "Are you sure you want to delete the competence?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-					lap.getElements().remove(showOn.getValue());
+					
 					_undoListener.undoableEditHappened(new UndoableEditEvent(lap.getElements(), new DeleteEdit(_diagram, window, null, showOn.getValue(), lap.getElements().indexOf(showOn.getValue()), lap.getElements())));
-					window.updateDiagrams(diagram, null);
+					lap.getElements().remove(showOn.getValue());
+					window.updateDiagrams(diagram, showOn.getParentNode().getValue());
 				}
 
 			}

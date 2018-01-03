@@ -45,12 +45,14 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.UndoableEditEvent;
 
 import model.IEditableElement;
 import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
 import abode.JAbode;
+import abode.editing.DeleteEdit;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
 import abode.visual.JTreeNode;
@@ -527,6 +529,7 @@ public class DriveElement implements IEditableElement {
 			public void actionPerformed(ActionEvent e) {
 				if ((showOn.getGroup() != null) && (showOn.getParentNode().getGroup() != null)) {
 					if (JOptionPane.showConfirmDialog(window, "Are you sure you want to delete this Drive Element?", "Delete " + getName() + "?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+						_undoListener.undoableEditHappened(new UndoableEditEvent(showOn.getParentNode().getGroup(), new DeleteEdit(diagram, window, null, showOn.getGroup(), showOn.getParentNode().getGroup().indexOf(showOn.getGroup()), showOn.getParentNode().getGroup())));
 						showOn.getParentNode().getGroup().remove(showOn.getGroup());
 						window.updateDiagrams(diagram, showOn.getParentNode().getValue());
 					}

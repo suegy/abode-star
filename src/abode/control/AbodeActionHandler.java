@@ -38,8 +38,7 @@ public class AbodeActionHandler {
 	}
 
 	public void deleteElementAction(JDiagram diagram, JEditorWindow internal, JTreeNode subject){
-		final ArrayList myGroup = subject.getGroup();
-		final ArrayList groupGroup = subject.getParentNode().getGroup();
+		final ArrayList<?> myGroup = subject.getGroup();
 		
 		if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
 			_undoListener.undoableEditHappened(new UndoableEditEvent(myGroup, new DeleteEdit(diagram, internal, subject.getParentNode(), subject.getValue(), myGroup.indexOf(subject.getValue()), myGroup)));
@@ -49,8 +48,8 @@ public class AbodeActionHandler {
 		
 	}
 	public void deleteGroupAction(JDiagram diagram, JEditorWindow internal, JTreeNode subject){
-		final ArrayList myGroup = subject.getGroup();
-		final ArrayList groupGroup = subject.getParentNode().getGroup();
+		final ArrayList<?> myGroup = subject.getGroup();
+		final ArrayList<?> groupGroup = subject.getParentNode().getGroup();
 		
 		if (JOptionPane.showConfirmDialog(diagram, "Are you sure you want to delete this item?") == JOptionPane.YES_OPTION) {
 			_undoListener.undoableEditHappened(new UndoableEditEvent(groupGroup, new DeleteEdit(diagram, internal, subject.getParentNode(), myGroup,groupGroup.indexOf(myGroup), groupGroup)));

@@ -52,6 +52,8 @@ import model.INamedElement;
 import model.TimeUnit;
 import abode.Configuration;
 import abode.JAbode;
+import abode.control.AbodeActionHandler;
+import abode.editing.DeleteEdit;
 import abode.editing.posh.CompetenceElementEdit;
 import abode.visual.JDiagram;
 import abode.visual.JEditorWindow;
@@ -464,15 +466,21 @@ public class CompetenceElement implements IEditableElement, INamedElement {
 		});
 
 		JMenuItem itemDelete = new JMenuItem("Delete " + getName());
+		
 		itemDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if ((showOn.getGroup() != null) && (showOn.getParentNode().getGroup() != null)) {
-					if (JOptionPane.showConfirmDialog(window, "Are you sure you want to delete this Drive Element?", "Delete " + getName() + "?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				AbodeActionHandler.getActionHandler().deleteGroupAction(diagram, _subGui, showOn);
+				
+				/*if ((showOn.getGroup() != null) && (showOn.getParentNode().getGroup() != null)) {
+					if (JOptionPane.showConfirmDialog(window, "Are you sure you want to delete this Competence Element?", "Delete " + getName() + "?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+						_undoListener.undoableEditHappened(new UndoableEditEvent(showOn.getParentNode().getGroup(), new DeleteEdit(_diagram, window, null, showOn.getGroup(), showOn.getParentNode().getGroup().indexOf(showOn), showOn.getParentNode().getGroup())));
 						showOn.getParentNode().getGroup().remove(showOn.getGroup());
-						window.updateDiagrams(diagram, showOn.getParentNode().getValue());
+						window.updateDiagrams(diagram, null);
+						//window.updateDiagrams(diagram, showOn.getParentNode().getValue());
+						
 					}
-				}
+				}*/
 			}
 		});
 		

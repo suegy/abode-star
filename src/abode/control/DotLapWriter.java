@@ -137,22 +137,17 @@ public class DotLapWriter implements ILapWriter {
 		result = "(" + (driveCollection.getStrictMode() ? "S" : "") + (driveCollection.getRealTime() ? "R" : "") + "DC " + driveCollection.getName() + " " + generateLispFromGoal(driveCollection.getGoal()) + "\n";
 		result += "\t(drives\n";
 
-		Iterator outer = driveCollection.getDriveElements().iterator();
-		while (outer.hasNext()) {
-			Iterator inner = ((ArrayList) outer.next()).iterator();
-			while (inner.hasNext()) {
-				DriveElement driveElement = (DriveElement) inner.next();
-				if (driveElement.isEnabled()) {
-					result += "\t\t(";
-				} else {
-					result += "\t\t;(";
-				}
+		for ( Object outer : driveCollection.getDriveElements()) {
+			result += "\t\t(";
+			ArrayList<DriveElement> inner = (ArrayList<DriveElement>) outer;
+			for (DriveElement driveElement : inner) {
 				result += generateLispFromDriveElement(driveElement);
 			}
 			result += ")\n";
 		}
-		result += "\n\t)\n)";
-
+		
+		result += "\n\t)";
+		result += "\n)"; 
 		return result;
 	}
 
@@ -167,8 +162,11 @@ public class DotLapWriter implements ILapWriter {
 		String result = "\n";
 		// If there are comments, then add them!
 		result += generateCommentsFromElement(driveElement, 2, false) + "\n";
-		
-		result += "\t\t(" + driveElement.getName() + " " + generateLispFromTrigger(driveElement.getTrigger()) + " " + driveElement.getAction();
+		if (driveElement.isEnabled()) 
+			result += "\t\t(";
+			else 
+			result += "\t\t;(";
+		result += driveElement.getName() + " " + generateLispFromTrigger(driveElement.getTrigger()) + " " + driveElement.getAction();
 		if (driveElement.getFrequency() != null)
 			result += generateLispFromTimeUnit(driveElement.getFrequency());
 		result += ")";
@@ -193,17 +191,14 @@ public class DotLapWriter implements ILapWriter {
 		// Parse the goal
 		result += "(elements\n";
 
-		Iterator outer = competence.getElementLists().iterator();
-		while (outer.hasNext()) {
-			ArrayList outerList = (ArrayList) outer.next();
-			Iterator inner = outerList.iterator();
+		for (Object outer : competence.getElementLists()){
+			ArrayList<CompetenceElement> outerList = (ArrayList<CompetenceElement>) outer;
 			if (competence.isEnabled()) {
 				result += "\t\t(";
 			} else {
 				result += "\t\t;(";
 			}
-			while (inner.hasNext()) {
-				CompetenceElement element = (CompetenceElement)inner.next();
+			for (CompetenceElement element : outerList) {
 				result += "\t";
 				System.out.println("Competence: " + element.getName() + ", Enabled: " + element.isEnabled());
 				result += generateLispFromCompetenceElement(element);
@@ -229,7 +224,7 @@ public class DotLapWriter implements ILapWriter {
 	 * @return Lisp representation of the competence element
 	 */
 	private String generateLispFromCompetenceElement(CompetenceElement compElement) {
-		String result = "(" + compElement.getName() + " " + generateLispFromTrigger(compElement.getTrigger()) + " " + compElement.getAction();
+		String result = "\n\t\t(" + compElement.getName() + " " + generateLispFromTrigger(compElement.getTrigger()) + " " + compElement.getAction();
 		if (compElement.getRetries() > 0)
 			result += " " + compElement.getRetries();
 		result += ")";
