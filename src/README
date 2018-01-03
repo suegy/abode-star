@@ -1,3 +1,6 @@
+=== Deprecated Documentation since 2012
+'current code maintainer Swen E. Gaudl under supervision of Dr. Joanna J. Bryson (jjb@bath.ac.uk) between April 2012 and Dec 2016
+
 ABODE DEVEOPER DOCUMENTATION
 ----------------------------
 
@@ -13,7 +16,7 @@ by two people previously:
 									new parser for this file format, addition of documentation,
 									addition of element disabling.
 	
-The project is being overseen by Joanna Bryson (jjb@cs.bath.ac.uk).
+The project was overseen by Joanna Bryson (jjb@cs.bath.ac.uk).
 
 The project has been checked into Subversion as an Eclipse project (note that it was
 originally developed using Netbeans, and handled through CVS, and some of the comments
