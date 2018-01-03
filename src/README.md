@@ -1,18 +1,19 @@
-=== Deprecated Documentation since 2012
-'current code maintainer Swen E. Gaudl under supervision of Dr. Joanna J. Bryson (jjb@bath.ac.uk) between April 2012 and Dec 2016
+### Deprecated Documentation since 2012
 
-ABODE DEVEOPER DOCUMENTATION
+> current code maintainer Swen E. Gaudl under supervision of Dr. Joanna J. Bryson (jjb@bath.ac.uk) between April 2012 and Dec 2016
+
+##### ABODE DEVEOPER DOCUMENTATION
 ----------------------------
 
 This document has been put together to aid anyone who needs (or wants) to develop ABODE,
 however it is far from a full system documentation! ABODE has been primarily developed
 by two people previously:
 
-	Steven Gray (Cobalt Software) - original designer and author of most of the code
+ * Steven Gray (Cobalt Software) - original designer and author of most of the code
 	<insert Steve's e-mail>
 	
-	James Nugent (Gentec Services) - general code cleanup, new code generator (to
-	jen20@bath.ac.uk					accomodate grammar changes  in Jan's new POSH engine),
+* James Nugent (Gentec Services) - general code cleanup, new code generator (to
+	jen20@bath.ac.uk						accomodate grammar changes  in Jan's new POSH engine),
 									new parser for this file format, addition of documentation,
 									addition of element disabling.
 	
